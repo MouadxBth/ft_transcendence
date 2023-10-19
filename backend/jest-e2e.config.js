@@ -1,6 +1,6 @@
 module.exports = {
 	preset: 'ts-jest',
-	displayName: 'swc-unit-integration',
+	displayName: 'swc-e2e',
 
 	rootDir: '.',
 	testRegex: '.e2e-spec.ts$',
@@ -21,7 +21,6 @@ module.exports = {
 		'<rootDir>/node_modules',
 		'<rootDir>/dist',
 		'<rootDir>/coverage',
-		'<rootDir>/ignore'
+		'<rootDir>/ignore',
 	],
-
 };
