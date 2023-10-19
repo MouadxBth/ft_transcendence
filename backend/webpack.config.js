@@ -5,6 +5,7 @@ const { RunScriptWebpackPlugin } = require('run-script-webpack-plugin');
 
 const swcDefaultConfig = require('@nestjs/cli/lib/compiler/defaults/swc-defaults').swcDefaultsFactory().swcOptions;
 
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
 	entry: ['webpack/hot/poll?100', './src/main.ts'],
@@ -31,6 +32,7 @@ module.exports = {
 		extensions: ['.tsx', '.ts', '.js'],
 	},
 	plugins: [
+		new BundleAnalyzerPlugin(),
 		new webpack.HotModuleReplacementPlugin(),
 		new RunScriptWebpackPlugin({ name: 'server.js', autoRestart: false }),
 	],
