@@ -1,33 +1,33 @@
 name: Lint and Format Backend
 
 on:
-	push:
-		branches:
-			- main
+  push:
+    branches:
+      - main
 
 jobs:
-	lint-and-format:
-		runs-on: ubuntu-latest
-		steps:
-			- name: Check out the code
-				uses: actions/checkout@v3
+  lint-and-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v3
 
-			- name: Setup Node.js
-				uses: actions/setup-node@v2
-				with:
-					node-version: 20
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
 
-			- name: Install dependencies
-				run: |
-					cd backend
-					npm install
+      - name: Install dependencies
+        run: |
+          cd backend
+          npm install
 
-			- name: Format
-				run: |
-					cd backend
-					npm run format
+      - name: Format
+        run: |
+          cd backend
+          npm run format
 
-			- name: Lint
-				run: |
-					cd backend
-					npm run lint
+      - name: Lint
+        run: |
+          cd backend
+          npm run lint
