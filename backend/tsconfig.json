@@ -23,22 +23,27 @@
 
 		"moduleDetection": "force",
 
-		"module": "commonjs",
-		"declaration": true,
-		"removeComments": true,
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
-		"allowSyntheticDefaultImports": true,
-		"target": "ES2021",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
 		"sourceMap": true,
 		"outDir": "./dist",
 		"baseUrl": "./",
+		"target": "ES2022",
+
+		"declaration": true,
+		"declarationDir": "./types",
+		"removeComments": true,
+
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+
+		"allowSyntheticDefaultImports": true,
+
 		"incremental": true,
 		"skipLibCheck": true,
-		"strictNullChecks": false,
-		"noImplicitAny": false,
-		"strictBindCallApply": false,
-		"forceConsistentCasingInFileNames": false,
-		"noFallthroughCasesInSwitch": false
+
+		"strictNullChecks": true,
+
+		"lib": ["ES2022"]
 	}
 }
