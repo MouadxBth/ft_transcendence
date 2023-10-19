@@ -6,7 +6,7 @@ module.exports = {
 	testRegex: '.e2e-spec.ts$',
 
 	transform: {
-		'^.+\\.ts$': 'ts-jest',
+		'^.+\\.ts$': ['@swc/jest'],
 	},
 	collectCoverageFrom: ['**/*.ts'],
 	coverageDirectory: '<rootDir>/coverage/e2e',

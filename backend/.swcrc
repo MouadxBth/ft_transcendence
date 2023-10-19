@@ -7,6 +7,10 @@
       "decorators": true,
       "dynamicImport": true
     },
+    "transform": {
+      "legacyDecorator": true,
+      "decoratorMetadata": true
+    },
     "baseUrl": "./"
   },
   "minify": false
