@@ -7,16 +7,13 @@ module.exports = {
 		ecmaVersion: 'latest',
 	},
 	plugins: ['@typescript-eslint/eslint-plugin'],
-	extends: [
-		'plugin:@typescript-eslint/recommended',
-		'plugin:prettier/recommended',
-	],
+	extends: ['plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
 	root: true,
 	env: {
 		node: true,
 		jest: true,
 	},
-	ignorePatterns: ['node_modules/', 'dist/', '.eslintrc.js', '*.config.js'],
+	ignorePatterns: ['node_modules/', 'dist/', '.eslintrc.js', '*.config.js', '.github'],
 	rules: {
 		'@typescript-eslint/interface-name-prefix': 'off',
 		'@typescript-eslint/explicit-function-return-type': 'off',

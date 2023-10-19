@@ -3,3 +3,4 @@ pnpm-lock.yaml
 *.md
 .next
 dist
+.github
