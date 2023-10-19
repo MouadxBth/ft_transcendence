@@ -31,4 +31,3 @@ jobs:
 				run: |
 					cd backend
 					npm run lint
-
