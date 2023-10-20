@@ -1,0 +1,33 @@
+name: Lint and Format Backend
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint-and-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          npm install
+
+      - name: Unit and Integration tests
+        run: |
+          cd backend
+          npm run test
+
+      - name: E2E tests
+        run: |
+          cd backend
+          npm run test:e2e
