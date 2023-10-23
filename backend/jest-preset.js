@@ -1,28 +1,30 @@
 module.exports = {
-	preset: 'ts-jest',
-	displayName: 'jest-swc-preset',
+	preset: "ts-jest",
+	displayName: "jest-swc-preset",
 
-	rootDir: '.',
+	passWithNoTests: true,
+
+	rootDir: ".",
 
 	moduleNameMapper: {
-		'^src/(.*)$': '<rootDir>/src/$1',
+		"^src/(.*)$": "<rootDir>/src/$1",
 	},
 
 	transform: {
-		'^.+\\.ts$': ['@swc/jest'],
+		"^.+\\.ts$": ["@swc/jest"],
 	},
-	collectCoverageFrom: ['**/*.ts'],
+	collectCoverageFrom: ["**/*.ts"],
 
-	testEnvironment: 'node',
+	testEnvironment: "node",
 
-	moduleFileExtensions: ['js', 'json', 'ts'],
+	moduleFileExtensions: ["js", "json", "ts"],
 
 	modulePathIgnorePatterns: [
-		'<rootDir>/__fixtures__',
-		'<rootDir>/node_modules',
-		'<rootDir>/dist',
-		'<rootDir>/coverage',
-		'<rootDir>/ignore',
-		'<rootDir>/test'
+		"<rootDir>/__fixtures__",
+		"<rootDir>/node_modules",
+		"<rootDir>/dist",
+		"<rootDir>/coverage",
+		"<rootDir>/ignore",
+		"<rootDir>/test",
 	],
-}
+};
