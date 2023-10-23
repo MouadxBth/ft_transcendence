@@ -13,7 +13,7 @@ module.exports = {
 		node: true,
 		jest: true,
 	},
-	ignorePatterns: ['node_modules/', 'dist/', '.eslintrc.js', '*.config.js', '.github'],
+	ignorePatterns: ['node_modules/', 'dist/', '.eslintrc.js', '*-preset.js', '*.config.js', '.github'],
 	rules: {
 		'@typescript-eslint/interface-name-prefix': 'off',
 		'@typescript-eslint/explicit-function-return-type': 'off',

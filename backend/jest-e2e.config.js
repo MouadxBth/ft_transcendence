@@ -1,26 +1,12 @@
 module.exports = {
-	preset: 'ts-jest',
-	displayName: 'swc-e2e',
+	preset: './jest-preset.js',
+	displayName: {
+		color: 'magenta',
+		name: 'swc-e2e',
+	},
 
-	rootDir: '.',
 	testRegex: '.e2e-spec.ts$',
 
-	transform: {
-		'^.+\\.ts$': ['@swc/jest'],
-	},
-	collectCoverageFrom: ['**/*.ts'],
 	coverageDirectory: '<rootDir>/coverage/e2e',
-	testEnvironment: 'node',
 
-	testEnvironment: 'node',
-
-	moduleFileExtensions: ['js', 'json', 'ts'],
-
-	modulePathIgnorePatterns: [
-		'<rootDir>/__fixtures__',
-		'<rootDir>/node_modules',
-		'<rootDir>/dist',
-		'<rootDir>/coverage',
-		'<rootDir>/ignore',
-	],
 };
