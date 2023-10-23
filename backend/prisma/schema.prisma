@@ -1,0 +1,180 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ChannelStatus {
+  PUBLIC
+  PRIVATE
+  PROTECTED
+}
+
+enum MatchType {
+	CLASSIC
+	CUSTOM
+}
+
+model User {
+  username   String @id
+  password   String
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  firstName  String?
+  lastName   String?
+
+  // login      String?
+  email      String? @unique
+
+  avatar     Bytes?
+
+  friends    User[]   @relation("UserFriends")
+  blocked    User[]   @relation("UserBlocked")
+
+	friendsOf  User[] @relation("UserFriends")
+  blockedBy  User[] @relation("UserBlocked")
+
+	achievements Achievement[]
+
+	ownedChannels Channel[]
+	channelMessages Message[]
+
+	joinedChannels ChannelMember[]
+
+	conversations Conversation[]
+	directMessages DirectMessage[]
+
+	matchesPlayed MatchResult[]
+}
+
+model Achievement {
+  name       String @id
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  description String?
+
+	users User[]
+}
+
+model Channel {
+  name      String @id
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  status    ChannelStatus @default(PUBLIC)
+  password  String?
+
+	topic	String?
+
+  messages  Message[]
+
+  owner     User     @relation(fields: [ownerId], references: username, onDelete: Cascade)
+  ownerId   String
+
+  members   ChannelMember[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  content   String
+  read      Boolean @default(false)
+
+  sender    User     @relation(fields: [senderId], references: username, onDelete: Cascade)
+  senderId  String
+
+	channel	Channel @relation(fields: [channelId], references: [name], onDelete: Cascade)
+	channelId	String
+}
+
+model ChannelMember {
+  id       Int      @id @default(autoincrement())
+
+  admin    Boolean @default(false)
+  muted    Boolean @default(false)
+  blocked  Boolean @default(false)
+
+  user     User     @relation(fields: [userId], references: username, onDelete: Cascade)
+  userId   String
+
+  channel  Channel  @relation(fields: [channelId], references: name, onDelete: Cascade)
+  channelId String
+}
+
+model Conversation {
+  id        Int      @id @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members   User[]
+  messages  DirectMessage[]
+}
+
+model DirectMessage {
+  id        Int      @id @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  content   String
+  read      Boolean @default(false)
+
+  sender    User     @relation(fields: [senderId], references: username, onDelete: Cascade)
+  senderId  String
+
+	conversation	Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+	conversationId	Int
+}
+
+model MatchHistory {
+	id Int @id @default(autoincrement())
+
+	createdAt DateTime @default(now())
+
+	type MatchType @default(CLASSIC)
+
+	map String?
+
+	time Int?
+
+	powerUp String?
+
+	winningPoints Int?
+
+	members MatchResult[]
+}
+
+model MatchResult {
+	id Int @id @default(autoincrement())
+
+	createdAt DateTime @default(now())
+
+	winner Boolean @default(false)
+	draw Boolean @default(false)
+
+	score Int @default(0)
+	points Int @default(0)
+
+	user User @relation(fields: [userId], references: [username], onDelete: Cascade)
+	userId String
+
+	match MatchHistory @relation(fields: [matchId], references: [id], onDelete: Cascade)
+	matchId Int
+}
+
+
