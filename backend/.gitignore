@@ -1,3 +1,4 @@
+*.ignore.ts
 .env
 prisma/migrations
 package-lock.json
