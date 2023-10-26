@@ -4,8 +4,6 @@ module.exports = {
 
 	passWithNoTests: true,
 
-	rootDir: ".",
-
 	moduleNameMapper: {
 		"^src/(.*)$": "<rootDir>/src/$1",
 	},
@@ -14,6 +12,8 @@ module.exports = {
 		"^.+\\.ts$": ["@swc/jest"],
 	},
 	collectCoverageFrom: ["**/*.ts"],
+
+	coveragePathIgnorePatterns: ["main.ts"],
 
 	testEnvironment: "node",
 
