@@ -9,4 +9,8 @@ module.exports = {
 
 	coverageDirectory: '<rootDir>/coverage/e2e',
 
+	modulePathIgnorePatterns: [
+		'.*\\.spec\\.ts$',
+	]
+
 };

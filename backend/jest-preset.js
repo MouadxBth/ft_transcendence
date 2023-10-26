@@ -20,11 +20,11 @@ module.exports = {
 	moduleFileExtensions: ["js", "json", "ts"],
 
 	modulePathIgnorePatterns: [
+		'.*\\.ignore\\.ts$',
 		"<rootDir>/__fixtures__",
 		"<rootDir>/node_modules",
 		"<rootDir>/dist",
 		"<rootDir>/coverage",
 		"<rootDir>/ignore",
-		"<rootDir>/test",
 	],
 };

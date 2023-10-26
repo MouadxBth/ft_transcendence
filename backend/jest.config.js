@@ -8,4 +8,8 @@ module.exports = {
 	testRegex: '.*\\.spec\\.ts$',
 
 	coverageDirectory: '<rootDir>/coverage/testing',
+
+	// modulePathIgnorePatterns: [
+	// 	"<rootDir>/test",
+	// ],
 };
