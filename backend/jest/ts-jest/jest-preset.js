@@ -13,7 +13,7 @@ module.exports = {
 	},
 	collectCoverageFrom: ["**/*.ts"],
 
-	coveragePathIgnorePatterns: ["main.ts"],
+	coveragePathIgnorePatterns: ["main.ts", "app.module.ts"],
 
 	testEnvironment: "node",
 
