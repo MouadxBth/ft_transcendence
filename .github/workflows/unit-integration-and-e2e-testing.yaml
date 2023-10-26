@@ -25,14 +25,17 @@ jobs:
       - name: Unit and Integration tests
         run: |
           cd backend
-          npm run test
+          npm run test:coverage
 
       - name: E2E tests
         run: |
           cd backend
-          npm run test:e2e
+          npm run test:e2e:coverage
 
-      - name: Coveralls GitHub Action
+      - name: Coveralls GitHub Action (Backend)
         uses: coverallsapp/github-action@v2
+        with:
+          files: ./backend/coverage/e2e/lcov.info ./backend/coverage/testing/lcov.info
+          allow-empty: true
 
 
