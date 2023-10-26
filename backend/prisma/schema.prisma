@@ -34,13 +34,16 @@ model User {
   // login      String?
   email      String? @unique
 
-  avatar     Bytes?
+  avatar     String?
 
   friends    User[]   @relation("UserFriends")
   blocked    User[]   @relation("UserBlocked")
 
 	friendsOf  User[] @relation("UserFriends")
   blockedBy  User[] @relation("UserBlocked")
+
+	sentFriendRequests FriendRequest[] @relation("SentFriendRequests")
+	receivedFriendRequests FriendRequest[] @relation("ReceivedFriendRequests")
 
 	achievements Achievement[]
 
@@ -53,6 +56,18 @@ model User {
 	directMessages DirectMessage[]
 
 	matchesPlayed MatchResult[]
+}
+
+model FriendRequest {
+	id Int @id @default(autoincrement())
+
+	createdAt DateTime @default(now())
+
+	sender User @relation("SentFriendRequests", fields: [senderId], references: [username], onDelete: Cascade)
+	senderId String
+
+	target User @relation("ReceivedFriendRequests", fields: [targetId], references: [username], onDelete: Cascade)
+	targetId String
 }
 
 model Achievement {
