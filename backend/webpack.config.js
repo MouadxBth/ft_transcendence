@@ -4,7 +4,6 @@ const { RunScriptWebpackPlugin } = require("run-script-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 module.exports = function (options, webpack) {
-	console.log(options.resolve);
 	return {
 		entry: ["webpack/hot/poll?100", "./src/main.ts"],
 		externals: [
@@ -30,7 +29,7 @@ module.exports = function (options, webpack) {
 		mode: "development",
 		plugins: [
 			...options.plugins,
-			//new BundleAnalyzerPlugin(),
+			new BundleAnalyzerPlugin(),
 			new webpack.HotModuleReplacementPlugin(),
 			new webpack.WatchIgnorePlugin({
 				paths: [/\.js$/, /\.d\.ts$/],
