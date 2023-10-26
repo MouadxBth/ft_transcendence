@@ -31,3 +31,7 @@ jobs:
         run: |
           cd backend
           npm run test:e2e
+
+			- name: Coveralls GitHub Action
+        uses: coverallsapp/github-action@v2
+
