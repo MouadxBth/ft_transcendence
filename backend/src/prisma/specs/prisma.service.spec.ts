@@ -12,7 +12,22 @@ describe("PrismaService", () => {
 		service = module.get<PrismaService>(PrismaService);
 	});
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
 	it("should be defined", () => {
 		expect(service).toBeDefined();
+	});
+
+	it("should call $connect on initialization", async () => {
+		service.$connect = jest.fn();
+		const connectSpy = jest.spyOn(service, "$connect");
+
+		await service.onModuleInit();
+
+		expect(connectSpy).toHaveBeenCalled();
+
+		connectSpy.mockRestore();
 	});
 });
