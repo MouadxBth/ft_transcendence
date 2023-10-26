@@ -81,10 +81,10 @@ export class UserService {
 	}
 
 	async remove(username: string) {
-		const usernameResult = await this.findOne(username);
+		const usernameResult = await this.prisma.user.findUnique({ where: { username: username } });
 
 		if (!usernameResult) {
-			throw new HttpException("Username doesnt exist!", HttpStatus.NOT_FOUND);
+			throw new HttpException("User with that username doesnt exist!", HttpStatus.NOT_FOUND);
 		}
 
 		return this.prisma.user.delete({
