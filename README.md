@@ -1,11 +1,9 @@
 # ft_transcendence
 
-[![Coverage Status](https://coveralls.io/repos/github/MouadxBth/ft_transcendence/badge.svg?branch=main&service=github)](https://coveralls.io/github/MouadxBth/ft_transcendence?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/MouadxBth/ft_transcendence/badge.svg?branch=main&service=github)](https://coveralls.io/github/MouadxBth/ft_transcendence?branch=main) ![e2e-unit-testing](https://github.com/MouadxBth/ft_transcendence/actions/workflows/unit-integration-and-e2e-testing.yaml/badge.svg) ![linting-formating](https://github.com/MouadxBth/ft_transcendence/actions/workflows/lint-and-format.yaml/badge.svg)
 
-![e2e-unit-testing](https://github.com/MouadxBth/ft_transcendence/actions/workflows/unit-integration-and-e2e-testing.yaml/badge.svg)
+![Jhin](https://media.tenor.com/S29qlVlvPSkAAAAd/jhin-league-of-legends.gif)
 
-![linting-formating](https://github.com/MouadxBth/ft_transcendence/actions/workflows/lint-and-format.yaml/badge.svg)
-
-> We shall transcend!
+> Through my work, you shall transcend.
 
 This project is about creating a website for the mighty Pong contest!
