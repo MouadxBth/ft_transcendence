@@ -20,23 +20,23 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
 
-		"test:ts-jest": "jest --config ./jest/ts-jest/test/jest.config.js",
-    "test:ts-jest:verbose": "jest --verbose --config ./jest/ts-jest/test/jest.config.js",
-    "test:ts-jest:watch": "jest --watch --config ./jest/ts-jest/test/jest.config.js",
-    "test:ts-jest:coverage": "jest --coverage --config ./jest/ts-jest/test/jest.config.js",
+		"test:ts-jest": "jest --config ./jest/ts-jest/test/jest.config.json",
+    "test:ts-jest:verbose": "jest --verbose --config ./jest/ts-jest/test/jest.config.json",
+    "test:ts-jest:watch": "jest --watch --config ./jest/ts-jest/test/jest.config.json",
+    "test:ts-jest:coverage": "jest --coverage --config ./jest/ts-jest/test/jest.config.json",
 
-		"test:ts-jest:e2e": "jest --config ./jest/ts-jest/e2e/jest-e2e.config.js",
-    "test:ts-jest:e2e:verbose": "jest --verbose --config ./jest/ts-jest/e2e/jest-e2e.config.js",
-    "test:ts-jest:e2e:coverage": "jest --config ./jest/ts-jest/e2e/jest-e2e.config.js --coverage",
+		"test:ts-jest:e2e": "jest --config ./jest/ts-jest/e2e/jest-e2e.config.json",
+    "test:ts-jest:e2e:verbose": "jest --verbose --config ./jest/ts-jest/e2e/jest-e2e.config.json",
+    "test:ts-jest:e2e:coverage": "jest --config ./jest/ts-jest/e2e/jest-e2e.config.json --coverage",
 
-		"test:swc": "jest --config ./jest/swc/test/jest.config.js",
-    "test:swc:verbose": "jest --verbose --config ./jest/swc/test/jest.config.js",
-    "test:swc:watch": "jest --watch --config ./jest/swc/test/jest.config.js",
-    "test:swc:coverage": "jest --coverage --config ./jest/swc/test/jest.config.js",
+		"test:swc": "jest --config ./jest/swc/test/jest.config.json",
+    "test:swc:verbose": "jest --verbose --config ./jest/swc/test/jest.config.json",
+    "test:swc:watch": "jest --watch --config ./jest/swc/test/jest.config.json",
+    "test:swc:coverage": "jest --coverage --config ./jest/swc/test/jest.config.json",
 
-		"test:swc:e2e": "jest --config ./jest/swc/e2e/jest-e2e.config.js",
-    "test:swc:e2e:verbose": "jest --verbose --config ./jest/swc/e2e/jest-e2e.config.js",
-    "test:swc:e2e:coverage": "jest --config ./jest/swc/e2e/jest-e2e.config.js --coverage",
+		"test:swc:e2e": "jest --config ./jest/swc/e2e/jest-e2e.config.json",
+    "test:swc:e2e:verbose": "jest --verbose --config ./jest/swc/e2e/jest-e2e.config.json",
+    "test:swc:e2e:coverage": "jest --config ./jest/swc/e2e/jest-e2e.config.json --coverage",
 
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
   },

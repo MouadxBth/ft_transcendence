@@ -1,0 +1,15 @@
+{
+	"preset": "./jest/swc/jest-preset.json",
+	"displayName": {
+		"color": "blue",
+		"name": "swc-unit-integration"
+	},
+
+	"rootDir": "../../..",
+
+	"testRegex": ".*\\.spec\\.ts$",
+
+	"coverageDirectory": "<rootDir>/coverage/swc/testing",
+
+	"modulePathIgnorePatterns": ["<rootDir>/test"]
+}

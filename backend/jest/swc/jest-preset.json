@@ -1,0 +1,49 @@
+{
+	"preset": "ts-jest",
+	"displayName": "jest-swc-preset",
+
+	"passWithNoTests": true,
+
+	"moduleNameMapper": {
+		"^src/(.*)$": "<rootDir>/src/$1"
+	},
+
+	"transform": {
+		"^.+\\.ts$": ["@swc/jest"]
+	},
+
+	"coverageThreshold": {
+    "global": {
+      "branches": 90,
+      "functions": 90,
+      "lines": 90,
+      "statements": 90
+    }
+  },
+  "collectCoverageFrom": [
+		"**/*.(t|j)s",
+		"!webpack.config.(t|j)s",
+		"!.eslintrc.(t|j)s",
+		"!main.(t|j)s",
+		"!app.module.(t|j)s"
+	],
+	"coveragePathIgnorePatterns": [
+		"<rootDir>/src/main.ts",
+		"<rootDir>/src/app.module.ts",
+		"<rootDir>/.eslintrc.js",
+		"node_modules"
+	],
+
+	"testEnvironment": "node",
+
+	"moduleFileExtensions": ["js", "json", "ts"],
+
+	"modulePathIgnorePatterns": [
+		".*\\.ignore\\.ts$",
+		"<rootDir>/__fixtures__",
+		"<rootDir>/node_modules",
+		"<rootDir>/dist",
+		"<rootDir>/coverage",
+		"<rootDir>/ignore"
+	]
+}
