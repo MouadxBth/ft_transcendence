@@ -6,4 +6,6 @@ export const ConfigSchema = Joi.object({
 		.uri({
 			scheme: ["postgresql"],
 		}),
+	REDIS_HOST: Joi.string().default("localhost"),
+	REDIS_PORT: Joi.number().default(6379),
 }).unknown(false);
