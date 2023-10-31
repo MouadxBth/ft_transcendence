@@ -25,7 +25,8 @@
 		"!webpack.config.(t|j)s",
 		"!.eslintrc.(t|j)s",
 		"!main.(t|j)s",
-		"!app.module.(t|j)s"
+		"!app.module.(t|j)s",
+		"!**/*.provider.(t|j)s"
 	],
 	"coveragePathIgnorePatterns": [
 		"<rootDir>/src/main.ts",
