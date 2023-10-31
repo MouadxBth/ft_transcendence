@@ -16,6 +16,7 @@ import { RedisClient } from "./redis/redis.provider";
 			cache: true,
 			isGlobal: true,
 			validationSchema: ConfigSchema,
+			envFilePath: [".env", ".env.example"],
 		}),
 		CacheModule.registerAsync({
 			isGlobal: true,
