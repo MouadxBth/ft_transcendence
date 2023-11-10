@@ -1,13 +1,13 @@
 import { ChannelStatus } from "@prisma/client";
 
 export class Channel {
-    name: string;
+	name: string;
 
-    password: string | null;
+	password: string | null;
 
-    topic: string | null;
+	topic: string | null;
 
-    status: ChannelStatus;
+	status: ChannelStatus;
 
-    ownerId: string;
+	ownerId: string;
 }

@@ -7,7 +7,7 @@ import { RedisModule } from "./redis/redis.module";
 import { CacheModule } from "@nestjs/cache-manager";
 import { ioRedisStore } from "@tirke/node-cache-manager-ioredis";
 import { RedisClient } from "./redis/redis.provider";
-import { ChannelModule } from './channel/channel.module';
+import { ChannelModule } from "./channel/channel.module";
 
 @Module({
 	imports: [
