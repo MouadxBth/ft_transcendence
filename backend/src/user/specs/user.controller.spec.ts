@@ -12,10 +12,8 @@ describe("UserController", () => {
 
 	const user = {
 		username: "mbouthai",
-		password: "123456",
 		firstName: "Mouad",
 		lastName: "Bouthaich",
-		email: "mouad.bouthaich@gmail.com",
 		avatar: "aatrox.jpeg",
 	} as User;
 
@@ -55,10 +53,8 @@ describe("UserController", () => {
 			// arrange
 			const createUserDto = {
 				username: "mbouthai",
-				password: "123456",
 				firstName: "Mouad",
 				lastName: "Bouthaich",
-				email: "mouad.bouthaich@gmail.com",
 				avatar: "avatar",
 			} as CreateUserDto;
 
@@ -118,31 +114,6 @@ describe("UserController", () => {
 			// assert
 			expect(service.findOne).toBeCalled();
 			expect(service.findOne).toBeCalledWith(username);
-
-			expect(result).toEqual(user);
-		});
-	});
-
-	describe("findOneByEmail", () => {
-		beforeEach(() => {
-			jest.spyOn(service, "findOneByEmail");
-		});
-
-		it("should be defined", () => {
-			expect(service.findOneByEmail).toBeDefined();
-		});
-
-		it("should find a user by a given email and return his data", async () => {
-			// arrange
-			const email = "mouad.bouthaich@gmail.com";
-			service.findOneByEmail.mockResolvedValueOnce(user);
-
-			// act
-			const result = await controller.findOneByEmail(email);
-
-			// assert
-			expect(service.findOneByEmail).toBeCalled();
-			expect(service.findOneByEmail).toBeCalledWith(email);
 
 			expect(result).toEqual(user);
 		});

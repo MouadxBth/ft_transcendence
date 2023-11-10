@@ -3,7 +3,6 @@ import { UserService } from "../user.service";
 import { PrismaService } from "src/prisma/prisma.service";
 import { DeepMocked, createMock } from "@golevelup/ts-jest";
 import { CreateUserDto } from "../dto/create-user.dto";
-import * as bcrypt from "bcrypt";
 import { User } from "@prisma/client";
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { UpdateUserDto } from "../dto/update-user.dto";
@@ -14,10 +13,8 @@ describe("UserService", () => {
 
 	const user = {
 		username: "mbouthai",
-		password: "123456",
 		firstName: "Mouad",
 		lastName: "Bouthaich",
-		email: "mouad.bouthaich@outlook.com",
 		avatar: "aatrox.jpeg",
 	} as User;
 
@@ -58,10 +55,8 @@ describe("UserService", () => {
 	describe("create", () => {
 		const createUserDto = {
 			username: "mbouthai",
-			password: "123456",
 			firstName: "Mouad",
 			lastName: "Bouthaich",
-			email: "mouad.bouthaich@outlook.com",
 			avatar: "avatar",
 		} as CreateUserDto;
 
@@ -79,10 +74,8 @@ describe("UserService", () => {
 				username: "mbouthai",
 				firstName: "Mouad",
 				lastName: "Bouthaich",
-				email: "mouad.bouthaich@outlook.com",
 				avatar: "aatrox.jpeg",
 			} as User;
-			const passwordHash = await bcrypt.hash(createUserDto.password, 10);
 
 			prisma.user.findUnique = jest.fn().mockImplementation(async (_) => null);
 			prisma.user.create = jest.fn().mockResolvedValue(user);
@@ -92,19 +85,14 @@ describe("UserService", () => {
 
 			// assert
 
-			expect(prisma.user.findUnique).toHaveBeenCalledTimes(2);
+			expect(prisma.user.findUnique).toHaveBeenCalled();
 
 			expect(prisma.user.findUnique).toHaveBeenCalledWith({
 				where: { username: createUserDto.username },
 			});
 
-			expect(prisma.user.findUnique).toHaveBeenCalledWith({
-				where: { email: createUserDto.email },
-			});
-
-			expect(prisma.user.create).toBeCalled();
+			expect(prisma.user.create).toHaveBeenCalled();
 			expectObjectContainingMost(partialUserInfo, result);
-			expect(await bcrypt.compare(result.password, passwordHash)).toBeTruthy();
 
 			expect(result).toEqual(user);
 		});
@@ -129,30 +117,6 @@ describe("UserService", () => {
 				where: { username: createUserDto.username },
 			});
 		});
-
-		it("should throw an exception saying the email exists", async () => {
-			// arrange
-			prisma.user.findUnique = jest.fn().mockImplementation(async (value) => {
-				if (value.where.email === createUserDto.email) return value;
-				return null;
-			});
-
-			// act
-			try {
-				await service.create(createUserDto);
-				fail("Expecting an exception to be thrown!");
-			} catch (exception: any) {
-				expect(exception).toBeInstanceOf(HttpException);
-				expect(exception.response).toBe("Email is already in use!");
-				expect(exception.status).toBe(HttpStatus.BAD_REQUEST);
-			}
-
-			// assert
-			expect(prisma.user.findUnique).toHaveBeenCalled();
-			expect(prisma.user.findUnique).toHaveBeenCalledWith({
-				where: { username: createUserDto.username },
-			});
-		});
 	});
 
 	describe("findAll", () => {
@@ -165,7 +129,7 @@ describe("UserService", () => {
 			const result = await service.findAll();
 
 			// assert
-			expect(prisma.user.findMany).toBeCalled();
+			expect(prisma.user.findMany).toHaveBeenCalled();
 			expect(result).toEqual(users);
 		});
 	});
@@ -179,8 +143,8 @@ describe("UserService", () => {
 			//act
 			const result = await service.findOne(username);
 
-			expect(prisma.user.findUnique).toBeCalled();
-			expect(prisma.user.findUnique).toBeCalledWith({ where: { username } });
+			expect(prisma.user.findUnique).toHaveBeenCalled();
+			expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { username } });
 			expect(result).toEqual(user);
 		});
 
@@ -199,42 +163,8 @@ describe("UserService", () => {
 				expect(exception.status).toBe(HttpStatus.NOT_FOUND);
 			}
 
-			expect(prisma.user.findUnique).toBeCalled();
-			expect(prisma.user.findUnique).toBeCalledWith({ where: { username } });
-		});
-	});
-
-	describe("findOneByEmail", () => {
-		it("should find a user by a given email and return its data", async () => {
-			//arrange
-			const email = "mouad.bouthaich@outlook.com";
-			prisma.user.findUnique = jest.fn().mockResolvedValueOnce(user);
-
-			//act
-			const result = await service.findOneByEmail(email);
-
-			expect(prisma.user.findUnique).toBeCalled();
-			expect(prisma.user.findUnique).toBeCalledWith({ where: { email } });
-			expect(result).toEqual(user);
-		});
-
-		it("should throw a not found exception", async () => {
-			//arrange
-			const email = "unknown@gmail.com";
-			prisma.user.findUnique = jest.fn().mockResolvedValueOnce(null);
-
-			//act
-			try {
-				await service.findOneByEmail(email);
-				fail("Expecting a not found exception");
-			} catch (exception: any) {
-				expect(exception).toBeInstanceOf(HttpException);
-				expect(exception.response).toBe("User with that email doesnt exist!");
-				expect(exception.status).toBe(HttpStatus.NOT_FOUND);
-			}
-
-			expect(prisma.user.findUnique).toBeCalled();
-			expect(prisma.user.findUnique).toBeCalledWith({ where: { email } });
+			expect(prisma.user.findUnique).toHaveBeenCalled();
+			expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { username } });
 		});
 	});
 
@@ -261,11 +191,11 @@ describe("UserService", () => {
 			//act
 			const result = await service.update(username, updateUserDto);
 
-			expect(prisma.user.findUnique).toBeCalled();
-			expect(prisma.user.findUnique).toBeCalledWith({ where: { username: username } });
+			expect(prisma.user.findUnique).toHaveBeenCalled();
+			expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { username: username } });
 
-			expect(prisma.user.update).toBeCalled();
-			expect(prisma.user.update).toBeCalledWith({
+			expect(prisma.user.update).toHaveBeenCalled();
+			expect(prisma.user.update).toHaveBeenCalledWith({
 				data: updateUserDto,
 				where: { username: username },
 			});
@@ -287,8 +217,42 @@ describe("UserService", () => {
 				expect(exception.status).toBe(HttpStatus.NOT_FOUND);
 			}
 
-			expect(prisma.user.findUnique).toBeCalled();
-			expect(prisma.user.findUnique).toBeCalledWith({ where: { username: username } });
+			expect(prisma.user.findUnique).toHaveBeenCalled();
+			expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { username: username } });
+		});
+
+		it("should throw a username already exists exception", async () => {
+			//arrange
+
+			const dto = {
+				username: "tester",
+				firstName: "tester",
+				lastName: "tester",
+				email: "tester@gmail.com",
+			} as UpdateUserDto;
+
+			const partialUserInfo = {
+				username: "mbouthai",
+				firstName: "Mouad",
+				lastName: "Bouthaich",
+				avatar: "aatrox.jpeg",
+			} as User;
+
+			prisma.user.findUnique = jest.fn().mockResolvedValue(partialUserInfo);
+
+			//act
+			try {
+				await service.update(username, dto);
+				fail("Expecting a username already exists exception");
+			} catch (exception: any) {
+				expect(exception).toBeInstanceOf(HttpException);
+				expect(exception.response).toBe("User with that username already exists!");
+				expect(exception.status).toBe(HttpStatus.BAD_REQUEST);
+			}
+
+			expect(prisma.user.findUnique).toHaveBeenCalledTimes(2);
+			expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { username: username } });
+			expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { username: dto.username } });
 		});
 	});
 
@@ -302,11 +266,11 @@ describe("UserService", () => {
 			//act
 			const result = await service.remove(username);
 
-			expect(prisma.user.findUnique).toBeCalled();
-			expect(prisma.user.findUnique).toBeCalledWith({ where: { username: username } });
+			expect(prisma.user.findUnique).toHaveBeenCalled();
+			expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { username: username } });
 
-			expect(prisma.user.delete).toBeCalled();
-			expect(prisma.user.delete).toBeCalledWith({ where: { username: username } });
+			expect(prisma.user.delete).toHaveBeenCalled();
+			expect(prisma.user.delete).toHaveBeenCalledWith({ where: { username: username } });
 			expect(result).toEqual(user);
 		});
 
@@ -326,8 +290,8 @@ describe("UserService", () => {
 				expect(exception.status).toBe(HttpStatus.NOT_FOUND);
 			}
 
-			expect(prisma.user.findUnique).toBeCalled();
-			expect(prisma.user.findUnique).toBeCalledWith({ where: { username: username } });
+			expect(prisma.user.findUnique).toHaveBeenCalled();
+			expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { username: username } });
 		});
 	});
 });

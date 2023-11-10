@@ -22,8 +22,6 @@ describe("AppModule", () => {
 			.compile();
 
 		config = app.get<ConfigService>(ConfigService);
-
-		console.log(config.get<string>("DATABASE_URL"));
 	});
 
 	it("should be defined", () => {
@@ -49,6 +47,7 @@ describe("AppModule", () => {
 	it("should have a ConfigModule", () => {
 		const configModule = app.get(ConfigModule);
 		expect(configModule).toBeDefined();
+		expect(config.get<string>("DATABASE_URL")).toBeDefined();
 	});
 
 	it("should have a CacheModule", () => {

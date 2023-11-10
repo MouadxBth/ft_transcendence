@@ -12,10 +12,8 @@ describe("UserController (e2e)", () => {
 
 	const user = {
 		username: "mbouthai",
-		password: "123456",
 		firstName: "Mouad",
 		lastName: "Bouthaich",
-		email: "mouad.bouthaich@gmail.com",
 		avatar: "aatrox.jpeg",
 	} as User;
 
@@ -44,10 +42,8 @@ describe("UserController (e2e)", () => {
 		it("should create a new user", () => {
 			const payload = {
 				username: "mbouthai",
-				password: "123456",
 				firstName: "Mouad",
 				lastName: "Bouthaich",
-				email: "mouad.bouthaich@gmail.com",
 				avatar: "avatar",
 			};
 
@@ -63,10 +59,8 @@ describe("UserController (e2e)", () => {
 		it("should throw an exception saying the username is taken", () => {
 			const payload = {
 				username: "mbouthai",
-				password: "123456",
 				firstName: "Mouad",
 				lastName: "Bouthaich",
-				email: "mouad.bouthaich@gmail.com",
 				avatar: "avatar",
 			};
 
@@ -76,31 +70,6 @@ describe("UserController (e2e)", () => {
 				.post("/user")
 				.send(payload)
 				.expect({ statusCode: HttpStatus.BAD_REQUEST, message: "Username already taken!" });
-		});
-
-		it("should throw an exception saying the email is taken", () => {
-			// Arrange
-			const payload = {
-				username: "mbouthai",
-				password: "123456",
-				firstName: "Mouad",
-				lastName: "Bouthaich",
-				email: "mouad.bouthaich@gmail.com",
-				avatar: "avatar",
-			};
-
-			prisma.user.findUnique = jest.fn().mockImplementation(async (data) => {
-				if (data.where.email === payload.email) return user;
-				return null;
-			});
-
-			prisma.user.create = jest.fn().mockResolvedValueOnce(user);
-
-			// act, assert
-			return request(app.getHttpServer())
-				.post("/user")
-				.send(payload)
-				.expect({ statusCode: HttpStatus.BAD_REQUEST, message: "Email is already in use!" });
 		});
 
 		it("should throw an exception saying bad request", () => {
@@ -115,10 +84,6 @@ describe("UserController (e2e)", () => {
 					message: [
 						"username should not be empty",
 						"username must be a string",
-						"password should not be empty",
-						"password must be a string",
-						"email should not be empty",
-						"email must be an email",
 					],
 					error: "Bad Request",
 					statusCode: HttpStatus.BAD_REQUEST,
@@ -134,41 +99,6 @@ describe("UserController (e2e)", () => {
 
 			// act, assert
 			return request(app.getHttpServer()).get("/user").expect(HttpStatus.OK).expect(users);
-		});
-	});
-
-	describe("/user/email/:id (GET)", () => {
-		it("should find a user by a given email and return its data", async () => {
-			//arrange
-			const email = "mouad.bouthaich@outlook.com";
-			prisma.user.findUnique = jest.fn().mockImplementationOnce(async (data) => {
-				if (data.where.email === email) return user;
-				return null;
-			});
-
-			// act, assert
-			return request(app.getHttpServer())
-				.get(`/user/email/${email}`)
-				.expect(HttpStatus.OK)
-				.expect(user);
-		});
-
-		it("should throw a not found exception", async () => {
-			//arrange
-			const email = "unknown@gmail.com";
-			prisma.user.findUnique = jest.fn().mockImplementationOnce(async (data) => {
-				if (data.where.email === email) return null;
-				return user;
-			});
-
-			// act, assert
-			return request(app.getHttpServer())
-				.get(`/user/email/${email}`)
-				.expect(HttpStatus.NOT_FOUND)
-				.expect({
-					statusCode: HttpStatus.NOT_FOUND,
-					message: "User with that email doesnt exist!",
-				});
 		});
 	});
 
@@ -213,7 +143,6 @@ describe("UserController (e2e)", () => {
 		const payload = {
 			firstName: "tester",
 			lastName: "tester",
-			email: "tester@gmail.com",
 		};
 
 		it("should find a user by a given username and update its data", async () => {
@@ -223,6 +152,7 @@ describe("UserController (e2e)", () => {
 				if (data.where.username === username) return user;
 				return null;
 			});
+
 			prisma.user.update = jest.fn().mockImplementationOnce(async (query) => {
 				return {
 					...user,
@@ -275,6 +205,28 @@ describe("UserController (e2e)", () => {
 				.expect(HttpStatus.OK)
 				.expect(user);
 		});
+
+		it("should throw a username already exists exception", async () => {
+			//arrange
+
+			const usernameUpdate = {
+				username: "tester",
+				firstName: "tester",
+				lastName: "tester",
+			};
+
+			prisma.user.findUnique = jest.fn().mockResolvedValue(user);
+
+			//act
+			return request(app.getHttpServer())
+				.patch(`/user/${username}`)
+				.send(usernameUpdate)
+				.expect({
+					statusCode: HttpStatus.BAD_REQUEST,
+					message: "User with that username already exists!",
+				});
+		});
+
 	});
 
 	describe("/user/:id (DELETE)", () => {
