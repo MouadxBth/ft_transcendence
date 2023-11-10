@@ -28,7 +28,7 @@ module.exports = {
 		"@typescript-eslint/no-explicit-any": "off",
 		"@typescript-eslint/no-unused-vars": [
 			"error",
-			{ varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
+			{ varsIgnorePattern: "^_|*secret", argsIgnorePattern: "^_|*secret" },
 		],
 		"linebreak-style": ["error", "unix"],
 		semi: ["error", "always"],
