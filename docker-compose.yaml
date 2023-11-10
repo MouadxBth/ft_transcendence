@@ -52,7 +52,7 @@ services:
     networks:
       - ft_transcendence
     volumes:
-      - node_modules_volume:/usr/src/app/node_modules
+      - backend_volume:/usr/src/app
     depends_on:
       postgres:
         condition: service_healthy
@@ -82,10 +82,10 @@ volumes:
     #   type: none
     #   device: ${POSTGRES_DATA_DIR}
 
-  node_modules_volume:
-    name: node_modules_volume
+  backend_volume:
+    name: backend_volume
     driver: local
     driver_opts:
       o: bind
       type: none
-      device: ${NODE_MODULES_DIR}
+      device: ${BACKEND_DIR}

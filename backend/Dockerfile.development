@@ -2,8 +2,4 @@ FROM node:latest
 
 RUN npm install -g prisma
 
-COPY --chown=node:node . /usr/src/app
-
 WORKDIR /usr/src/app
-
-RUN npm install --prefer-offline
