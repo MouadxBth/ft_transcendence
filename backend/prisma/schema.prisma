@@ -23,7 +23,8 @@ enum MatchType {
 
 model User {
   username   String @id
-  password   String
+
+	firstTime	Boolean @default(true)
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -31,10 +32,10 @@ model User {
   firstName  String?
   lastName   String?
 
-  // login      String?
-  email      String? @unique
-
   avatar     String?
+
+	twoFactorAuthenticationEnabled	Boolean @default(false)
+	twoFactorAuthenticationSecret	String?
 
   friends    User[]   @relation("UserFriends")
   blocked    User[]   @relation("UserBlocked")
