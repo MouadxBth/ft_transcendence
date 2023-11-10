@@ -1,29 +1,24 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { ChannelStatus } from "../enums/channel-status.enum";
 
-export enum ChannelStatus
-{
-    PUBLIC =  "PUBLIC",
-    PRIVATE = "PRIVATE",
-    PROTECTED = "PROTECTED",
-}
 export class CreateChannelDto {
-   @IsString()
-   @IsNotEmpty()
-   name: string; 
+	@IsString()
+	@IsNotEmpty()
+	name: string;
 
-   @IsString()
-   @IsOptional()
-   password: string;
+	@IsString()
+	@IsOptional()
+	password: string;
 
-   @IsEnum(ChannelStatus)
-   @IsNotEmpty()
-   status: ChannelStatus;
+	@IsEnum(ChannelStatus)
+	@IsNotEmpty()
+	status: ChannelStatus = ChannelStatus.PUBLIC;
 
-   @IsString()
-   @IsOptional()
-   topic: string;
+	@IsString()
+	@IsOptional()
+	topic: string;
 
-   @IsString()
-   @IsNotEmpty()
-   owner: string;
+	@IsString()
+	@IsNotEmpty()
+	owner: string;
 }
