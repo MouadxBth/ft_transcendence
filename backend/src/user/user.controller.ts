@@ -16,22 +16,17 @@ export class UserController {
 	@ApiResponse({ status: 201, description: "User created successfully", type: User })
 	@ApiResponse({ status: 400, description: "Bad request" })
 	async create(@Body() createUserDto: CreateUserDto) {
-		return this.userService.create(createUserDto);
+		const { twoFactorAuthenticationSecret, ...result } =
+			await this.userService.create(createUserDto);
+		return result;
 	}
 
 	@Get()
 	@ApiOperation({ summary: "Fetch all users", description: "Used to fetch all Users" })
 	@ApiResponse({ status: 200, description: "Successful retrieval", type: Array<string> })
 	async findAll() {
-		return this.userService.findAll();
-	}
-
-	@Get("email/:id")
-	@ApiOperation({ summary: "Fetch User by email", description: "Used to fetch a User by email" })
-	@ApiResponse({ status: 200, description: "Successful retrieval", type: User })
-	@ApiResponse({ status: 404, description: "User does not exist" })
-	async findOneByEmail(@Param("id") id: string) {
-		return this.userService.findOneByEmail(id);
+		const collection = await this.userService.findAll();
+		return collection.map(({ twoFactorAuthenticationSecret, ...result }) => result);
 	}
 
 	@Get(":id")
@@ -42,7 +37,8 @@ export class UserController {
 	@ApiResponse({ status: 200, description: "Successful retrieval", type: User })
 	@ApiResponse({ status: 404, description: "User does not exist" })
 	async findOne(@Param("id") id: string) {
-		return this.userService.findOne(id);
+		const { twoFactorAuthenticationSecret, ...result } = await this.userService.findOne(id);
+		return result;
 	}
 
 	@Patch(":id")
@@ -53,7 +49,11 @@ export class UserController {
 	@ApiResponse({ status: 200, description: "Update successful", type: User })
 	@ApiResponse({ status: 404, description: "User does not exist" })
 	async update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
-		return this.userService.update(id, updateUserDto);
+		const { twoFactorAuthenticationSecret, ...result } = await this.userService.update(
+			id,
+			updateUserDto
+		);
+		return result;
 	}
 
 	@Delete(":id")
@@ -64,6 +64,7 @@ export class UserController {
 	@ApiResponse({ status: 200, description: "Successful deletion", type: User })
 	@ApiResponse({ status: 404, description: "User does not exist" })
 	async remove(@Param("id") id: string) {
-		return this.userService.remove(id);
+		const { twoFactorAuthenticationSecret, ...result } = await this.userService.remove(id);
+		return result;
 	}
 }
