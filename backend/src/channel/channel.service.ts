@@ -1,125 +1,131 @@
-import { HttpException, HttpStatus, Injectable} from '@nestjs/common';
-import { CreateChannelDto } from './dto/create-channel.dto';
-import { UpdateChannelDto } from './dto/update-channel.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { Channel } from './entities/channel.entity';
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { CreateChannelDto } from "./dto/create-channel.dto";
+import { UpdateChannelDto } from "./dto/update-channel.dto";
+import { PrismaService } from "src/prisma/prisma.service";
 import * as bcrypt from "bcrypt";
+import { ChannelStatus } from "./enums/channel-status.enum";
 
 @Injectable()
 export class ChannelService {
-  constructor (private readonly prisma: PrismaService) {}
+	constructor(private readonly prisma: PrismaService) {}
 
-  async create(createChannelDto: CreateChannelDto):Promise<Channel> {
-    const channelResult =  await this.prisma.channel.findUnique({where: {name: createChannelDto.name}});
-    const userResult = await this.prisma.user.findUnique({where: {username: createChannelDto.owner}});
+	async create(createChannelDto: CreateChannelDto) {
+		const channelResult = await this.prisma.channel.findUnique({
+			where: { name: createChannelDto.name },
+		});
 
-    if (channelResult)
-    {
-      throw new HttpException("channelname already taken!", HttpStatus.BAD_REQUEST);
-    }
-    if (!userResult)
-    {
-      throw new HttpException("username doesn't exist!", HttpStatus.BAD_REQUEST);
-    }
-    if (createChannelDto.status == "PROTECTED" && !createChannelDto.password)
-    {
-      throw new HttpException("password must be set for protected channels.", HttpStatus.BAD_REQUEST);
-    }
-    if (createChannelDto.status == "PUBLIC" && createChannelDto.password)
-    {
-      throw new HttpException("no password is required for public channels.", HttpStatus.BAD_REQUEST);
-    }
-    const {owner, password,  ...otherInfo} = createChannelDto;
+		if (channelResult)
+			throw new HttpException("Channel name already taken!", HttpStatus.BAD_REQUEST);
+		const userResult = await this.prisma.user.findUnique({
+			where: { username: createChannelDto.owner },
+		});
 
-     let passhash;
-     if (password)
-     {
-      passhash = await bcrypt.hash(password, 10);
-     }
+		if (!userResult) throw new HttpException("User name doesn't exist!", HttpStatus.BAD_REQUEST);
 
-    return this.prisma.channel.create({data: {
-      ...otherInfo,
-      password: passhash,
-      owner: {connect : {
-        username: createChannelDto.owner, 
-      }}
-    }})
-  }
+		if (
+			createChannelDto.status === ChannelStatus.PROTECTED &&
+			(!createChannelDto.password || !createChannelDto.password.length)
+		)
+			throw new HttpException(
+				"Password must be set for protected channels.",
+				HttpStatus.BAD_REQUEST
+			);
 
-   async findAll():Promise<Channel[]> {
-    return await this.prisma.channel.findMany();
-  }
+		if (
+			createChannelDto.status === ChannelStatus.PUBLIC &&
+			(createChannelDto.password || createChannelDto.password.length)
+		)
+			throw new HttpException(
+				"No password is required for public channels.",
+				HttpStatus.BAD_REQUEST
+			);
+		const { password, ...otherInfo } = createChannelDto;
 
-  async findOne(id: string):Promise<Channel> {
-     const channelResult = await this.prisma.channel.findUnique({where: {name: id}})
+		return this.prisma.channel.create({
+			data: {
+				...otherInfo,
+				password: password ? await bcrypt.hash(password, 10) : undefined,
+				owner: {
+					connect: {
+						username: createChannelDto.owner,
+					},
+				},
+			},
+		});
+	}
 
-     if (!channelResult)
-     {
-      throw new HttpException("no such channel with that name!", HttpStatus.BAD_REQUEST)
-     }
+	async findAll() {
+		return await this.prisma.channel.findMany();
+	}
 
-     return channelResult;
-  }
+	async findOne(id: string) {
+		const channelResult = await this.prisma.channel.findUnique({ where: { name: id } });
 
-  async update(id: string, updateChannelDto: UpdateChannelDto):Promise<Channel> {
-    let channelResult = await this.prisma.channel.findUnique({where: {name: id}});
+		if (!channelResult)
+			throw new HttpException("No such channel with that name!", HttpStatus.BAD_REQUEST);
 
-     if (!channelResult)
-     {
-      throw new HttpException("no such channel with that name!", HttpStatus.BAD_REQUEST)
-     }
+		return channelResult;
+	}
 
-     if (!updateChannelDto.owner || updateChannelDto.owner != channelResult.ownerId)
-     {
-      throw new HttpException("incorrect owner of the channel!", HttpStatus.BAD_REQUEST)
-     }
-    
-    if (updateChannelDto.status == "PROTECTED" && !updateChannelDto.password)
-    {
-      throw new HttpException("password must be set for protected channels.", HttpStatus.BAD_REQUEST);
-    }
-    if (channelResult.status == "PUBLIC" && updateChannelDto.password)
-    {
-      throw new HttpException("no password is required for public channels.", HttpStatus.BAD_REQUEST);
-    }
-    if (updateChannelDto.name)
-    {
-      channelResult = await this.prisma.channel.findUnique({where: {name: updateChannelDto.name}});
+	async update(id: string, updateChannelDto: UpdateChannelDto) {
+		const channelResult = await this.prisma.channel.findUnique({ where: { name: id } });
 
-      if (channelResult)
-      {
-        throw new HttpException("channelname already taken!", HttpStatus.BAD_REQUEST);
-      }
-    }
-    const {owner, password, ...otherInfo} = updateChannelDto;
+		if (!channelResult)
+			throw new HttpException("No such channel with that name!", HttpStatus.BAD_REQUEST);
 
-     let passhash;
-     if (password)
-     {
-      passhash = await bcrypt.hash(password, 10);
-     }
+		//  if (!updateChannelDto.owner || updateChannelDto.owner != channelResult.ownerId)
+		//   throw new HttpException("Incorrect owner of the channel!", HttpStatus.BAD_REQUEST)
 
-     return await this.prisma.channel.update({
-      where: {name: id},
-      data: {
-        ...otherInfo,
-        password: passhash,
-        owner: {connect: {
-          username: owner, 
-        }
-      },
-     }})
-    }
+		if (
+			updateChannelDto.status === ChannelStatus.PROTECTED &&
+			(!updateChannelDto.password || !updateChannelDto.password.length)
+		)
+			throw new HttpException(
+				"Password must be set for protected channels.",
+				HttpStatus.BAD_REQUEST
+			);
 
-  async remove(id: string):Promise<Channel> {
-    // add ownership checks
-    const channelResult = await this.prisma.channel.findUnique({where: {name: id}});
+		if (
+			channelResult.status === ChannelStatus.PUBLIC &&
+			(!updateChannelDto.status || updateChannelDto.status === ChannelStatus.PUBLIC) &&
+			updateChannelDto.password
+		)
+			throw new HttpException(
+				"No password is required for public channels.",
+				HttpStatus.BAD_REQUEST
+			);
 
-     if (!channelResult)
-     {
-      throw new HttpException("no such channel with that name!", HttpStatus.BAD_REQUEST)
-     }
+		if (updateChannelDto.name) {
+			const ownedChannel = await this.prisma.channel.findUnique({
+				where: { name: updateChannelDto.name },
+			});
 
-     return await this.prisma.channel.delete({where: {name: id}});
-  }
+			if (ownedChannel)
+				throw new HttpException("Channel name already taken!", HttpStatus.BAD_REQUEST);
+		}
+		const { password, ...otherInfo } = updateChannelDto;
+
+		return await this.prisma.channel.update({
+			where: { name: id },
+			data: {
+				...otherInfo,
+				password: password ? await bcrypt.hash(password, 10) : undefined,
+				owner: {
+					connect: {
+						username: channelResult.ownerId,
+					},
+				},
+			},
+		});
+	}
+
+	async remove(id: string) {
+		// add ownership checks
+		const channelResult = await this.prisma.channel.findUnique({ where: { name: id } });
+
+		if (!channelResult)
+			throw new HttpException("No such channel with that name!", HttpStatus.BAD_REQUEST);
+
+		return await this.prisma.channel.delete({ where: { name: id } });
+	}
 }
