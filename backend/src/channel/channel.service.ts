@@ -16,11 +16,12 @@ export class ChannelService {
 
 		if (channelResult)
 			throw new HttpException("Channel name already taken!", HttpStatus.BAD_REQUEST);
-		const userResult = await this.prisma.user.findUnique({
-			where: { username: createChannelDto.owner },
-		});
 
-		if (!userResult) throw new HttpException("User name doesn't exist!", HttpStatus.BAD_REQUEST);
+		// const userResult = await this.prisma.user.findUnique({
+		// 	where: { username: createChannelDto.owner },
+		// });
+
+		// if (!userResult) throw new HttpException("User name doesn't exist!", HttpStatus.BAD_REQUEST);
 
 		if (
 			createChannelDto.status === ChannelStatus.PROTECTED &&
