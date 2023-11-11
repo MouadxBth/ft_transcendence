@@ -5,26 +5,26 @@ import { ApiProperty } from "@nestjs/swagger";
 export class CreateChannelDto {
 	@IsString()
 	@IsNotEmpty()
-	@ApiProperty({example: "channel"})
+	@ApiProperty({ example: "channel" })
 	name: string;
 
 	@IsString()
 	@IsOptional()
-	@ApiProperty({example: "password"})
+	@ApiProperty({ example: "password" })
 	password: string;
 
 	@IsEnum(ChannelStatus)
 	@IsNotEmpty()
-	@ApiProperty({enum: ChannelStatus, example: ChannelStatus.PRIVATE})
+	@ApiProperty({ enum: ChannelStatus, example: ChannelStatus.PRIVATE })
 	status: ChannelStatus;
 
 	@IsString()
 	@IsOptional()
-	@ApiProperty({example: "a channel's topic"})
+	@ApiProperty({ example: "a channel's topic" })
 	topic: string;
 
 	@IsString()
 	@IsNotEmpty()
-	@ApiProperty({example: "owner"})
+	@ApiProperty({ example: "owner" })
 	owner: string;
 }
