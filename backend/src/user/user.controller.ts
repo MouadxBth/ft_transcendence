@@ -21,7 +21,7 @@ export class UserController {
 
 	@Get()
 	@ApiOperation({ summary: "Fetch all users", description: "Used to fetch all Users" })
-	@ApiResponse({ status: 200, description: "Successful retrieval", type: Array<string> })
+	@ApiResponse({ status: 200, description: "Successful retrieval", type: Array<User> })
 	async findAll() {
 		return this.userService.findAll();
 	}

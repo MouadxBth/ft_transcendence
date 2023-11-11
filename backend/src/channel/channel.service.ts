@@ -85,9 +85,7 @@ export class ChannelService {
 				HttpStatus.BAD_REQUEST
 			);
 
-		if (
-			channelResult.status === ChannelStatus.PUBLIC &&
-			(!updateChannelDto.status || updateChannelDto.status === ChannelStatus.PUBLIC) &&
+		if ( (!updateChannelDto.status || updateChannelDto.status === ChannelStatus.PUBLIC) &&
 			updateChannelDto.password
 		)
 			throw new HttpException(
