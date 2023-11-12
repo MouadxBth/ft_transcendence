@@ -15,7 +15,7 @@ export class CreateChannelDto {
 	password: string;
 
 	@IsEnum(ChannelStatus)
-	@IsNotEmpty()
+	@IsOptional()
 	@ApiProperty({ enum: ChannelStatus, example: ChannelStatus.PRIVATE })
 	status: ChannelStatus;
 
