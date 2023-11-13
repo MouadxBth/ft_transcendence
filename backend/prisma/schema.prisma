@@ -23,6 +23,7 @@ enum MatchType {
 
 model User {
   username   String @id
+	password	String?
 
 	firstTime	Boolean @default(true)
 
