@@ -44,7 +44,7 @@ export class UserService {
 			throw new HttpException("User with that username doesnt exist!", HttpStatus.NOT_FOUND);
 		}
 
-		if (usernameValue !== updateUserDto.username) {
+		if (updateUserDto.username && usernameValue !== updateUserDto.username) {
 			const check = await this.prisma.user.findUnique({
 				where: { username: updateUserDto.username },
 			});
