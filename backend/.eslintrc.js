@@ -29,8 +29,8 @@ module.exports = {
 		"@typescript-eslint/no-unused-vars": [
 			"error",
 			{
-				varsIgnorePattern: "^_|twoFactorAuthenticationSecret",
-				argsIgnorePattern: "^_|twoFactorAuthenticationSecret",
+				varsIgnorePattern: "^_|twoFactorAuthenticationSecret|password",
+				argsIgnorePattern: "^_|twoFactorAuthenticationSecret|password",
 			},
 		],
 		"linebreak-style": ["error", "unix"],
