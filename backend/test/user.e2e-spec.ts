@@ -5,6 +5,7 @@ import { DeepMocked, createMock } from "@golevelup/ts-jest";
 import { UserModule } from "src/user/user.module";
 import { PrismaService } from "src/prisma/prisma.service";
 import { User } from "@prisma/client";
+import { UpdateUserDto } from "src/user/dto/update-user.dto";
 
 describe("UserController (e2e)", () => {
 	let app: INestApplication;
@@ -14,7 +15,7 @@ describe("UserController (e2e)", () => {
 		username: "mbouthai",
 		firstName: "Mouad",
 		lastName: "Bouthaich",
-		avatar: "aatrox.jpeg",
+		avatar: "https://images.com/aatrox.jpeg",
 	} as User;
 
 	beforeEach(async () => {
@@ -42,13 +43,15 @@ describe("UserController (e2e)", () => {
 		it("should create a new user", () => {
 			const payload = {
 				username: "mbouthai",
+				password: "mbouthai",
 				firstName: "Mouad",
 				lastName: "Bouthaich",
-				avatar: "avatar",
+				avatar: "https://images.com/aatrox.jpeg",
 			};
 
 			prisma.user.findUnique = jest.fn().mockResolvedValueOnce(null);
 			prisma.user.create = jest.fn().mockResolvedValueOnce(user);
+
 			return request(app.getHttpServer())
 				.post("/user")
 				.send(payload)
@@ -59,9 +62,10 @@ describe("UserController (e2e)", () => {
 		it("should throw an exception saying the username is taken", () => {
 			const payload = {
 				username: "mbouthai",
+				password: "mbouthai",
 				firstName: "Mouad",
 				lastName: "Bouthaich",
-				avatar: "avatar",
+				avatar: "https://images.com/aatrox.jpeg",
 			};
 
 			prisma.user.findUnique = jest.fn().mockResolvedValueOnce(user);
@@ -72,7 +76,7 @@ describe("UserController (e2e)", () => {
 				.expect({ statusCode: HttpStatus.BAD_REQUEST, message: "Username already taken!" });
 		});
 
-		it("should throw an exception saying bad request", () => {
+		it("should throw an exception saying bad request because of the username", () => {
 			// Arrange
 			const payload = {};
 
@@ -82,6 +86,8 @@ describe("UserController (e2e)", () => {
 				.send(payload)
 				.expect({
 					message: [
+						"Username cannot contain whitespaces",
+						"Username must be between 3 and 20 characters",
 						"username should not be empty",
 						"username must be a string",
 					],
@@ -218,15 +224,88 @@ describe("UserController (e2e)", () => {
 			prisma.user.findUnique = jest.fn().mockResolvedValue(user);
 
 			//act
+			return request(app.getHttpServer()).patch(`/user/${username}`).send(usernameUpdate).expect({
+				statusCode: HttpStatus.BAD_REQUEST,
+				message: "User with that username already exists!",
+			});
+		});
+
+		it("should throw an exception saying bad request because of the password", () => {
+			// Arrange
+			const payload = {
+				password: "",
+			} as UpdateUserDto;
+
+			// act, assert
 			return request(app.getHttpServer())
 				.patch(`/user/${username}`)
-				.send(usernameUpdate)
+				.send(payload)
 				.expect({
+					message: [
+						"Password cannot contain whitespaces",
+						"Password must be between 8 and 30 characters",
+					],
+					error: "Bad Request",
 					statusCode: HttpStatus.BAD_REQUEST,
-					message: "User with that username already exists!",
 				});
 		});
 
+		it("should throw an exception saying bad request because of the first name", () => {
+			// Arrange
+			const payload = {
+				firstName: "",
+			} as UpdateUserDto;
+
+			// act, assert
+			return request(app.getHttpServer())
+				.patch(`/user/${username}`)
+				.send(payload)
+				.expect({
+					message: [
+						"First name cannot contain whitespaces",
+						"First name must be between 3 and 30 characters",
+					],
+					error: "Bad Request",
+					statusCode: HttpStatus.BAD_REQUEST,
+				});
+		});
+
+		it("should throw an exception saying bad request because of the last name", () => {
+			// Arrange
+			const payload = {
+				lastName: "",
+			} as UpdateUserDto;
+
+			// act, assert
+			return request(app.getHttpServer())
+				.patch(`/user/${username}`)
+				.send(payload)
+				.expect({
+					message: [
+						"Last name cannot contain whitespaces",
+						"Last name must be between 3 and 30 characters",
+					],
+					error: "Bad Request",
+					statusCode: HttpStatus.BAD_REQUEST,
+				});
+		});
+
+		it("should throw an exception saying bad request because of the avatar", () => {
+			// Arrange
+			const payload = {
+				avatar: "",
+			} as UpdateUserDto;
+
+			// act, assert
+			return request(app.getHttpServer())
+				.patch(`/user/${username}`)
+				.send(payload)
+				.expect({
+					message: ["Invalid avatar URL format"],
+					error: "Bad Request",
+					statusCode: HttpStatus.BAD_REQUEST,
+				});
+		});
 	});
 
 	describe("/user/:id (DELETE)", () => {
