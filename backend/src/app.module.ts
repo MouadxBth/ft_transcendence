@@ -7,6 +7,7 @@ import { RedisModule } from "./redis/redis.module";
 import { CacheModule } from "@nestjs/cache-manager";
 import { ioRedisStore } from "@tirke/node-cache-manager-ioredis";
 import { RedisClient } from "./redis/redis.provider";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
 	imports: [
@@ -31,6 +32,7 @@ import { RedisClient } from "./redis/redis.provider";
 				};
 			},
 		}),
+		AuthModule,
 	],
 })
 export class AppModule {}
