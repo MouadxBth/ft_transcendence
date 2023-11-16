@@ -52,6 +52,6 @@ export class AuthController {
 			"If it failed to destroy the current authenticated user's session, an Internal Server error will be returned",
 	})
 	logout(@Req() request: Request, @Res({ passthrough: true }) response: Response): any {
-		return this.authService.invalidateSession(request, response);
+		return this.authService.logout(request, response);
 	}
 }
