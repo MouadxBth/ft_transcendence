@@ -12,12 +12,12 @@ export class LocalService {
 
 		const { password, twoFactorAuthenticationSecret, ...result } = user;
 
-		if (!password) throw new HttpException("Invalid credentials", HttpStatus.UNAUTHORIZED);
+		if (!password) throw new HttpException("Invalid credentials!", HttpStatus.UNAUTHORIZED);
 
 		const comparison = await bcrypt.compare(pass, password);
 
 		if (!comparison) {
-			throw new HttpException("Invalid credentials", HttpStatus.UNAUTHORIZED);
+			throw new HttpException("Invalid credentials!", HttpStatus.UNAUTHORIZED);
 		}
 
 		return result;
@@ -29,8 +29,11 @@ export class LocalService {
 				"Invalid credentials, a password is required!",
 				HttpStatus.BAD_REQUEST
 			);
-		dto.password = await this.hash(dto.password, 10);
-		return await this.userService.create(dto);
+		const createUserDto = {
+			...dto,
+			password: await this.hash(dto.password, 10),
+		} as CreateUserDto;
+		return await this.userService.create(createUserDto);
 	}
 
 	async hash(password: string, rounds: number) {
