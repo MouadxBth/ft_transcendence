@@ -17,11 +17,15 @@ import { GithubController } from "./github/github.controller";
 import { GithubService } from "./github/github.service";
 import { GithubGuard } from "./github/guards/github.guard";
 import { GithubStrategy } from "./github/strategies/github.strategy";
+import { GoogleController } from "./google/google.controller";
+import { GoogleService } from "./google/google.service";
+import { GoogleGuard } from "./google/guards/google.guard";
+import { GoogleStrategy } from "./google/strategies/google.strategy";
 
-const controllers = [LocalController, FortyTwoController, GithubController];
-const services = [LocalService, FortyTwoService, GithubService];
-const guards = [AuthenticatedGuard, LocalGuard, FortyTwoGuard, GithubGuard];
-const strategies = [LocalStrategy, FortyTwoStrategy, GithubStrategy];
+const controllers = [LocalController, FortyTwoController, GithubController, GoogleController];
+const services = [LocalService, FortyTwoService, GithubService, GoogleService];
+const guards = [AuthenticatedGuard, LocalGuard, FortyTwoGuard, GithubGuard, GoogleGuard];
+const strategies = [LocalStrategy, FortyTwoStrategy, GithubStrategy, GoogleStrategy];
 
 @Module({
 	imports: [
