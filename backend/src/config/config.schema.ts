@@ -13,4 +13,12 @@ export const ConfigSchema = Joi.object({
 	SESSION_NAME: Joi.string().default("mawi"),
 	SESSION_SECRET: Joi.string().required(),
 	SESSION_COOKIE_AGE: Joi.number().default(1e3 * 60 * 15),
+
+	FORTY_TWO_CLIENT_ID: Joi.string().required(),
+	FORTY_TWO_CLIENT_SECRET: Joi.string().required(),
+	FORTY_TWO_CLIENT_CALLBACK_URL: Joi.string()
+		.uri({
+			scheme: ["http", "https"],
+		})
+		.required(),
 }).unknown(false);
