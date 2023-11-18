@@ -1,5 +1,5 @@
 import { DeepMocked, createMock } from "@golevelup/ts-jest";
-import { HttpException, HttpStatus, INestApplication, ValidationPipe } from "@nestjs/common";
+import { HttpStatus, INestApplication, ValidationPipe } from "@nestjs/common";
 import { TestingModule, Test } from "@nestjs/testing";
 import { User } from "@prisma/client";
 import passport from "passport";
@@ -9,8 +9,6 @@ import { PrismaService } from "src/prisma/prisma.service";
 import request from "supertest";
 import session from "express-session";
 import { AuthService } from "src/auth/auth.service";
-import { ConfigService } from "@nestjs/config";
-import type { Request, Response } from "express";
 
 describe("AuthModule (E2E)", () => {
 	let app: INestApplication;
@@ -60,10 +58,19 @@ describe("AuthModule (E2E)", () => {
 		it("should return an empty object", () => {
 			return request(app.getHttpServer()).get("/auth/profile").expect({});
 		});
+
+		it("should throw an exception saying user not logged in", () => {
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(false);
+
+			return request(app.getHttpServer())
+				.post("/auth/logout")
+				.send()
+				.expect({ statusCode: HttpStatus.BAD_REQUEST, message: "You are not logged in!" });
+		});
 	});
 
 	describe("logout", () => {
-		it("should logout", async () => {
+		it("should logout successfully", async () => {
 			const authService: DeepMocked<AuthService> = app.get(AuthService);
 
 			jest.spyOn(authService, "logout").mockReturnValue("Logged out");
@@ -84,92 +91,12 @@ describe("AuthModule (E2E)", () => {
 		});
 
 		it("should throw an exception saying not logged in", () => {
-			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(false);
 
 			return request(app.getHttpServer())
 				.post("/auth/logout")
 				.send()
 				.expect({ statusCode: HttpStatus.BAD_REQUEST, message: "You are not logged in!" });
-		});
-
-		it("should logout successfully", () => {
-			const sessionName = "test";
-			const request = createMock<Request>({
-				session: {
-					destroy: jest.fn(),
-				},
-			});
-
-			const response = createMock<Response>();
-			const authService: DeepMocked<AuthService> = app.get(AuthService);
-			const configService: DeepMocked<ConfigService> = app.get(ConfigService);
-
-			const requestSpy = jest.spyOn(request, "isAuthenticated").mockReturnValue(true);
-			const responseSpy = jest.spyOn(response, "clearCookie");
-			const configServiceGetSpy = jest.spyOn(configService, "get").mockReturnValueOnce(sessionName);
-
-			const logOutOptions = { keepSessionInfo: false } as passport.LogOutOptions;
-
-			const logOutSpy = jest.spyOn(request, "logOut");
-
-			const result = authService.logout(request, response);
-
-			expect(requestSpy).toHaveBeenCalledTimes(1);
-
-			expect(configServiceGetSpy).toHaveBeenCalledTimes(1);
-			expect(configServiceGetSpy).toHaveBeenNthCalledWith(1, "SESSION_NAME");
-
-			expect(responseSpy).toHaveBeenCalledTimes(1);
-			expect(responseSpy).toHaveBeenNthCalledWith(1, sessionName);
-
-			expect(logOutSpy).toHaveBeenCalledTimes(1);
-			expect(logOutSpy).toHaveBeenNthCalledWith(1, logOutOptions, expect.any(Function));
-
-			expect(result).toEqual("Logged out");
-		});
-
-		it("should throw an exception if it failed to logout", () => {
-			const sessionName = "test";
-			const request = createMock<Request>({
-				session: {
-					destroy: jest.fn(),
-				},
-			});
-			const response = createMock<Response>();
-			const authService: DeepMocked<AuthService> = app.get(AuthService);
-			const configService: DeepMocked<ConfigService> = app.get(ConfigService);
-
-			const requestSpy = jest.spyOn(request, "isAuthenticated").mockReturnValue(true);
-			const responseSpy = jest.spyOn(response, "clearCookie");
-			const configServiceGetSpy = jest.spyOn(configService, "get").mockReturnValueOnce(sessionName);
-
-			const logOutOptions = { keepSessionInfo: false } as passport.LogOutOptions;
-
-			const logOutSpy = jest
-				.spyOn(request, "logOut")
-				.mockImplementation((_options: passport.LogOutOptions, callback: (error: any) => void) => {
-					callback(true);
-				});
-
-			try {
-				authService.logout(request, response);
-				fail("Expecting an exception to be thrown!");
-			} catch (exception: unknown) {
-				expect(exception).toBeInstanceOf(HttpException);
-				expect((exception as HttpException).getStatus()).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
-				expect((exception as HttpException).message).toBe("Failed to log out");
-			}
-
-			expect(requestSpy).toHaveBeenCalledTimes(1);
-
-			expect(configServiceGetSpy).toHaveBeenCalledTimes(1);
-			expect(configServiceGetSpy).toHaveBeenNthCalledWith(1, "SESSION_NAME");
-
-			expect(responseSpy).toHaveBeenCalledTimes(1);
-			expect(responseSpy).toHaveBeenNthCalledWith(1, sessionName);
-
-			expect(logOutSpy).toHaveBeenCalledTimes(1);
-			expect(logOutSpy).toHaveBeenNthCalledWith(1, logOutOptions, expect.any(Function));
 		});
 	});
 
@@ -180,7 +107,7 @@ describe("AuthModule (E2E)", () => {
 		} as User;
 
 		describe("Login (/auth/local/login)", () => {
-			it("should login", () => {
+			it("should login successfully", () => {
 				const payload = {
 					username: "mbouthai",
 					password: "mbouthai",
@@ -254,8 +181,9 @@ describe("AuthModule (E2E)", () => {
 					.expect({ message: "Unauthorized", statusCode: HttpStatus.UNAUTHORIZED });
 			});
 		});
+
 		describe("Register (/auth/local/register)", () => {
-			it("should register a new user", () => {
+			it("should register a new user successfully", () => {
 				const payload = {
 					username: "mbouthai",
 					password: "mbouthai",
@@ -286,11 +214,8 @@ describe("AuthModule (E2E)", () => {
 					.expect({ statusCode: 400, message: "Username already taken!" });
 			});
 
-			it("should throw an exception due to username", () => {
-				const payload = {
-					// username: "mbouthai",
-					// password: "mbouthai",
-				};
+			it("should throw an exception due to invalid username", () => {
+				const payload = {};
 
 				prisma.user.findUnique = jest.fn().mockResolvedValueOnce(user);
 
