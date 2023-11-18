@@ -13,11 +13,15 @@ import { FortyTwoController } from "./forty-two/forty-two.controller";
 import { FortyTwoService } from "./forty-two/forty-two.service";
 import { FortyTwoGuard } from "./forty-two/guards/forty-two.guard";
 import { FortyTwoStrategy } from "./forty-two/strategies/forty-two.strategy";
+import { GithubController } from "./github/github.controller";
+import { GithubService } from "./github/github.service";
+import { GithubGuard } from "./github/guards/github.guard";
+import { GithubStrategy } from "./github/strategies/github.strategy";
 
-const controllers = [LocalController, FortyTwoController];
-const services = [LocalService, FortyTwoService];
-const guards = [AuthenticatedGuard, LocalGuard, FortyTwoGuard];
-const strategies = [LocalStrategy, FortyTwoStrategy];
+const controllers = [LocalController, FortyTwoController, GithubController];
+const services = [LocalService, FortyTwoService, GithubService];
+const guards = [AuthenticatedGuard, LocalGuard, FortyTwoGuard, GithubGuard];
+const strategies = [LocalStrategy, FortyTwoStrategy, GithubStrategy];
 
 @Module({
 	imports: [
