@@ -9,11 +9,15 @@ import { LocalGuard } from "./local/guards/local.guard";
 import { LocalService } from "./local/local.service";
 import { LocalStrategy } from "./local/strategies/local.strategy";
 import { SessionSerializer } from "./utilities/session.serializer";
+import { FortyTwoController } from "./forty-two/forty-two.controller";
+import { FortyTwoService } from "./forty-two/forty-two.service";
+import { FortyTwoGuard } from "./forty-two/guards/forty-two.guard";
+import { FortyTwoStrategy } from "./forty-two/strategies/forty-two.strategy";
 
-const controllers = [LocalController];
-const services = [LocalService];
-const guards = [AuthenticatedGuard, LocalGuard];
-const strategies = [LocalStrategy];
+const controllers = [LocalController, FortyTwoController];
+const services = [LocalService, FortyTwoService];
+const guards = [AuthenticatedGuard, LocalGuard, FortyTwoGuard];
+const strategies = [LocalStrategy, FortyTwoStrategy];
 
 @Module({
 	imports: [
