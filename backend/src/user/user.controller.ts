@@ -1,12 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { User } from "./entities/user.entity";
+import { AuthenticatedGuard } from "src/auth/guards/authenticated.guard";
 
 @ApiTags("User")
 @Controller("user")
+@UseGuards(AuthenticatedGuard)
 export class UserController {
 	constructor(private readonly userService: UserService) {}
 

@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TestingModule, Test } from "@nestjs/testing";
 import { Cache } from "joi";
 import { AppModule } from "src/app.module";
+import { AuthModule } from "src/auth/auth.module";
 import { PrismaModule } from "src/prisma/prisma.module";
 import { PrismaService } from "src/prisma/prisma.service";
 import { RedisModule } from "src/redis/redis.module";
@@ -21,7 +22,7 @@ describe("AppModule (e2e)", () => {
 			.overrideProvider("REDIS_CLIENT")
 			.useValue(createMock<RedisClient>())
 			.overrideProvider(PrismaService)
-			.useValue(createMock)
+			.useValue(createMock<PrismaService>())
 			.useMocker(createMock)
 			.compile();
 
@@ -49,6 +50,16 @@ describe("AppModule (e2e)", () => {
 		expect(userModule).toBeDefined();
 	});
 
+	it("should have a CacheModule", () => {
+		const cacheModule = app.get<Cache>(CACHE_MANAGER);
+		expect(cacheModule).toBeDefined();
+	});
+
+	it("should have an AuthModule", () => {
+		const authModule = app.get(AuthModule);
+		expect(authModule).toBeDefined();
+	});
+
 	describe("ConfigModule", () => {
 		it("should be defined", () => {
 			const configModule = app.get(ConfigModule);
@@ -68,10 +79,5 @@ describe("AppModule (e2e)", () => {
 			expect(value).toBeDefined();
 			expect(value?.length).toBeGreaterThan(0);
 		});
-	});
-
-	it("should have a CacheModule", () => {
-		const cacheModule = app.get<Cache>(CACHE_MANAGER);
-		expect(cacheModule).toBeDefined();
 	});
 });
