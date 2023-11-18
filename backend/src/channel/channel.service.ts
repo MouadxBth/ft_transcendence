@@ -17,11 +17,11 @@ export class ChannelService {
 		if (channelResult)
 			throw new HttpException("Channel name already taken!", HttpStatus.BAD_REQUEST);
 
-		// const userResult = await this.prisma.user.findUnique({
-		// 	where: { username: createChannelDto.owner },
-		// });
+		const userResult = await this.prisma.user.findUnique({
+			where: { username: createChannelDto.owner },
+		});
 
-		// if (!userResult) throw new HttpException("User name doesn't exist!", HttpStatus.BAD_REQUEST);
+		if (!userResult) throw new HttpException("User name doesn't exist!", HttpStatus.BAD_REQUEST);
 
 		if (
 			createChannelDto.status === ChannelStatus.PROTECTED &&
@@ -33,8 +33,7 @@ export class ChannelService {
 			);
 
 		if (
-			createChannelDto.status === ChannelStatus.PUBLIC &&
-			(createChannelDto.password || createChannelDto.password.length)
+			createChannelDto.status === ChannelStatus.PUBLIC && createChannelDto.password 
 		)
 			throw new HttpException(
 				"No password is required for public channels.",
@@ -112,7 +111,7 @@ export class ChannelService {
 				password: password ? await bcrypt.hash(password, 10) : undefined,
 				owner: {
 					connect: {
-						username: channelResult.ownerId,
+						username: updateChannelDto.owner,
 					},
 				},
 			},
