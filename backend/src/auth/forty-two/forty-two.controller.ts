@@ -1,9 +1,10 @@
 import { Controller, Get, Req, UseGuards } from "@nestjs/common";
 import { FortyTwoGuard } from "./guards/forty-two.guard";
 import { type Request } from "express";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { User } from "src/user/entities/user.entity";
 
+@ApiTags("Auth | 42")
 @Controller("auth/42")
 export class FortyTwoController {
 	@Get("login")

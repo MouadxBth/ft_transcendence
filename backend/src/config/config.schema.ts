@@ -29,4 +29,12 @@ export const ConfigSchema = Joi.object({
 			scheme: ["http", "https"],
 		})
 		.required(),
+
+	GOOGLE_CLIENT_ID: Joi.string().required(),
+	GOOGLE_CLIENT_SECRET: Joi.string().required(),
+	GOOGLE_CLIENT_CALLBACK_URL: Joi.string()
+		.uri({
+			scheme: ["http", "https"],
+		})
+		.required(),
 }).unknown(false);
