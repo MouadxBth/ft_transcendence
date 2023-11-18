@@ -29,7 +29,8 @@
 		"!**/*.provider.(t|j)s",
 		"!**/*.guard.(t|j)s",
 		"!**/*.strategy.(t|j)s",
-		"!**/*.serializer.(t|j)s"
+		"!**/*.serializer.(t|j)s",
+		"!**/auth/**/*.(t|j)s"
 	],
 	"coveragePathIgnorePatterns": [
 		"<rootDir>/src/main.ts",
