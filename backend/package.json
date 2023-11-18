@@ -59,7 +59,8 @@
     "passport-42": "^1.2.6",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@golevelup/ts-jest": "^0.4.0",
