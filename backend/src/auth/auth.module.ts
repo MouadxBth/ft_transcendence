@@ -21,9 +21,17 @@ import { GoogleController } from "./google/google.controller";
 import { GoogleService } from "./google/google.service";
 import { GoogleGuard } from "./google/guards/google.guard";
 import { GoogleStrategy } from "./google/strategies/google.strategy";
+import { TwoFactorController } from "./two-factor/two-factor.controller";
+import { TwoFactorService } from "./two-factor/two-factor.service";
 
-const controllers = [LocalController, FortyTwoController, GithubController, GoogleController];
-const services = [LocalService, FortyTwoService, GithubService, GoogleService];
+const controllers = [
+	LocalController,
+	FortyTwoController,
+	GithubController,
+	GoogleController,
+	TwoFactorController,
+];
+const services = [LocalService, FortyTwoService, GithubService, GoogleService, TwoFactorService];
 const guards = [AuthenticatedGuard, LocalGuard, FortyTwoGuard, GithubGuard, GoogleGuard];
 const strategies = [LocalStrategy, FortyTwoStrategy, GithubStrategy, GoogleStrategy];
 
