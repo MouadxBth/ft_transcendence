@@ -23,6 +23,7 @@ function configureExpressSession(app: INestApplication<any>) {
 
 	app.use(
 		session({
+			name: configService.get<string>("SESSION_NAME"),
 			secret: configService.get<string>("SESSION_SECRET")!,
 			resave: false,
 			saveUninitialized: false,

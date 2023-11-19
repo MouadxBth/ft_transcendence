@@ -5,30 +5,37 @@ import { DeepMocked, createMock } from "@golevelup/ts-jest";
 import { UserModule } from "src/user/user.module";
 import { PrismaService } from "src/prisma/prisma.service";
 import { User } from "@prisma/client";
+import { UpdateUserDto } from "src/user/dto/update-user.dto";
+import passport from "passport";
+import { AuthenticatedGuard } from "src/auth/guards/authenticated.guard";
 
 describe("UserController (e2e)", () => {
 	let app: INestApplication;
 	let prisma: DeepMocked<PrismaService>;
+	let guard: DeepMocked<AuthenticatedGuard>;
 
 	const user = {
 		username: "mbouthai",
-		password: "123456",
 		firstName: "Mouad",
 		lastName: "Bouthaich",
-		email: "mouad.bouthaich@gmail.com",
-		avatar: "aatrox.jpeg",
+		avatar: "https://images.com/aatrox.jpeg",
 	} as User;
 
 	beforeEach(async () => {
 		const moduleFixture: TestingModule = await Test.createTestingModule({
 			imports: [UserModule],
 		})
+			.overrideGuard(AuthenticatedGuard)
+			.useValue(createMock<AuthenticatedGuard>())
 			.useMocker(createMock)
 			.compile();
 
 		app = moduleFixture.createNestApplication();
+		app.use(passport.initialize());
 		app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
 		prisma = app.get(PrismaService);
+		guard = app.get(AuthenticatedGuard);
 		await app.init();
 	});
 
@@ -40,19 +47,29 @@ describe("UserController (e2e)", () => {
 		expect(app).toBeDefined();
 	});
 
+	it("(PrismaService) should be defined", () => {
+		expect(prisma).toBeDefined();
+	});
+
+	it("(AuthenticatedGuard) should be defined", () => {
+		expect(guard).toBeDefined();
+	});
+
 	describe("/user (POST)", () => {
 		it("should create a new user", () => {
 			const payload = {
 				username: "mbouthai",
-				password: "123456",
+				password: "mbouthai",
 				firstName: "Mouad",
 				lastName: "Bouthaich",
-				email: "mouad.bouthaich@gmail.com",
-				avatar: "avatar",
+				avatar: "https://images.com/aatrox.jpeg",
 			};
+
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
 
 			prisma.user.findUnique = jest.fn().mockResolvedValueOnce(null);
 			prisma.user.create = jest.fn().mockResolvedValueOnce(user);
+
 			return request(app.getHttpServer())
 				.post("/user")
 				.send(payload)
@@ -60,15 +77,34 @@ describe("UserController (e2e)", () => {
 				.expect(user);
 		});
 
+		it("should throw an exception saying the user is not authenticated", () => {
+			const payload = {
+				username: "mbouthai",
+				password: "mbouthai",
+				firstName: "Mouad",
+				lastName: "Bouthaich",
+				avatar: "https://images.com/aatrox.jpeg",
+			};
+
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(false);
+
+			return request(app.getHttpServer()).post("/user").send(payload).expect({
+				message: "Forbidden resource",
+				error: "Forbidden",
+				statusCode: HttpStatus.FORBIDDEN,
+			});
+		});
+
 		it("should throw an exception saying the username is taken", () => {
 			const payload = {
 				username: "mbouthai",
-				password: "123456",
+				password: "mbouthai",
 				firstName: "Mouad",
 				lastName: "Bouthaich",
-				email: "mouad.bouthaich@gmail.com",
-				avatar: "avatar",
+				avatar: "https://images.com/aatrox.jpeg",
 			};
+
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
 
 			prisma.user.findUnique = jest.fn().mockResolvedValueOnce(user);
 
@@ -78,34 +114,11 @@ describe("UserController (e2e)", () => {
 				.expect({ statusCode: HttpStatus.BAD_REQUEST, message: "Username already taken!" });
 		});
 
-		it("should throw an exception saying the email is taken", () => {
-			// Arrange
-			const payload = {
-				username: "mbouthai",
-				password: "123456",
-				firstName: "Mouad",
-				lastName: "Bouthaich",
-				email: "mouad.bouthaich@gmail.com",
-				avatar: "avatar",
-			};
-
-			prisma.user.findUnique = jest.fn().mockImplementation(async (data) => {
-				if (data.where.email === payload.email) return user;
-				return null;
-			});
-
-			prisma.user.create = jest.fn().mockResolvedValueOnce(user);
-
-			// act, assert
-			return request(app.getHttpServer())
-				.post("/user")
-				.send(payload)
-				.expect({ statusCode: HttpStatus.BAD_REQUEST, message: "Email is already in use!" });
-		});
-
-		it("should throw an exception saying bad request", () => {
+		it("should throw an exception saying bad request because of the username", () => {
 			// Arrange
 			const payload = {};
+
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
 
 			// act, assert
 			return request(app.getHttpServer())
@@ -113,12 +126,10 @@ describe("UserController (e2e)", () => {
 				.send(payload)
 				.expect({
 					message: [
+						"Username cannot contain whitespaces",
+						"Username must be between 3 and 20 characters",
 						"username should not be empty",
 						"username must be a string",
-						"password should not be empty",
-						"password must be a string",
-						"email should not be empty",
-						"email must be an email",
 					],
 					error: "Bad Request",
 					statusCode: HttpStatus.BAD_REQUEST,
@@ -130,45 +141,23 @@ describe("UserController (e2e)", () => {
 		it("should return an array of user", async () => {
 			// arrange
 			const users = [user];
+
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
+
 			prisma.user.findMany = jest.fn().mockResolvedValueOnce(users);
 
 			// act, assert
 			return request(app.getHttpServer()).get("/user").expect(HttpStatus.OK).expect(users);
 		});
-	});
 
-	describe("/user/email/:id (GET)", () => {
-		it("should find a user by a given email and return its data", async () => {
-			//arrange
-			const email = "mouad.bouthaich@outlook.com";
-			prisma.user.findUnique = jest.fn().mockImplementationOnce(async (data) => {
-				if (data.where.email === email) return user;
-				return null;
+		it("should throw an exception saying the user is not authenticated", () => {
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(false);
+
+			return request(app.getHttpServer()).get("/user").expect({
+				message: "Forbidden resource",
+				error: "Forbidden",
+				statusCode: HttpStatus.FORBIDDEN,
 			});
-
-			// act, assert
-			return request(app.getHttpServer())
-				.get(`/user/email/${email}`)
-				.expect(HttpStatus.OK)
-				.expect(user);
-		});
-
-		it("should throw a not found exception", async () => {
-			//arrange
-			const email = "unknown@gmail.com";
-			prisma.user.findUnique = jest.fn().mockImplementationOnce(async (data) => {
-				if (data.where.email === email) return null;
-				return user;
-			});
-
-			// act, assert
-			return request(app.getHttpServer())
-				.get(`/user/email/${email}`)
-				.expect(HttpStatus.NOT_FOUND)
-				.expect({
-					statusCode: HttpStatus.NOT_FOUND,
-					message: "User with that email doesnt exist!",
-				});
 		});
 	});
 
@@ -176,6 +165,9 @@ describe("UserController (e2e)", () => {
 		it("should find a user by a given username and return its data", async () => {
 			//arrange
 			const username = "mbouthai";
+
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
+
 			prisma.user.findUnique = jest.fn().mockImplementationOnce(async (data) => {
 				if (data.where.username === username) return user;
 				return null;
@@ -188,9 +180,24 @@ describe("UserController (e2e)", () => {
 				.expect(user);
 		});
 
+		it("should throw an exception saying the user is not authenticated", () => {
+			const username = "mbouthai";
+
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(false);
+
+			return request(app.getHttpServer()).get(`/user/${username}`).expect({
+				message: "Forbidden resource",
+				error: "Forbidden",
+				statusCode: HttpStatus.FORBIDDEN,
+			});
+		});
+
 		it("should throw a not found exception", async () => {
 			//arrange
 			const username = "mbouthai";
+
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
+
 			prisma.user.findUnique = jest.fn().mockImplementationOnce(async (data) => {
 				if (data.where.username === username) return null;
 				return user;
@@ -213,16 +220,18 @@ describe("UserController (e2e)", () => {
 		const payload = {
 			firstName: "tester",
 			lastName: "tester",
-			email: "tester@gmail.com",
 		};
 
 		it("should find a user by a given username and update its data", async () => {
 			//arrange
 
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
+
 			prisma.user.findUnique = jest.fn().mockImplementationOnce(async (data) => {
 				if (data.where.username === username) return user;
 				return null;
 			});
+
 			prisma.user.update = jest.fn().mockImplementationOnce(async (query) => {
 				return {
 					...user,
@@ -240,8 +249,21 @@ describe("UserController (e2e)", () => {
 				});
 		});
 
+		it("should throw an exception saying the user is not authenticated", async () => {
+			//arrange
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(false);
+
+			//act
+			return request(app.getHttpServer()).patch(`/user/${username}`).send(payload).expect({
+				message: "Forbidden resource",
+				error: "Forbidden",
+				statusCode: HttpStatus.FORBIDDEN,
+			});
+		});
+
 		it("should throw a not found exception", async () => {
 			//arrange
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
 
 			prisma.user.findUnique = jest.fn().mockImplementationOnce(async (data) => {
 				if (data.where.username === username) return null;
@@ -257,6 +279,7 @@ describe("UserController (e2e)", () => {
 
 		it("should not modify the user", async () => {
 			//arrange
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
 
 			prisma.user.findUnique = jest.fn().mockImplementationOnce(async (data) => {
 				if (data.where.username === username) return user;
@@ -275,6 +298,110 @@ describe("UserController (e2e)", () => {
 				.expect(HttpStatus.OK)
 				.expect(user);
 		});
+
+		it("should throw a username already exists exception", async () => {
+			//arrange
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
+
+			const usernameUpdate = {
+				username: "tester",
+				firstName: "tester",
+				lastName: "tester",
+			};
+
+			prisma.user.findUnique = jest.fn().mockResolvedValue(user);
+
+			//act
+			return request(app.getHttpServer()).patch(`/user/${username}`).send(usernameUpdate).expect({
+				statusCode: HttpStatus.BAD_REQUEST,
+				message: "User with that username already exists!",
+			});
+		});
+
+		it("should throw an exception saying bad request because of the password", () => {
+			// Arrange
+			const payload = {
+				password: "",
+			} as UpdateUserDto;
+
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
+
+			// act, assert
+			return request(app.getHttpServer())
+				.patch(`/user/${username}`)
+				.send(payload)
+				.expect({
+					message: [
+						"Password cannot contain whitespaces",
+						"Password must be between 8 and 30 characters",
+					],
+					error: "Bad Request",
+					statusCode: HttpStatus.BAD_REQUEST,
+				});
+		});
+
+		it("should throw an exception saying bad request because of the first name", () => {
+			// Arrange
+			const payload = {
+				firstName: "",
+			} as UpdateUserDto;
+
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
+
+			// act, assert
+			return request(app.getHttpServer())
+				.patch(`/user/${username}`)
+				.send(payload)
+				.expect({
+					message: [
+						"First name cannot contain whitespaces",
+						"First name must be between 3 and 30 characters",
+					],
+					error: "Bad Request",
+					statusCode: HttpStatus.BAD_REQUEST,
+				});
+		});
+
+		it("should throw an exception saying bad request because of the last name", () => {
+			// Arrange
+			const payload = {
+				lastName: "",
+			} as UpdateUserDto;
+
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
+
+			// act, assert
+			return request(app.getHttpServer())
+				.patch(`/user/${username}`)
+				.send(payload)
+				.expect({
+					message: [
+						"Last name cannot contain whitespaces",
+						"Last name must be between 3 and 30 characters",
+					],
+					error: "Bad Request",
+					statusCode: HttpStatus.BAD_REQUEST,
+				});
+		});
+
+		it("should throw an exception saying bad request because of the avatar", () => {
+			// Arrange
+			const payload = {
+				avatar: "",
+			} as UpdateUserDto;
+
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
+
+			// act, assert
+			return request(app.getHttpServer())
+				.patch(`/user/${username}`)
+				.send(payload)
+				.expect({
+					message: ["Invalid avatar URL format"],
+					error: "Bad Request",
+					statusCode: HttpStatus.BAD_REQUEST,
+				});
+		});
 	});
 
 	describe("/user/:id (DELETE)", () => {
@@ -282,6 +409,8 @@ describe("UserController (e2e)", () => {
 
 		it("should find a user by a given username and remove them", async () => {
 			// arrange
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
+
 			prisma.user.findUnique = jest.fn().mockImplementationOnce(async (data) => {
 				if (data.where.username === username) return user;
 				return null;
@@ -295,8 +424,22 @@ describe("UserController (e2e)", () => {
 				.expect(user);
 		});
 
+		it("should throw an exception saying the user is not authenticated", async () => {
+			//arrange
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(false);
+
+			//act
+			return request(app.getHttpServer()).delete(`/user/${username}`).expect({
+				message: "Forbidden resource",
+				error: "Forbidden",
+				statusCode: HttpStatus.FORBIDDEN,
+			});
+		});
+
 		it("should throw a not found exception", async () => {
 			// arrange
+			jest.spyOn(guard, "canActivate").mockResolvedValueOnce(true);
+
 			prisma.user.findUnique = jest.fn().mockImplementationOnce(async (data) => {
 				if (data.where.username === username) return null;
 				return user;

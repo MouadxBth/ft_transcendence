@@ -6,8 +6,35 @@ export const ConfigSchema = Joi.object({
 		.uri({
 			scheme: ["postgresql"],
 		}),
-	REDIS_HOST: Joi.string().default("redis"),
+
+	REDIS_HOST: Joi.string().default("localhost"),
 	REDIS_PORT: Joi.number().default(6379),
+
+	SESSION_NAME: Joi.string().default("mawi"),
 	SESSION_SECRET: Joi.string().required(),
 	SESSION_COOKIE_AGE: Joi.number().default(1e3 * 60 * 15),
+
+	FORTY_TWO_CLIENT_ID: Joi.string().required(),
+	FORTY_TWO_CLIENT_SECRET: Joi.string().required(),
+	FORTY_TWO_CLIENT_CALLBACK_URL: Joi.string()
+		.uri({
+			scheme: ["http", "https"],
+		})
+		.required(),
+
+	GITHUB_CLIENT_ID: Joi.string().required(),
+	GITHUB_CLIENT_SECRET: Joi.string().required(),
+	GITHUB_CLIENT_CALLBACK_URL: Joi.string()
+		.uri({
+			scheme: ["http", "https"],
+		})
+		.required(),
+
+	GOOGLE_CLIENT_ID: Joi.string().required(),
+	GOOGLE_CLIENT_SECRET: Joi.string().required(),
+	GOOGLE_CLIENT_CALLBACK_URL: Joi.string()
+		.uri({
+			scheme: ["http", "https"],
+		})
+		.required(),
 }).unknown(false);

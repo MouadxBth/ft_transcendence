@@ -12,11 +12,9 @@ describe("UserController", () => {
 
 	const user = {
 		username: "mbouthai",
-		password: "123456",
 		firstName: "Mouad",
 		lastName: "Bouthaich",
-		email: "mouad.bouthaich@gmail.com",
-		avatar: "aatrox.jpeg",
+		avatar: "https://images/aatrox.jpeg",
 	} as User;
 
 	beforeEach(async () => {
@@ -55,11 +53,9 @@ describe("UserController", () => {
 			// arrange
 			const createUserDto = {
 				username: "mbouthai",
-				password: "123456",
 				firstName: "Mouad",
 				lastName: "Bouthaich",
-				email: "mouad.bouthaich@gmail.com",
-				avatar: "avatar",
+				avatar: "https://images/aatrox.jpeg",
 			} as CreateUserDto;
 
 			service.create.mockResolvedValueOnce(user);
@@ -68,8 +64,9 @@ describe("UserController", () => {
 			const result = await controller.create(createUserDto);
 
 			// assert
-			expect(service.create).toBeCalled();
-			expect(service.create).toBeCalledWith(createUserDto);
+			expect(service.create).toHaveBeenCalledTimes(1);
+			expect(service.create).toHaveBeenCalledWith(createUserDto);
+			expect(service.create).toHaveBeenNthCalledWith(1, createUserDto);
 
 			expect(result).toEqual(user);
 		});
@@ -93,8 +90,11 @@ describe("UserController", () => {
 			const result = await controller.findAll();
 
 			// assert
-			expect(service.findAll).toBeCalled();
-			expect(result).toEqual(users);
+			expect(service.findAll).toHaveBeenCalledTimes(1);
+
+			expect(result.length).toBe(1);
+			expect(result).toContainEqual(user);
+			expect(result).toStrictEqual(users);
 		});
 	});
 
@@ -116,33 +116,9 @@ describe("UserController", () => {
 			const result = await controller.findOne(username);
 
 			// assert
-			expect(service.findOne).toBeCalled();
-			expect(service.findOne).toBeCalledWith(username);
-
-			expect(result).toEqual(user);
-		});
-	});
-
-	describe("findOneByEmail", () => {
-		beforeEach(() => {
-			jest.spyOn(service, "findOneByEmail");
-		});
-
-		it("should be defined", () => {
-			expect(service.findOneByEmail).toBeDefined();
-		});
-
-		it("should find a user by a given email and return his data", async () => {
-			// arrange
-			const email = "mouad.bouthaich@gmail.com";
-			service.findOneByEmail.mockResolvedValueOnce(user);
-
-			// act
-			const result = await controller.findOneByEmail(email);
-
-			// assert
-			expect(service.findOneByEmail).toBeCalled();
-			expect(service.findOneByEmail).toBeCalledWith(email);
+			expect(service.findOne).toHaveBeenCalledTimes(1);
+			expect(service.findOne).toHaveBeenCalledWith(username);
+			expect(service.findOne).toHaveBeenNthCalledWith(1, username);
 
 			expect(result).toEqual(user);
 		});
@@ -164,7 +140,6 @@ describe("UserController", () => {
 			const updateUserDto = {
 				firstname: "tester",
 				lastname: "tester",
-				email: "tester@gmail.com",
 			} as UpdateUserDto;
 
 			service.update.mockImplementationOnce(async (_, data: any) => {
@@ -177,8 +152,9 @@ describe("UserController", () => {
 			//act
 			const result = await controller.update(username, updateUserDto);
 
-			expect(service.update).toBeCalled();
-			expect(service.update).toBeCalledWith(username, updateUserDto);
+			expect(service.update).toHaveBeenCalledTimes(1);
+			expect(service.update).toHaveBeenCalledWith(username, updateUserDto);
+			expect(service.update).toHaveBeenNthCalledWith(1, username, updateUserDto);
 
 			expect(result).toEqual({ ...user, ...updateUserDto });
 		});
@@ -201,8 +177,9 @@ describe("UserController", () => {
 			//act
 			const result = await controller.remove(username);
 
-			expect(service.remove).toBeCalled();
-			expect(service.remove).toBeCalledWith(username);
+			expect(service.remove).toHaveBeenCalledTimes(1);
+			expect(service.remove).toHaveBeenCalledWith(username);
+			expect(service.remove).toHaveBeenNthCalledWith(1, username);
 
 			expect(result).toEqual(user);
 		});

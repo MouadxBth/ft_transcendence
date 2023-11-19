@@ -1,2 +1,5 @@
+npm install --prefer-offline
+
 prisma migrate dev --name init
-npm run start:dev
+
+exec npm run start:dev
