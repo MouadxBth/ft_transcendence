@@ -1,6 +1,6 @@
 import { ApiProperty, PartialType } from "@nestjs/swagger";
 import { CreateUserDto } from "./create-user.dto";
-import { IsBoolean, IsOptional } from "class-validator";
+import { IsBoolean, IsOptional, IsString } from "class-validator";
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
 	@IsBoolean()
@@ -10,4 +10,13 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 		example: true,
 	})
 	twoFactorAuthenticationEnabled?: boolean;
+
+	@IsString()
+	@IsOptional()
+	@ApiProperty({
+		description: "This represents the 2FA secret of a user",
+		example: "aAbBcCdD$123456987daz",
+		nullable: true,
+	})
+	twoFactorAuthenticationSecret?: string | null;
 }
