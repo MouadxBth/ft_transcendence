@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { UserService } from "src/user/user.service";
 import { CreateUserDto } from "src/user/dto/create-user.dto";
 import * as bcrypt from "bcrypt";
+import { Request } from "express";
 
 @Injectable()
 export class LocalService {
@@ -23,17 +24,24 @@ export class LocalService {
 		return result;
 	}
 
-	async register(dto: CreateUserDto) {
+	async register(req: Request, dto: CreateUserDto) {
 		if (!dto.password)
 			throw new HttpException(
 				"Invalid credentials, a password is required!",
 				HttpStatus.BAD_REQUEST
 			);
+
+		if (req.isAuthenticated())
+			throw new HttpException("You are already logged in, log out first!", HttpStatus.BAD_REQUEST);
+
 		const createUserDto = {
 			...dto,
 			password: await this.hash(dto.password, 10),
 		} as CreateUserDto;
-		return await this.userService.create(createUserDto);
+
+		const { twoFactorAuthenticationSecret, password, ...result } =
+			await this.userService.create(createUserDto);
+		return result;
 	}
 
 	async hash(password: string, rounds: number) {
