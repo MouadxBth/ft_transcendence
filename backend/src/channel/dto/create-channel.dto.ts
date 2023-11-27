@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString} from "class-validator";
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { ChannelStatus } from "../enums/channel-status.enum";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -23,8 +23,8 @@ export class CreateChannelDto {
 	@ApiProperty({ example: "a channel's topic" })
 	topic: string;
 
-	@IsString()
-	@IsNotEmpty()
-	@ApiProperty({ example: "owner" })
-	owner: string;
+	// @IsString()
+	// @IsNotEmpty()
+	// @ApiProperty({ example: "owner" })
+	// owner: string;
 }
