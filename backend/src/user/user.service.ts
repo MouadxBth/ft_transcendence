@@ -2,6 +2,8 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { PrismaService } from "src/prisma/prisma.service";
+import { Request } from "express";
+import { User } from "@prisma/client";
 
 @Injectable()
 export class UserService {
@@ -35,7 +37,15 @@ export class UserService {
 		return result;
 	}
 
-	async update(usernameValue: string, updateUserDto: UpdateUserDto) {
+	async update(req: Request, usernameValue: string, updateUserDto: UpdateUserDto) {
+		const authenticatedUser = req.user as User;
+
+		if (authenticatedUser && authenticatedUser.username !== usernameValue)
+			throw new HttpException(
+				"You are not allowed to perform this operation!",
+				HttpStatus.FORBIDDEN
+			);
+
 		const user = await this.prisma.user.findUnique({
 			where: { username: usernameValue },
 		});
@@ -62,7 +72,15 @@ export class UserService {
 		return updatedUser;
 	}
 
-	async remove(username: string) {
+	async remove(req: Request, username: string) {
+		const authenticatedUser = req.user as User;
+
+		if (authenticatedUser && authenticatedUser.username !== username)
+			throw new HttpException(
+				"You are not allowed to perform this operation!",
+				HttpStatus.FORBIDDEN
+			);
+
 		const usernameResult = await this.prisma.user.findUnique({ where: { username: username } });
 
 		if (!usernameResult) {
