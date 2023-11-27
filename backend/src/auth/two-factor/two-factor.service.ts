@@ -3,13 +3,15 @@ import { User } from "@prisma/client";
 import { authenticator } from "otplib";
 import { UserService } from "src/user/user.service";
 import { toDataURL } from "qrcode";
-import { Request } from "express";
+import { type Request } from "express";
 
 @Injectable()
 export class TwoFactorService {
 	constructor(private readonly userService: UserService) {}
 
-	async enableTwoFactorAuth(user: User) {
+	async enableTwoFactorAuth(req: Request) {
+		const user = req.user! as User;
+
 		if (user.twoFactorAuthenticationEnabled && user.twoFactorAuthenticationSecret)
 			throw new HttpException("2FA is already enabled!", HttpStatus.BAD_REQUEST);
 
@@ -17,7 +19,7 @@ export class TwoFactorService {
 
 		const otpAuthUrl = authenticator.keyuri(user.username, "ft_transcendence", secret);
 
-		await this.userService.update(user.username, {
+		await this.userService.update(req, user.username, {
 			twoFactorAuthenticationEnabled: true,
 			twoFactorAuthenticationSecret: secret,
 		});
@@ -28,11 +30,13 @@ export class TwoFactorService {
 		};
 	}
 
-	async disableTwoFactorAuth(user: User) {
+	async disableTwoFactorAuth(req: Request) {
+		const user = req.user! as User;
+
 		if (!user.twoFactorAuthenticationEnabled || !user.twoFactorAuthenticationSecret)
 			throw new HttpException("2FA is already disabled!", HttpStatus.BAD_REQUEST);
 
-		await this.userService.update(user.username, {
+		await this.userService.update(req, user.username, {
 			twoFactorAuthenticationEnabled: false,
 			twoFactorAuthenticationSecret: undefined,
 		});
