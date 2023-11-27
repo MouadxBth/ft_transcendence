@@ -37,7 +37,7 @@ export class LocalController {
 		status: 400,
 		description: "If the user already exists, a Bad request will be returned",
 	})
-	async register(@Body() dto: CreateUserDto) {
-		return this.localService.register(dto);
+	async register(@Req() req: Request, @Body() dto: CreateUserDto) {
+		return this.localService.register(req, dto);
 	}
 }
