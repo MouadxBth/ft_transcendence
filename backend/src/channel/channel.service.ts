@@ -4,24 +4,19 @@ import { UpdateChannelDto } from "./dto/update-channel.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import * as bcrypt from "bcrypt";
 import { ChannelStatus } from "./enums/channel-status.enum";
+import { User } from "@prisma/client";
 
 @Injectable()
 export class ChannelService {
 	constructor(private readonly prisma: PrismaService) {}
 
-	async create(createChannelDto: CreateChannelDto) {
+	async create(createChannelDto: CreateChannelDto, user: User) {
 		const channelResult = await this.prisma.channel.findUnique({
 			where: { name: createChannelDto.name },
 		});
 
 		if (channelResult)
 			throw new HttpException("Channel name already taken!", HttpStatus.BAD_REQUEST);
-
-		const userResult = await this.prisma.user.findUnique({
-			where: { username: createChannelDto.owner },
-		});
-
-		if (!userResult) throw new HttpException("User name doesn't exist!", HttpStatus.BAD_REQUEST);
 
 		if (
 			createChannelDto.status === ChannelStatus.PROTECTED &&
@@ -32,9 +27,7 @@ export class ChannelService {
 				HttpStatus.BAD_REQUEST
 			);
 
-		if (
-			createChannelDto.status === ChannelStatus.PUBLIC && createChannelDto.password 
-		)
+		if (createChannelDto.status === ChannelStatus.PUBLIC && createChannelDto.password)
 			throw new HttpException(
 				"No password is required for public channels.",
 				HttpStatus.BAD_REQUEST
@@ -47,7 +40,7 @@ export class ChannelService {
 				password: password ? await bcrypt.hash(password, 10) : undefined,
 				owner: {
 					connect: {
-						username: createChannelDto.owner,
+						username: user.username,
 					},
 				},
 			},
@@ -67,14 +60,14 @@ export class ChannelService {
 		return channelResult;
 	}
 
-	async update(id: string, updateChannelDto: UpdateChannelDto) {
+	async update(id: string, updateChannelDto: UpdateChannelDto, user: User) {
 		const channelResult = await this.prisma.channel.findUnique({ where: { name: id } });
 
 		if (!channelResult)
 			throw new HttpException("No such channel with that name!", HttpStatus.BAD_REQUEST);
 
-		//  if (!updateChannelDto.owner || updateChannelDto.owner != channelResult.ownerId)
-		//   throw new HttpException("Incorrect owner of the channel!", HttpStatus.BAD_REQUEST)
+		if (channelResult.ownerId != user.username)
+			throw new HttpException("You're not the owner of the channel", HttpStatus.BAD_REQUEST);
 
 		if (
 			updateChannelDto.status === ChannelStatus.PROTECTED &&
@@ -111,19 +104,22 @@ export class ChannelService {
 				password: password ? await bcrypt.hash(password, 10) : undefined,
 				owner: {
 					connect: {
-						username: updateChannelDto.owner,
+						username: user.username,
 					},
 				},
 			},
 		});
 	}
 
-	async remove(id: string) {
+	async remove(id: string, user: User) {
 		// add ownership checks
 		const channelResult = await this.prisma.channel.findUnique({ where: { name: id } });
 
 		if (!channelResult)
 			throw new HttpException("No such channel with that name!", HttpStatus.BAD_REQUEST);
+
+		if (channelResult.ownerId != user.username)
+			throw new HttpException("You're not the owner of the channel", HttpStatus.BAD_REQUEST);
 
 		return await this.prisma.channel.delete({ where: { name: id } });
 	}
