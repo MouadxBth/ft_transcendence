@@ -53,6 +53,8 @@ model User {
 	channelMessages Message[]
 
 	joinedChannels ChannelMember[]
+	blockedOnChannels Channel[] @relation("BlockedUsers")
+	invitedToChannels Channel[] @relation("InvitedUsers")
 
 	conversations Conversation[]
 	directMessages DirectMessage[]
@@ -100,6 +102,8 @@ model Channel {
   ownerId   String
 
   members   ChannelMember[]
+	blocked		User[] @relation("BlockedUsers")
+	invited		User[] @relation("InvitedUsers")
 }
 
 model Message {
@@ -123,7 +127,6 @@ model ChannelMember {
 
   admin    Boolean @default(false)
   muted    Boolean @default(false)
-  blocked  Boolean @default(false)
 
   user     User     @relation(fields: [userId], references: username, onDelete: Cascade)
   userId   String
