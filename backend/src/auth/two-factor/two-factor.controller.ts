@@ -3,9 +3,10 @@ import { TwoFactorService } from "./two-factor.service";
 import { User } from "@prisma/client";
 import { AuthenticatedGuard } from "../guards/authenticated.guard";
 import { type Request } from "express";
-import { ApiOperation, ApiResponse, ApiBody } from "@nestjs/swagger";
+import { ApiOperation, ApiResponse, ApiBody, ApiTags } from "@nestjs/swagger";
 import { TimeBasedOneTimePasswordDto } from "./dto/totp.dto";
 
+@ApiTags("Auth | 2FA")
 @Controller("auth/2fa")
 @UseGuards(AuthenticatedGuard)
 export class TwoFactorController {
@@ -49,8 +50,7 @@ export class TwoFactorController {
 	})
 	@ApiResponse({ status: 200, description: "Two-Factor Authentication enabled successfully" })
 	async enableTwoFactorAuthentication(@Req() req: Request) {
-		const user = req.user as User;
-		return this.twoFactorService.enableTwoFactorAuth(user);
+		return this.twoFactorService.enableTwoFactorAuth(req);
 	}
 
 	@Get("disable")
@@ -60,6 +60,6 @@ export class TwoFactorController {
 	})
 	@ApiResponse({ status: 200, description: "Two-Factor Authentication disabled successfully" })
 	async disableTwoFactorAuthentication(@Req() req: Request) {
-		return this.twoFactorService.disableTwoFactorAuth(req.user as User);
+		return this.twoFactorService.disableTwoFactorAuth(req);
 	}
 }

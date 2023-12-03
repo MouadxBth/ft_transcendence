@@ -1,33 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from "@nestjs/common";
+import { Controller, Get, Body, Patch, Param, Delete, UseGuards, Req } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { User } from "./entities/user.entity";
 import { AuthenticatedGuard } from "src/auth/guards/authenticated.guard";
+import { type Request } from "express";
 
 @ApiTags("User")
 @Controller("user")
 @UseGuards(AuthenticatedGuard)
 export class UserController {
 	constructor(private readonly userService: UserService) {}
-
-	@Post()
-	@ApiOperation({
-		summary: "Create a new User (FOR TESTING PURPOSES)",
-		description: "Used to create a new User (FOR TESTING PURPOSES)",
-	})
-	@ApiBody({ type: CreateUserDto, description: "D.T.O for creating a new User" })
-	@ApiResponse({ type: User, status: 201, description: "User created successfully" })
-	@ApiResponse({
-		status: 400,
-		description: "If the user already exists, a Bad request will be returned",
-	})
-	async create(@Body() createUserDto: CreateUserDto) {
-		const { twoFactorAuthenticationSecret, password, ...result } =
-			await this.userService.create(createUserDto);
-		return result;
-	}
 
 	@Get()
 	@ApiOperation({ summary: "Fetch all users", description: "Used to fetch all Users" })
@@ -60,8 +43,9 @@ export class UserController {
 		status: 404,
 		description: "If the user does not exist, a Not Found will be returned",
 	})
-	async update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
+	async update(@Req() req: Request, @Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
 		const { twoFactorAuthenticationSecret, password, ...result } = await this.userService.update(
+			req,
 			id,
 			updateUserDto
 		);
@@ -75,9 +59,11 @@ export class UserController {
 	})
 	@ApiResponse({ type: User, status: 200, description: "Successful deletion" })
 	@ApiResponse({ status: 404, description: "User does not exist" })
-	async remove(@Param("id") id: string) {
-		const { twoFactorAuthenticationSecret, password, ...result } =
-			await this.userService.remove(id);
+	async remove(@Req() req: Request, @Param("id") id: string) {
+		const { twoFactorAuthenticationSecret, password, ...result } = await this.userService.remove(
+			req,
+			id
+		);
 		return result;
 	}
 }
