@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query, ParseIntPipe } from "@nestjs/common";
 import { ChannelService } from "./channel.service";
 import { CreateChannelDto } from "./dto/create-channel.dto";
 import { UpdateChannelDto } from "./dto/update-channel.dto";
@@ -42,8 +42,8 @@ export class ChannelController {
 	@ApiResponse({ status: 200, description: "Successful retrieval", type: Channel })
 	@ApiResponse({ status: 400, description: "Channel doesn't exist" })
 	@Get(":id")
-	async findOne(@Param("id") id: string) {
-		const { password, ...channel } = await this.channelService.findOne(id);
+	async findOne(@Param("id") id: string, @Query("page", ParseIntPipe) page: number = 1, @Query("pageSize", ParseIntPipe) pageSize: number = 10) {
+		const { password, ...channel } = await this.channelService.findOne(id, page, pageSize);
 		return channel;
 	}
 

@@ -51,13 +51,60 @@ export class ChannelService {
 		return await this.prisma.channel.findMany();
 	}
 
-	async findOne(id: string) {
-		const channelResult = await this.prisma.channel.findUnique({ where: { name: id } });
+	async findOne(id: string, page: number, pageSize: number) {
+		if (page < 0)
+			throw new HttpException("Invalid Cursor/Page!", HttpStatus.BAD_REQUEST);
+		if (pageSize <= 0)
+			throw new HttpException("Invalid Page Size!", HttpStatus.BAD_REQUEST);
+		const channelResult = await this.prisma.channel.findUnique({ where: { name: id },
+		include:{
+			members: {
+				select: {
+					user: false,
+					channel: false,
+					channelId: false,
+					userId: true,
+					admin: true,
+					muted: true,
+					blocked: true,
+					id: true
+				}
+			},
+			messages: {
+				orderBy: {createdAt: "desc"},
+				cursor: {id: page},
+				take: pageSize,
+				select:
+				{
+					id: true,
+					channel: false,
+					channelId: false,
+					sender: false,
+					senderId: true,
+					content: true,
+					createdAt: true,
+					updatedAt: true,
+				}
+			},
+		}});
 
 		if (!channelResult)
 			throw new HttpException("No such channel with that name!", HttpStatus.BAD_REQUEST);
 
 		return channelResult;
+	}
+
+	async findUserChannels(user: User) {
+		return await this.prisma.channel.findMany({
+			include: {
+				members: 
+				{
+					where: {
+						userId : user.username,
+					}
+				}
+			}
+		});
 	}
 
 	async update(id: string, updateChannelDto: UpdateChannelDto, user: User) {
@@ -123,4 +170,5 @@ export class ChannelService {
 
 		return await this.prisma.channel.delete({ where: { name: id } });
 	}
+
 }
