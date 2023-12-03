@@ -12,7 +12,7 @@ declare const module: any;
 
 function configureApp(app: INestApplication<any>) {
 	app.setGlobalPrefix("api/v1");
-	app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+	app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
 }
 
 function configureExpressSession(app: INestApplication<any>) {
