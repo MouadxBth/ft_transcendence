@@ -23,6 +23,7 @@ import { GoogleGuard } from "./google/guards/google.guard";
 import { GoogleStrategy } from "./google/strategies/google.strategy";
 import { TwoFactorController } from "./two-factor/two-factor.controller";
 import { TwoFactorService } from "./two-factor/two-factor.service";
+import { WsAuthenticatedGuard } from "./guards/ws-authenticated.guard";
 
 const controllers = [
 	LocalController,
@@ -32,7 +33,14 @@ const controllers = [
 	TwoFactorController,
 ];
 const services = [LocalService, FortyTwoService, GithubService, GoogleService, TwoFactorService];
-const guards = [AuthenticatedGuard, LocalGuard, FortyTwoGuard, GithubGuard, GoogleGuard];
+const guards = [
+	AuthenticatedGuard,
+	LocalGuard,
+	FortyTwoGuard,
+	GithubGuard,
+	GoogleGuard,
+	WsAuthenticatedGuard,
+];
 const strategies = [LocalStrategy, FortyTwoStrategy, GithubStrategy, GoogleStrategy];
 
 @Module({
@@ -44,6 +52,6 @@ const strategies = [LocalStrategy, FortyTwoStrategy, GithubStrategy, GoogleStrat
 	],
 	controllers: [AuthController, ...controllers],
 	providers: [AuthService, SessionSerializer, ...services, ...guards, ...strategies],
-	exports: [AuthenticatedGuard],
+	exports: [AuthenticatedGuard, WsAuthenticatedGuard],
 })
 export class AuthModule {}
