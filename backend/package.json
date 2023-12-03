@@ -43,7 +43,9 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^10.0.2",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/platform-socket.io": "^10.2.10",
     "@nestjs/swagger": "^7.1.14",
+    "@nestjs/websockets": "^10.2.10",
     "@prisma/client": "^5.4.2",
     "@swc/jest": "^0.2.29",
     "@tirke/node-cache-manager-ioredis": "^3.4.0",
@@ -64,6 +66,7 @@
     "qrcode": "^1.5.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
+    "socket.io": "^4.7.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {
