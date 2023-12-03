@@ -6,9 +6,13 @@ import { ConfigService } from "@nestjs/config";
 import { RedisClient } from "./redis/redis.provider";
 import session from "express-session";
 import RedisStore from "connect-redis";
-import * as passport from "passport";
+import passport from "passport";
+import { RequestHandler } from "express";
+import { WsSessionAdapter } from "./socket-io/ws-session.adapter";
 
 declare const module: any;
+
+let sessionMiddleware: RequestHandler;
 
 function configureApp(app: INestApplication<any>) {
 	app.setGlobalPrefix("api/v1");
@@ -19,27 +23,31 @@ function configureExpressSession(app: INestApplication<any>) {
 	const configService = app.get(ConfigService);
 	const redis = app.get<RedisClient>("REDIS_CLIENT");
 
-	app.use(
-		session({
-			name: configService.get<string>("SESSION_NAME"),
-			secret: configService.get<string>("SESSION_SECRET")!,
-			resave: false,
-			saveUninitialized: false,
-			store: new RedisStore({
-				client: redis,
-			}),
-			cookie: {
-				maxAge: configService.get<number>("SESSION_COOKIE_AGE"),
-				httpOnly: true,
-				sameSite: true,
-			},
-		})
-	);
+	sessionMiddleware = session({
+		name: configService.get<string>("SESSION_NAME"),
+		secret: configService.get<string>("SESSION_SECRET")!,
+		resave: false,
+		saveUninitialized: false,
+		store: new RedisStore({
+			client: redis,
+		}),
+		cookie: {
+			maxAge: configService.get<number>("SESSION_COOKIE_AGE"),
+			httpOnly: true,
+			sameSite: true,
+		},
+	});
+
+	app.use(sessionMiddleware);
 }
 
 function configurePassport(app: INestApplication<any>) {
 	app.use(passport.initialize());
 	app.use(passport.session());
+}
+
+function configureWebsocketAdapter(app: INestApplication<any>) {
+	app.useWebSocketAdapter(new WsSessionAdapter(sessionMiddleware, app));
 }
 
 function configureSwagger(app: INestApplication<any>) {
@@ -66,6 +74,7 @@ async function bootstrap() {
 	configureApp(app);
 	configureExpressSession(app);
 	configurePassport(app);
+	configureWebsocketAdapter(app);
 	configureSwagger(app);
 	hotModuleReplacement(app);
 
