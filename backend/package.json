@@ -16,7 +16,7 @@
     "prisma:migrate:dev": "prisma migrate dev",
     "build": "nest build",
     "start": "nest build --webpack --webpackPath webpack.config.js",
-    "start:dev": "nest build --webpack --webpackPath webpack.config.js --watch",
+    "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "test:ts-jest": "jest --config ./jest/ts-jest/test/jest.config.json",
