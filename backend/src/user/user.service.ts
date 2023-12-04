@@ -4,18 +4,23 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Request } from "express";
 import { User } from "@prisma/client";
+import { UserCache } from "./user.cache";
+import { AuthenticatedUser } from "src/auth/entities/authenticated-user.entity";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UserService {
-	constructor(private readonly prisma: PrismaService) {}
+	constructor(
+		private readonly prisma: PrismaService,
+		private readonly userCache: UserCache
+	) {}
 
 	async create(dto: CreateUserDto) {
 		const usernameResult = await this.prisma.user.findUnique({ where: { username: dto.username } });
 
-		if (usernameResult) {
-			throw new HttpException("Username already taken!", HttpStatus.BAD_REQUEST);
-		}
-		return this.prisma.user.create({
+		if (usernameResult) throw new HttpException("Username already taken!", HttpStatus.BAD_REQUEST);
+
+		return await this.prisma.user.create({
 			data: dto,
 		});
 	}
@@ -25,22 +30,28 @@ export class UserService {
 	}
 
 	async findOne(username: string) {
-		const result = await this.prisma.user.findUnique({
-			where: {
-				username: username,
-			},
-		});
+		let result: User | null | undefined = await this.userCache.getAndUpdate(username);
 
 		if (!result) {
-			throw new HttpException("User with that username doesnt exist!", HttpStatus.NOT_FOUND);
+			result = await this.prisma.user.findUnique({
+				where: {
+					username: username,
+				},
+			});
+
+			if (result) await this.userCache.set(result);
 		}
+
+		if (!result)
+			throw new HttpException("User with that username doesnt exist!", HttpStatus.NOT_FOUND);
+
 		return result;
 	}
 
 	async update(req: Request, usernameValue: string, updateUserDto: UpdateUserDto) {
-		const authenticatedUser = req.user as User;
+		const authenticatedUser = req.user as AuthenticatedUser;
 
-		if (authenticatedUser && authenticatedUser.username !== usernameValue)
+		if (authenticatedUser && authenticatedUser.user.username !== usernameValue)
 			throw new HttpException(
 				"You are not allowed to perform this operation!",
 				HttpStatus.FORBIDDEN
@@ -50,32 +61,54 @@ export class UserService {
 			where: { username: usernameValue },
 		});
 
-		if (!user) {
+		if (!user)
 			throw new HttpException("User with that username doesnt exist!", HttpStatus.NOT_FOUND);
-		}
 
 		if (updateUserDto.username && usernameValue !== updateUserDto.username) {
 			const check = await this.prisma.user.findUnique({
 				where: { username: updateUserDto.username },
 			});
 
-			if (check) {
+			if (check)
 				throw new HttpException("User with that username already exists!", HttpStatus.BAD_REQUEST);
-			}
 		}
 
-		const updatedUser = await this.prisma.user.update({
-			where: { username: usernameValue },
-			data: updateUserDto,
-		});
+		if (updateUserDto.password)
+			updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
 
-		return updatedUser;
+		return await this.prisma.$transaction(async (client) => {
+			const updatedUser = await client.user.update({
+				where: { username: usernameValue },
+				data: updateUserDto,
+			});
+
+			if (!updatedUser)
+				throw new HttpException("Unable to update user!", HttpStatus.INTERNAL_SERVER_ERROR);
+
+			await this.userCache.update(usernameValue, updatedUser);
+
+			const { password, twoFactorAuthenticationSecret, ...result } = updatedUser;
+
+			req.logIn(
+				{ user: result, valid2Fa: authenticatedUser.valid2Fa } as AuthenticatedUser,
+				{ session: true },
+				(error: unknown) => {
+					if (error && error instanceof Error)
+						throw new HttpException(
+							`Unable to update user session! ${error.message}`,
+							HttpStatus.INTERNAL_SERVER_ERROR
+						);
+				}
+			);
+
+			return updatedUser;
+		});
 	}
 
 	async remove(req: Request, username: string) {
-		const authenticatedUser = req.user as User;
+		const authenticatedUser = req.user as AuthenticatedUser;
 
-		if (authenticatedUser && authenticatedUser.username !== username)
+		if (authenticatedUser && authenticatedUser.user.username !== username)
 			throw new HttpException(
 				"You are not allowed to perform this operation!",
 				HttpStatus.FORBIDDEN
@@ -83,14 +116,28 @@ export class UserService {
 
 		const usernameResult = await this.prisma.user.findUnique({ where: { username: username } });
 
-		if (!usernameResult) {
+		if (!usernameResult)
 			throw new HttpException("User with that username doesnt exist!", HttpStatus.NOT_FOUND);
-		}
 
-		return this.prisma.user.delete({
-			where: {
-				username: username,
-			},
+		return await this.prisma.$transaction(async (client) => {
+			const result = await client.user.delete({
+				where: { username },
+			});
+
+			if (!result)
+				throw new HttpException("Unable to delete user!", HttpStatus.INTERNAL_SERVER_ERROR);
+
+			await this.userCache.delete(username);
+
+			req.logOut({ keepSessionInfo: false }, (error: unknown) => {
+				if (error && error instanceof Error)
+					throw new HttpException(
+						`Unable to delete user session! ${error.message}`,
+						HttpStatus.INTERNAL_SERVER_ERROR
+					);
+			});
+
+			return result;
 		});
 	}
 }
