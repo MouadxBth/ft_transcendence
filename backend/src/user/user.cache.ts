@@ -15,6 +15,12 @@ export class UserCache {
 		return await this.cacheService.get<User>(`user:${username}`);
 	}
 
+	async getAndUpdate(username: string) {
+		const result = await this.get(username);
+		if (result) await this.set(result);
+		return result;
+	}
+
 	async set(user: User) {
 		return await this.cacheService.set(
 			`user:${user.username}`,
