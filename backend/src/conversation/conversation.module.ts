@@ -8,9 +8,10 @@ import { DirectMessageController } from "./direct-message/direct-message.control
 import { AuthModule } from "src/auth/auth.module";
 import { UserModule } from "src/user/user.module";
 import { ConversationCache } from "./conversation.cache";
+import { BlockedModule } from "src/blocked/blocked.module";
 
 @Module({
-	imports: [AuthModule, UserModule],
+	imports: [AuthModule, UserModule, BlockedModule],
 	controllers: [ConversationController, DirectMessageController],
 	providers: [ConversationService, ConversationGateway, ConversationCache, DirectMessageService],
 })
