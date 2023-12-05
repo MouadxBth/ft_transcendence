@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, HttpStatus, Post, Req, UseGuards } from "@nestjs/common";
 import { LocalGuard } from "./guards/local.guard";
 import { type Request } from "express";
 import { CreateUserDto } from "src/user/dto/create-user.dto";
@@ -17,9 +17,13 @@ export class LocalController {
 		summary: "Login/Authenticate a user",
 		description: "Used to Login/Authenticate a user",
 	})
-	@ApiResponse({ type: User, status: 201, description: "Authenticated User's profile" })
 	@ApiResponse({
-		status: 401,
+		type: User,
+		status: HttpStatus.CREATED,
+		description: "Authenticated User's profile",
+	})
+	@ApiResponse({
+		status: HttpStatus.UNAUTHORIZED,
 		description: "If the user's credentials don't match, a Unauthorized exception will be returned",
 	})
 	async localLogin(@Req() req: Request) {
@@ -32,9 +36,13 @@ export class LocalController {
 		description: "Used to Register a new user",
 	})
 	@ApiBody({ type: CreateUserDto, description: "D.T.O for registering a new User" })
-	@ApiResponse({ type: User, status: 201, description: "User registered successfully" })
 	@ApiResponse({
-		status: 400,
+		type: User,
+		status: HttpStatus.CREATED,
+		description: "User registered successfully",
+	})
+	@ApiResponse({
+		status: HttpStatus.BAD_REQUEST,
 		description: "If the user already exists, a Bad request will be returned",
 	})
 	async register(@Req() req: Request, @Body() dto: CreateUserDto) {
