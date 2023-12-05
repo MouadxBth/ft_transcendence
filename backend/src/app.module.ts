@@ -11,6 +11,7 @@ import { AuthModule } from "./auth/auth.module";
 import { ConversationModule } from "./conversation/conversation.module";
 import { BlockedModule } from "./blocked/blocked.module";
 import { FriendModule } from "./friend/friend.module";
+import { OnlineStatusModule } from "./online-status/online-status.module";
 
 @Module({
 	imports: [
@@ -39,6 +40,7 @@ import { FriendModule } from "./friend/friend.module";
 		ConversationModule,
 		BlockedModule,
 		FriendModule,
+		OnlineStatusModule,
 	],
 })
 export class AppModule {}
