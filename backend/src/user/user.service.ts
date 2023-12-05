@@ -39,11 +39,11 @@ export class UserService {
 				},
 			});
 
+			if (!result)
+				throw new HttpException("User with that username doesnt exist!", HttpStatus.NOT_FOUND);
+
 			if (result) await this.userCache.set(result);
 		}
-
-		if (!result)
-			throw new HttpException("User with that username doesnt exist!", HttpStatus.NOT_FOUND);
 
 		return result;
 	}
