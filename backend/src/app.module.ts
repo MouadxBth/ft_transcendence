@@ -10,6 +10,7 @@ import { RedisClient } from "./redis/redis.provider";
 import { AuthModule } from "./auth/auth.module";
 import { ConversationModule } from "./conversation/conversation.module";
 import { BlockedModule } from "./blocked/blocked.module";
+import { FriendModule } from "./friend/friend.module";
 
 @Module({
 	imports: [
@@ -37,6 +38,7 @@ import { BlockedModule } from "./blocked/blocked.module";
 		AuthModule,
 		ConversationModule,
 		BlockedModule,
+		FriendModule,
 	],
 })
 export class AppModule {}
