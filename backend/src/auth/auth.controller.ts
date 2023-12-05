@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
+import { Controller, Get, HttpStatus, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthenticatedGuard } from "./guards/authenticated.guard";
 
@@ -18,9 +18,9 @@ export class AuthController {
 		description:
 			"Used to fetch the profile of the currently authenticated User (FOR TESTING PURPOSES)",
 	})
-	@ApiResponse({ type: User, status: 200, description: "Authenticated User's profile" })
+	@ApiResponse({ type: User, status: HttpStatus.OK, description: "Authenticated User's profile" })
 	@ApiResponse({
-		status: 403,
+		status: HttpStatus.FORBIDDEN,
 		description: "If the user is not authenticated, a Forbidden exception will be returned",
 	})
 	profile(@Req() req: Request) {
@@ -34,20 +34,20 @@ export class AuthController {
 	})
 	@ApiResponse({
 		type: String,
-		status: 201,
+		status: HttpStatus.CREATED,
 		description: "If logged out successfully, Logged Out will be returned",
 	})
 	@ApiResponse({
-		status: 403,
+		status: HttpStatus.FORBIDDEN,
 		description: "If the user is not authenticated, a Forbidden exception will be returned",
 	})
 	@ApiResponse({
-		status: 500,
+		status: HttpStatus.INTERNAL_SERVER_ERROR,
 		description:
 			"If it failed to log out the current authenticated user, an Internal Server error will be returned",
 	})
 	@ApiResponse({
-		status: 500,
+		status: HttpStatus.INTERNAL_SERVER_ERROR,
 		description:
 			"If it failed to destroy the current authenticated user's session, an Internal Server error will be returned",
 	})

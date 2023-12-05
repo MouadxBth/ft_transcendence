@@ -9,6 +9,9 @@ export const ConfigSchema = Joi.object({
 
 	REDIS_HOST: Joi.string().default("localhost"),
 	REDIS_PORT: Joi.number().default(6379),
+	REDIS_CACHE_TTL: Joi.number()
+		.default(60 * 15)
+		.description("This value is in seconds"),
 
 	SESSION_NAME: Joi.string().default("mawi"),
 	SESSION_SECRET: Joi.string().required(),

@@ -1,16 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { User } from "@prisma/client";
 import { authenticator } from "otplib";
 import { UserService } from "src/user/user.service";
 import { toDataURL } from "qrcode";
 import { type Request } from "express";
+import { AuthenticatedUser } from "../entities/authenticated-user.entity";
 
 @Injectable()
 export class TwoFactorService {
 	constructor(private readonly userService: UserService) {}
 
 	async enableTwoFactorAuth(req: Request) {
-		const user = req.user! as User;
+		const user = await this.userService.findOne((req.user! as AuthenticatedUser).user.username);
 
 		if (user.twoFactorAuthenticationEnabled && user.twoFactorAuthenticationSecret)
 			throw new HttpException("2FA is already enabled!", HttpStatus.BAD_REQUEST);
@@ -24,14 +24,11 @@ export class TwoFactorService {
 			twoFactorAuthenticationSecret: secret,
 		});
 
-		return {
-			message: "Log out and log in for 2FA to take effect!",
-			data: await toDataURL(otpAuthUrl),
-		};
+		return await toDataURL(otpAuthUrl);
 	}
 
 	async disableTwoFactorAuth(req: Request) {
-		const user = req.user! as User;
+		const user = await this.userService.findOne((req.user! as AuthenticatedUser).user.username);
 
 		if (!user.twoFactorAuthenticationEnabled || !user.twoFactorAuthenticationSecret)
 			throw new HttpException("2FA is already disabled!", HttpStatus.BAD_REQUEST);
@@ -47,24 +44,46 @@ export class TwoFactorService {
 	async isTwoFactorAuthenticationCodeValid(
 		req: Request,
 		twoFactorAuthenticationCode: string,
-		sender: User
+		sender: AuthenticatedUser
 	) {
-		if ((req.session as any).validTwoFa)
+		if (sender.valid2Fa)
 			throw new HttpException("2FA Code is already validated!", HttpStatus.BAD_REQUEST);
 
-		const user = await this.userService.findOne(sender.username);
+		const user = await this.userService.findOne(sender.user.username);
 
-		if (!user.twoFactorAuthenticationEnabled || !user.twoFactorAuthenticationSecret) return false;
+		if (!user.twoFactorAuthenticationEnabled || !user.twoFactorAuthenticationSecret)
+			throw new HttpException("2FA is not enabled!", HttpStatus.BAD_REQUEST);
 
-		const check = authenticator.verify({
+		sender.valid2Fa = authenticator.verify({
 			token: twoFactorAuthenticationCode,
 			secret: user.twoFactorAuthenticationSecret,
 		});
 
-		(req.session as any).validTwoFa = check;
+		if (!sender.valid2Fa) throw new HttpException("2FA Code is invalid!", HttpStatus.UNAUTHORIZED);
 
-		if (!check) throw new HttpException("2FA Code is invalid!", HttpStatus.UNAUTHORIZED);
+		req.logIn(sender, { session: true }, (error: unknown) => {
+			if (error && error instanceof Error)
+				throw new HttpException(
+					`Unable to update user session! ${error.message}`,
+					HttpStatus.INTERNAL_SERVER_ERROR
+				);
+		});
 
 		return "2FA Code validated Successfully!";
+	}
+
+	async getQrCode(req: Request) {
+		const user = await this.userService.findOne((req.user! as AuthenticatedUser).user.username);
+
+		if (!user.twoFactorAuthenticationEnabled || !user.twoFactorAuthenticationSecret)
+			throw new HttpException("2FA is not disabled!", HttpStatus.BAD_REQUEST);
+
+		const otpAuthUrl = authenticator.keyuri(
+			user.username,
+			"ft_transcendence",
+			user.twoFactorAuthenticationSecret
+		);
+
+		return await toDataURL(otpAuthUrl);
 	}
 }

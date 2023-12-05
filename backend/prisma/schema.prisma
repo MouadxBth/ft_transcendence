@@ -54,7 +54,7 @@ model User {
 	channelMessages Message[]
 
 	joinedChannels ChannelMember[]
-	blockedOnChannels Channel[] @relation("BlockedUsers")
+	bannedOnChannels Channel[] @relation("BannedUsers")
 	invitedToChannels Channel[] @relation("InvitedUsers")
 
 	conversations Conversation[]
@@ -103,7 +103,7 @@ model Channel {
   ownerId   String
 
   members   ChannelMember[]
-	blocked		User[] @relation("BlockedUsers")
+	banned		User[] @relation("BannedUsers")
 	invited		User[] @relation("InvitedUsers")
 }
 
