@@ -3,38 +3,28 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { DirectMessageDto } from "../dto/direct-message.dto";
 import { UpdateDirectMessageDto } from "../dto/update-direct-message.dto";
 import { ConversationService } from "../conversation.service";
+import { BlockedService } from "src/blocked/blocked.service";
 
 @Injectable()
 export class DirectMessageService {
 	constructor(
 		private readonly prismaService: PrismaService,
-		private readonly conversationService: ConversationService
+		private readonly conversationService: ConversationService,
+		private readonly blockedService: BlockedService
 	) {}
 
 	async create(sender: string, message: DirectMessageDto) {
-		/** can be put into "block" cache **/
-		const target = await this.prismaService.user.findUnique({
-			where: {
-				username: message.target,
-			},
-			include: {
-				blocked: { select: { username: true } },
-				blockedBy: { select: { username: true } },
-			},
-		});
+		const blockedInfo = await this.blockedService.getBlockedAndBlockedBy(sender);
 
-		if (!target) throw new HttpException("Target does not exist!", HttpStatus.NOT_FOUND);
-		/** --block cache-- **/
-
-		if (target.blocked.find(({ username }) => username === sender))
+		if (blockedInfo.blocked.find((username) => username === message.target))
 			throw new HttpException(
-				"You are blocked by this user, you can't send a message!",
+				"You have blocked this user, unblock him to send a message!",
 				HttpStatus.BAD_REQUEST
 			);
 
-		if (target.blockedBy.find(({ username }) => username === sender))
+		if (blockedInfo.blockedBy.find((username) => username === message.target))
 			throw new HttpException(
-				"You have blocked this user, unblock him to send a message!",
+				"You are blocked by this user, you can't send a message!",
 				HttpStatus.BAD_REQUEST
 			);
 

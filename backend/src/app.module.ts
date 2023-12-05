@@ -9,6 +9,7 @@ import { ioRedisStore } from "@tirke/node-cache-manager-ioredis";
 import { RedisClient } from "./redis/redis.provider";
 import { AuthModule } from "./auth/auth.module";
 import { ConversationModule } from "./conversation/conversation.module";
+import { BlockedModule } from "./blocked/blocked.module";
 
 @Module({
 	imports: [
@@ -35,6 +36,7 @@ import { ConversationModule } from "./conversation/conversation.module";
 		}),
 		AuthModule,
 		ConversationModule,
+		BlockedModule,
 	],
 })
 export class AppModule {}
