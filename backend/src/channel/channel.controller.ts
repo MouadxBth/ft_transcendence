@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query, ParseIntPipe } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from "@nestjs/common";
 import { ChannelService } from "./channel.service";
 import { CreateChannelDto } from "./dto/create-channel.dto";
 import { UpdateChannelDto } from "./dto/update-channel.dto";
@@ -6,7 +6,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Channel } from "./entities/channel.entity";
 import { AuthenticatedGuard } from "src/auth/guards/authenticated.guard";
 import type { Request } from "express";
-import { User } from "@prisma/client";
+import { AuthenticatedUser } from "src/auth/entities/authenticated-user.entity";
 
 @ApiTags("channel")
 @Controller("channel")
@@ -20,10 +20,10 @@ export class ChannelController {
 	@ApiResponse({ status: 201, description: "Used created successfully", type: Channel })
 	@ApiResponse({ status: 400, description: "Bad request" })
 	async create(@Req() request: Request, @Body() createChannelDto: CreateChannelDto) {
-		const user = request.user!;
+		const authenticatedUser = request.user! as AuthenticatedUser;
 		const { password, ...channel } = await this.channelService.create(
 			createChannelDto,
-			user as User
+			authenticatedUser.user	
 		);
 		return channel;
 	}
@@ -42,8 +42,8 @@ export class ChannelController {
 	@ApiResponse({ status: 200, description: "Successful retrieval", type: Channel })
 	@ApiResponse({ status: 400, description: "Channel doesn't exist" })
 	@Get(":id")
-	async findOne(@Param("id") id: string, @Query("page", ParseIntPipe) page: number = 1, @Query("pageSize", ParseIntPipe) pageSize: number = 10) {
-		const { password, ...channel } = await this.channelService.findOne(id, page, pageSize);
+	async findOne(@Param("id") id: string) {
+		const { password, ...channel } = await this.channelService.findOne(id);
 		return channel;
 	}
 
@@ -60,11 +60,11 @@ export class ChannelController {
 		@Param("id") id: string,
 		@Body() updateChannelDto: UpdateChannelDto
 	) {
-		const user = request.user!;
+		const authenticatedUser = request.user! as AuthenticatedUser;
 		const { password, ...channel } = await this.channelService.update(
 			id,
 			updateChannelDto,
-			user as User
+			authenticatedUser.user	
 		);
 		return channel;
 	}
@@ -78,8 +78,8 @@ export class ChannelController {
 	@ApiResponse({ status: 400, description: "Not the owner of the channel" })
 	@Delete(":id")
 	async remove(@Req() request: Request, @Param("id") id: string) {
-		const user = request.user!;
-		const { password, ...channel } = await this.channelService.remove(id, user as User);
+		const authenticatedUser = request.user! as AuthenticatedUser;
+		const { password, ...channel } = await this.channelService.remove(id, authenticatedUser.user);
 		return channel;
 	}
 }

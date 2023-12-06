@@ -4,7 +4,7 @@ import { UpdateChannelDto } from "./dto/update-channel.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import * as bcrypt from "bcrypt";
 import { ChannelStatus } from "./enums/channel-status.enum";
-import { User } from "@prisma/client";
+import { User } from "src/user/entities/user.entity";
 
 @Injectable()
 export class ChannelService {
@@ -51,42 +51,8 @@ export class ChannelService {
 		return await this.prisma.channel.findMany();
 	}
 
-	async findOne(id: string, page: number, pageSize: number) {
-		if (page < 0)
-			throw new HttpException("Invalid Cursor/Page!", HttpStatus.BAD_REQUEST);
-		if (pageSize <= 0)
-			throw new HttpException("Invalid Page Size!", HttpStatus.BAD_REQUEST);
-		const channelResult = await this.prisma.channel.findUnique({ where: { name: id },
-		include:{
-			members: {
-				select: {
-					user: false,
-					channel: false,
-					channelId: false,
-					userId: true,
-					admin: true,
-					muted: true,
-					blocked: true,
-					id: true
-				}
-			},
-			messages: {
-				orderBy: {createdAt: "desc"},
-				cursor: {id: page},
-				take: pageSize,
-				select:
-				{
-					id: true,
-					channel: false,
-					channelId: false,
-					sender: false,
-					senderId: true,
-					content: true,
-					createdAt: true,
-					updatedAt: true,
-				}
-			},
-		}});
+	async findOne(id: string) {
+		const channelResult = await this.prisma.channel.findUnique({ where: { name: id }});
 
 		if (!channelResult)
 			throw new HttpException("No such channel with that name!", HttpStatus.BAD_REQUEST);
@@ -96,7 +62,8 @@ export class ChannelService {
 
 	async findUserChannels(user: User) {
 		return await this.prisma.channel.findMany({
-			include: {
+			select: {
+				name: true,
 				members: 
 				{
 					where: {

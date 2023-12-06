@@ -3,13 +3,13 @@ import { ChannelService } from "./channel.service";
 import { ChannelController } from "./channel.controller";
 import { AuthModule } from "src/auth/auth.module";
 import { ChannelGateway } from "./gateway/channel.gateway";
-import { ChannelMessageService } from "./channel-message.service";
-import { ChannelMemberController } from './channel-member.controller';
-import { ChannelMemberService } from './channel-member.service';
-import { ChannelOwnerController } from "./channel-owner.controller";
-import { ChannelAdminController } from "./channel-admin.controller";
-import { ChannelOwnerService } from "./channel-owner.service";
-import { ChannelAdminService } from "./channel-admin.service";
+import { ChannelMessageService } from "./message/channel-message.service";
+import { ChannelMemberController } from './member/channel-member.controller';
+import { ChannelMemberService } from './member/channel-member.service';
+import { ChannelOwnerController } from "./owner/channel-owner.controller";
+import { ChannelAdminController } from "./admin/channel-admin.controller";
+import { ChannelOwnerService } from "./owner/channel-owner.service";
+import { ChannelAdminService } from "./admin/channel-admin.service";
 import { TwoFactorMiddleware } from "src/auth/two-factor/middleware/two-factor.middleware";
 
 @Module({
