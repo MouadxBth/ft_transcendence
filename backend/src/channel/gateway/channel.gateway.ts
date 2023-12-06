@@ -7,13 +7,21 @@ import { SubscribeMessage,
   WebSocketServer} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { MessageDto } from '../dto/message.dto';
-import { User } from '@prisma/client';
-import { ChannelMessageService } from '../channel-message.service';
+import { ChannelMessageService } from '../message/channel-message.service';
 import { ChannelService } from '../channel.service';
+import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
+import { WsValidationPipe } from 'src/socket-io/ws-validation.pipe';
+import { WsExceptionFilter } from 'src/socket-io/ws-exception.filter';
+import { WsAuthenticatedGuard } from 'src/auth/guards/ws-authenticated.guard';
+import { AuthenticatedUser } from 'src/auth/entities/authenticated-user.entity';
+import { Request } from 'express';
 
 @WebSocketGateway({
 namespace: "channel",
 })
+@UsePipes(WsValidationPipe)
+@UseFilters(WsExceptionFilter)
+@UseGuards(WsAuthenticatedGuard)
 export class ChannelGateway implements OnGatewayConnection, OnGatewayDisconnect{
 
   constructor(private readonly channelMessageService: ChannelMessageService, 
@@ -23,12 +31,11 @@ export class ChannelGateway implements OnGatewayConnection, OnGatewayDisconnect{
   private readonly server: Server;
 
   async handleConnection(@ConnectedSocket() client: Socket) {
-    let user = {
-      username: "username",
-    } as User;
+    const authenticatedUser = (client.request as Request).user as AuthenticatedUser;
+
     console.log("socket with id:" + client.id + " is connected");
     //rejoin the user to all the rooms of the channels they're a member of
-    (await this.channelService.findUserChannels(user)).map((channel) => client.join(channel.name));
+    (await this.channelService.findUserChannels(authenticatedUser.user)).map((channel) => client.join(channel.name));
   }
 
   handleDisconnect(@ConnectedSocket() client: Socket) {
@@ -38,13 +45,9 @@ export class ChannelGateway implements OnGatewayConnection, OnGatewayDisconnect{
   @SubscribeMessage('send_message')
   async sendMessage(@ConnectedSocket() client: Socket, @MessageBody() messageBody: MessageDto) {
 
-    // hard coded the user object, will change later when we have gateway protection on
-    client;
-    let user = {
-      username: "username",
-    } as User;
-    await this.channelMessageService.verifyMessage(messageBody, user);
-    const message = await this.channelMessageService.createMessage(messageBody, user);
+    const authenticatedUser = (client.request as Request).user as AuthenticatedUser;
+    await this.channelMessageService.verifyMessage(authenticatedUser, messageBody);
+    const message = await this.channelMessageService.createMessage(authenticatedUser, messageBody);
     this.server.to(messageBody.channelName).emit("recieve_message", message);
   }
 
