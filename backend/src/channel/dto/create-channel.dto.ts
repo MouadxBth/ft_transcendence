@@ -11,20 +11,15 @@ export class CreateChannelDto {
 	@IsString()
 	@IsOptional()
 	@ApiProperty({ example: "password" })
-	password: string;
+	password?: string;
 
 	@IsEnum(ChannelStatus)
 	@IsOptional()
 	@ApiProperty({ enum: ChannelStatus, example: ChannelStatus.PRIVATE })
-	status: ChannelStatus;
+	status?: ChannelStatus;
 
 	@IsString()
 	@IsOptional()
 	@ApiProperty({ example: "a channel's topic" })
-	topic: string;
-
-	// @IsString()
-	// @IsNotEmpty()
-	// @ApiProperty({ example: "owner" })
-	// owner: string;
+	topic?: string;
 }

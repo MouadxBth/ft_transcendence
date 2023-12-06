@@ -11,5 +11,4 @@ export class MessageDto {
     @IsString()
     @IsNotEmpty()
     channelName: string;
-
 }
