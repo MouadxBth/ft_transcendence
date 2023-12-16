@@ -10,25 +10,25 @@ import { Button } from './button'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 function Sidebar() {
   return (
-    <div className="flex">
-        <aside className="fixed flex flex-col justify-between items-center w-96 h-screen bg-white pt-12 pb-12">
-        <div className="flex items-center">
-          <div className="mr-4">
+    <div className="lg:flex hidden">
+        <aside className="flex flex-col justify-between items-center 2xl:w-96 w-72 h-screen bg-white pt-12 pb-12">
+        <div className="2xl:flex 2xl:flex-row flex flex-col justify-center items-center">
+          <div className="2xl:mr-4 mr-2">
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage src="https://robohash.org/ikoukou" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </div>
           <div className="">
             <div className="text-xl">Ihssane Koukou</div>
-            <div className="text-md text-gray-400">@ikoukou</div>
+            <div className="2xl:flex 2xl:justify-start flex justify-center text-sm text-gray-400">@ikoukou</div>
           </div>
         </div>
-            <div className="grid gap-6">
+            <div className="grid 2xl:gap-6 gap-3">
               <div>
                 <Link href="/">
                   <Button variant="link">
-                  <Image className="mr-4" src={home} alt="" width={30} height={30}/>
+                  <Image className="2xl:mr-4 mr-2" src={home} alt="" width={30} height={30}/>
                     Home
                     </Button>
                   </Link>
@@ -36,7 +36,7 @@ function Sidebar() {
               <div>
                 <Link href="/profile">
                   <Button variant="link">
-                  <Image className="mr-4" src={profile} alt="" width={30} height={30}/>
+                  <Image className="2xl:mr-4 mr-2" src={profile} alt="" width={30} height={30}/>
                     Profile
                     </Button>
                   </Link>
@@ -44,7 +44,7 @@ function Sidebar() {
               <div>
                 <Link href="/chat">
                   <Button variant="link">
-                  <Image className="mr-4" src={chat} alt="" width={30} height={30}/>
+                  <Image className="2xl:mr-4 mr-2" src={chat} alt="" width={30} height={30}/>
                     Chat
                     </Button>
                   </Link>
@@ -52,7 +52,7 @@ function Sidebar() {
               <div>
                 <Link href="/game">
                   <Button variant="link">
-                  <Image className="mr-4" src={game} alt="" width={30} height={30}/>
+                  <Image className="2xl:mr-4 mr-2" src={game} alt="" width={30} height={30}/>
                     Game
                     </Button>
                   </Link>
@@ -60,7 +60,7 @@ function Sidebar() {
               <div>
                 <Link href="/settings">
                   <Button variant="link">
-                  <Image className="mr-4" src={settings} alt="" width={30} height={30}/>
+                  <Image className="2xl:mr-4 mr-2" src={settings} alt="" width={30} height={30}/>
                     Settings
                     </Button>
                   </Link>
@@ -69,7 +69,7 @@ function Sidebar() {
             <div>
                 <Link href="/">
                   <Button variant="link">
-                  <Image className="mr-4" src={logout} alt="" width={30} height={30}/>
+                  <Image className="2xl:mr-4 mr-2" src={logout} alt="" width={30} height={30}/>
                     Logout
                     </Button>
                   </Link>
