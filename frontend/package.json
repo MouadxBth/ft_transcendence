@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-		"cypress": "cypress open"
+		"format": "prettier --write \"src/**/*.ts\" \"src/**/*.ts\""
   },
   "dependencies": {
     "eslint-config-prettier": "^9.1.0",
