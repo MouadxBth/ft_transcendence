@@ -2,6 +2,7 @@ import Sidebar from '@/components/ui/navbar'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Audiowide } from 'next/font/google'
+import Navbar from '@/components/ui/navbar'
 
 const audiowide = Audiowide({ subsets: ['latin'] , weight: ['400']})
 
@@ -18,8 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${audiowide.className} bg-black`}>
-      <Sidebar/>
+	<div className='grid'>
+		<Navbar/>
         {children}
+	</div>
       </body>
     </html>
   )
