@@ -1,3 +1,4 @@
+import Sidebar from '@/components/ui/navbar'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Audiowide } from 'next/font/google'
@@ -16,7 +17,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={audiowide.className}>{children}</body>
+      <body className={`${audiowide.className} bg-black`}>
+      <Sidebar/>
+        {children}
+      </body>
     </html>
   )
 }

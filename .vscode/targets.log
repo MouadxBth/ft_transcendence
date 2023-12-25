@@ -1,0 +1,437 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 4.2.1
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2016 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Mon Dec 25 21:52:56 2023
+
+# Variables
+
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# environment
+RUBY_VERSION = ruby-3.2.2
+# automatic
+?F = $(notdir $?)
+# default
+.SHELLFLAGS := -c
+# environment
+VSCODE_AGENT_FOLDER = /home/codespace/.vscode-remote
+# environment
+NODE_ROOT = /home/codespace/nvm
+# environment
+NVM_INC = /usr/local/share/nvm/versions/node/v20.10.0/include/node
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# environment
+GRADLE_HOME = /usr/local/sdkman/candidates/gradle/current
+# environment
+rvm_path = /usr/local/rvm
+# environment
+JAVA_ROOT = /home/codespace/java
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# automatic
+@F = $(notdir $@)
+# makefile
+CURDIR := /workspaces/ft_transcendence
+# environment
+DOCKER_BUILDKIT = 1
+# environment
+PYTHON_ROOT = /home/codespace/.python
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en","osLocale":"en","availableLanguages":{}}
+# environment
+GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN = app.github.dev
+# environment
+PROMPT_DIRTRIM = 4
+# environment
+_ = /usr/bin/cat
+# environment
+GITHUB_GRAPHQL_URL = https://api.github.com/graphql
+# environment
+RUBY_HOME = /usr/local/rvm/rubies/default
+# environment
+MAVEN_HOME = /usr/local/sdkman/candidates/maven/current
+# environment
+GITHUB_TOKEN = ghu_Znipv7Dw4PcJ68OHeI6KsBJDn7ww9D0uwjU6
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST :=  Makefile
+# environment
+ENABLE_DYNAMIC_INSTALL = true
+# 'override' directive
+GNUMAKEFLAGS := 
+# environment
+CONDA_DIR = /opt/conda
+# environment
+LESSOPEN = | /usr/bin/lesspipe %s
+# environment
+VSCODE_CWD = /vscode/bin/linux-x64/0ee08df0cf4527e40edc9aa28f4b5bd38bbff2b2
+# environment
+NVS_ROOT = /usr/local/nvs
+# environment
+DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
+# environment
+PATH = /vscode/bin/linux-x64/0ee08df0cf4527e40edc9aa28f4b5bd38bbff2b2/bin/remote-cli:/home/codespace/.local/bin:/home/codespace/.dotnet:/home/codespace/nvm/current/bin:/home/codespace/.php/current/bin:/home/codespace/.python/current/bin:/home/codespace/java/current/bin:/home/codespace/.ruby/current/bin:/home/codespace/.local/bin:/usr/local/python/current/bin:/usr/local/py-utils/bin:/usr/local/oryx:/usr/local/go/bin:/go/bin:/usr/local/sdkman/bin:/usr/local/sdkman/candidates/java/current/bin:/usr/local/sdkman/candidates/gradle/current/bin:/usr/local/sdkman/candidates/maven/current/bin:/usr/local/sdkman/candidates/ant/current/bin:/usr/local/rvm/gems/default/bin:/usr/local/rvm/gems/default@global/bin:/usr/local/rvm/rubies/default/bin:/usr/local/share/rbenv/bin:/usr/local/php/current/bin:/opt/conda/bin:/usr/local/nvs:/usr/local/share/nvm/current/bin:/usr/local/hugo/bin:/usr/local/dotnet/current:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/rvm/bin
+# environment
+NVS_OS = linux
+# environment
+DYNAMIC_INSTALL_ROOT_DIR = /opt
+# environment
+CLOUDENV_ENVIRONMENT_ID = 3a836ea4-bb93-4c45-8630-d0ee58015371
+# environment
+rvm_stored_umask = 0022
+# environment
+GITHUB_SERVER_URL = https://github.com
+# environment
+PIPX_BIN_DIR = /usr/local/py-utils/bin
+# environment
+PIPX_HOME = /usr/local/py-utils
+# environment
+SDKMAN_DIR = /usr/local/sdkman
+# makefile (from 'Makefile', line 14)
+COMPOSE_CMD := docker compose -f
+# environment
+SDKMAN_CANDIDATES_API = https://api.sdkman.io/2
+# environment
+GOPATH = /go
+# environment
+NVM_BIN = /usr/local/share/nvm/versions/node/v20.10.0/bin
+# environment
+HUGO_DIR = /usr/local/hugo/bin
+# environment
+SDKMAN_PLATFORM = linuxx64
+# environment
+NUGET_XMLDOC_MODE = skip
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-dba3541d-6e76-4a9c-aead-c5aefc39eea4.sock
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
+# environment
+CODESPACES = true
+# environment
+CODESPACE_NAME = probable-space-fiesta-6x4p94vq6jpf5xx4
+# environment
+LS_COLORS = 
+# automatic
+%F = $(notdir $%)
+# environment
+NVS_DIR = /usr/local/nvs
+# environment
+PHP_PATH = /usr/local/php/current
+# environment
+CONDA_SCRIPT = /opt/conda/etc/profile.d/conda.sh
+# environment
+ORYX_DIR = /usr/local/oryx
+# environment
+JUPYTERLAB_PATH = /home/codespace/.local/bin
+# environment
+rvm_bin_path = /usr/local/rvm/bin
+# environment
+ORYX_SDK_STORAGE_BASE_URL = https://oryx-cdn.microsoft.io
+# environment
+DOTNET_ROOT = /usr/local/dotnet/current
+# default
+.LOADED := 
+# environment
+GEM_HOME = /usr/local/rvm/gems/ruby-3.2.2
+# environment
+RVM_PATH = /usr/local/rvm
+# environment
+NPM_GLOBAL = /home/codespace/.npm-global
+# environment
+NVM_SYMLINK_CURRENT = true
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+HOME = /home/codespace
+# environment
+LESSCLOSE = /usr/bin/lesspipe %s %s
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# environment
+NVM_CD_FLAGS = 
+# automatic
++F = $(notdir $+)
+# environment
+ORYX_PREFER_USER_INSTALLED_SDKS = true
+# environment
+PYTHONIOENCODING = UTF-8
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+HOSTNAME = codespaces-4c3758
+# environment
+ORYX_ENV_TYPE = vsonline-present
+# environment
+MAKELEVEL := 0
+# environment
+GEM_PATH = /usr/local/rvm/gems/ruby-3.2.2:/usr/local/rvm/gems/ruby-3.2.2@global
+# default
+MAKE = $(MAKE_COMMAND)
+# environment
+HUGO_ROOT = /home/codespace/.hugo
+# default
+MAKECMDGOALS := all
+# environment
+IRBRC = /usr/local/rvm/rubies/ruby-3.2.2/.irbrc
+# environment
+SHLVL = 1
+# environment
+RUBY_ROOT = /home/codespace/.ruby
+# environment
+MAVEN_ROOT = /home/codespace/.maven
+# environment
+JAVA_HOME = /usr/local/sdkman/candidates/java/current
+# default
+MAKE_VERSION := 4.2.1
+# environment
+GITHUB_CODESPACE_TOKEN = AXUOJ6P5RMPN6E6NABX57F3FRKQ6FANCNFSM4AF4LUNA
+# environment
+USER = codespace
+# environment
+NVS_USE_XZ = 1
+# makefile
+.DEFAULT_GOAL := all
+# environment
+SHELL_LOGGED_IN = true
+# environment
+GOROOT = /usr/local/go
+# environment
+rvm_version = 1.29.12 (latest)
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# makefile (from 'Makefile', line 13)
+COMPOSE_FILE := ./docker-compose.yaml
+# default
+MAKE_COMMAND := make
+# environment
+OLDPWD = /vscode/bin/linux-x64/0ee08df0cf4527e40edc9aa28f4b5bd38bbff2b2
+# default
+.VARIABLES := 
+# automatic
+*F = $(notdir $*)
+# makefile
+MAKEFLAGS = pqrR
+# environment
+MFLAGS = -pqrR
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+NVM_DIR = /usr/local/share/nvm
+# environment
+PYTHON_PATH = /usr/local/python/current
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# makefile
+SHELL = /bin/sh
+# environment
+rvm_user_install_flag = 0
+# environment
+BROWSER = /vscode/bin/linux-x64/0ee08df0cf4527e40edc9aa28f4b5bd38bbff2b2/bin/helpers/browser.sh
+# environment
+PHP_ROOT = /home/codespace/.php
+# environment
+NVS_HOME = /usr/local/nvs
+# environment
+VSCODE_HANDLES_SIGPIPE = true
+# environment
+DEBIAN_FLAVOR = focal-scm
+# environment
+GITHUB_USER = enolaihssane
+# default
+MAKEFILES := 
+# automatic
+<F = $(notdir $<)
+# environment
+SDKMAN_CANDIDATES_DIR = /usr/local/sdkman/candidates
+# environment
+GITHUB_API_URL = https://api.github.com
+# environment
+PWD = /workspaces/ft_transcendence
+# environment
+LC_ALL = C
+# environment
+INTERNAL_VSCS_TARGET_URL = https://uksouth.online.visualstudio.com
+# environment
+GITHUB_REPOSITORY = MouadxBth/ft_transcendence
+# automatic
+^F = $(notdir $^)
+# environment
+rvm_prefix = /usr/local
+# default
+SUFFIXES := 
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# environment
+rvm_loaded_flag = 1
+# default
+.RECIPEPREFIX := 
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+ 
+# environment
+RAILS_DEVELOPMENT_HOSTS = .githubpreview.dev,.preview.app.github.dev,.app.github.dev
+# environment
+LANG = C
+# environment
+ContainerVersion = 13
+# environment
+MY_RUBY_HOME = /usr/local/rvm/rubies/ruby-3.2.2
+# variable set hash-table stats:
+# Load=137/1024=13%, Rehash=0, Collisions=14/167=8%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 1795, inode 1441802): 16 files, no impossibilities.
+
+# 16 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+stop:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 29):
+	@echo "Stopping docker containers...\n"
+	@$(COMPOSE_CMD) $(COMPOSE_FILE) stop
+
+all:
+#  Phony target (prerequisite of .PHONY).
+#  Command line target.
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: ''
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := all
+# automatic
+# % := 
+# automatic
+# * := 
+# automatic
+# + := 
+# automatic
+# | := 
+# automatic
+# < := 
+# automatic
+# ^ := 
+# automatic
+# ? := 
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=2/13=15%
+#  recipe to execute (from 'Makefile', line 17):
+	@echo "Building and running docker images...\n"
+	@$(COMPOSE_CMD) $(COMPOSE_FILE) up -d --build
+
+.PHONY: all build down re clean fclean
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2023-12-17 16:32:54.674707496
+#  File has been updated.
+#  Successfully updated.
+
+start:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 21):
+	@echo "Starting docker containers...\n"
+	@$(COMPOSE_CMD) $(COMPOSE_FILE) start
+
+build:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+
+fclean:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 37):
+	@echo "Deleting containers, images, networks and volumes...\n"
+	@$(COMPOSE_CMD) $(COMPOSE_FILE) down --rmi local -v --remove-orphans
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+re: fclean all
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+
+clean: down
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 33):
+	@echo "Deleting docker containers...\n"
+	@$(COMPOSE_CMD) $(COMPOSE_FILE) down
+
+logs:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 25):
+	@echo "Docker compose logs:"
+	@$(COMPOSE_CMD) $(COMPOSE_FILE) logs
+
+down:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+
+# files hash-table stats:
+# Load=13/1024=1%, Rehash=0, Collisions=0/34=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 30 / storage = 259 B / avg = 8 B
+# current buf: size = 8162 B / used = 259 B / count = 30 / avg = 8 B
+
+# strcache performance: lookups = 51 / hit rate = 41%
+# hash-table stats:
+# Load=30/8192=0%, Rehash=0, Collisions=1/51=2%
+# Finished Make data base on Mon Dec 25 21:52:56 2023
+
+ 

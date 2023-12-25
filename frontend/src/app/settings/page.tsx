@@ -1,9 +1,10 @@
-import Sidebar from '@/components/ui/sidebar'
+import Sidebar from '@/components/ui/navbar'
 import React from 'react'
 
 function page() {
   return (
-    <Sidebar/>
+    <div className="flex">
+    </div>
   )
 }
 
