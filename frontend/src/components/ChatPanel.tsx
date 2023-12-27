@@ -7,6 +7,12 @@ import MessagingSection from "./MessagingSection"
 import { useState } from "react"
 import Tab from "./Tab"
 
+
+const conversationData = [
+	{id: 3, CreatedAt: "2023-12-28T21:34:42.466Z", members: [1, 2], userName: "madsquirrel"},
+	{id: 3, CreatedAt: "2023-12-28T21:34:42.466Z", members: [1, 2], userName: "Dummy"}
+]
+
 export default function ChatPanel() {
 	
 	const [toggle, setToggle] = useState("chat");
@@ -29,7 +35,7 @@ export default function ChatPanel() {
 				<Image className="absolute top-[29%] right-[12%]" src="/img/search.png" alt="search" height={50} width={50} />
 			</div> */}
 			<div className="h-screen overflow-y-scroll">
-				<MessagingSection showItem={toggle}/>
+				<MessagingSection data={conversationData} showItem={toggle}/>
 			</div>
 		</div>
 	)
