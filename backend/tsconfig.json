@@ -31,7 +31,6 @@
 		"target": "ES2022",
 
 		"declaration": true,
-		"declarationDir": "./types",
 		"removeComments": true,
 
 		"emitDecoratorMetadata": true,

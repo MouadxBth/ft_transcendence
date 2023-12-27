@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { UserService } from "src/user/user.service";
 import z, { ZodError } from "zod";
-// import { UserService } from "src/user/user.service";
+import { AuthenticatedUser } from "../entities/authenticated-user.entity";
 
 const profileSchema = z.object({
 	username: z.string(),
@@ -19,7 +19,7 @@ type UserProfile = z.infer<typeof profileSchema>;
 export class GithubService {
 	constructor(private readonly userService: UserService) {}
 
-	async validate(profile: unknown) {
+	async validate(profile: unknown): Promise<AuthenticatedUser | null> {
 		let userProfile: UserProfile;
 
 		try {
@@ -43,7 +43,10 @@ export class GithubService {
 
 		const { twoFactorAuthenticationSecret, ...result } = user;
 
-		return result;
+		return {
+			user: result,
+			valid2Fa: false,
+		};
 	}
 
 	async handleFirstTime(profile: UserProfile) {

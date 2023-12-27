@@ -1,21 +1,16 @@
 import { Injectable, NestMiddleware } from "@nestjs/common";
-import { User } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
+import { AuthenticatedUser } from "src/auth/entities/authenticated-user.entity";
 
 @Injectable()
 export class TwoFactorMiddleware implements NestMiddleware {
 	async use(req: Request, res: Response, next: NextFunction) {
-		const user = req.user as User;
+		const authenticatedUser = req.user as AuthenticatedUser;
 
-		if (!user || !user.twoFactorAuthenticationEnabled) {
-			return next();
-		}
+		if (!authenticatedUser || !authenticatedUser.user.twoFactorAuthenticationEnabled) return next();
 
-		const check = (req.session as any).validTwoFa;
+		if (!authenticatedUser.valid2Fa) return res.redirect("/api/v1/auth/2fa");
 
-		if (!check) {
-			return res.redirect("/api/v1/auth/2fa");
-		}
 		next();
 	}
 }

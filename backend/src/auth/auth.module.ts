@@ -1,4 +1,4 @@
-import { Module, forwardRef } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule, RequestMethod, forwardRef } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { LocalController } from "./local/local.controller";
@@ -23,6 +23,8 @@ import { GoogleGuard } from "./google/guards/google.guard";
 import { GoogleStrategy } from "./google/strategies/google.strategy";
 import { TwoFactorController } from "./two-factor/two-factor.controller";
 import { TwoFactorService } from "./two-factor/two-factor.service";
+import { WsAuthenticatedGuard } from "./guards/ws-authenticated.guard";
+import { TwoFactorMiddleware } from "./two-factor/middleware/two-factor.middleware";
 
 const controllers = [
 	LocalController,
@@ -32,7 +34,14 @@ const controllers = [
 	TwoFactorController,
 ];
 const services = [LocalService, FortyTwoService, GithubService, GoogleService, TwoFactorService];
-const guards = [AuthenticatedGuard, LocalGuard, FortyTwoGuard, GithubGuard, GoogleGuard];
+const guards = [
+	AuthenticatedGuard,
+	LocalGuard,
+	FortyTwoGuard,
+	GithubGuard,
+	GoogleGuard,
+	WsAuthenticatedGuard,
+];
 const strategies = [LocalStrategy, FortyTwoStrategy, GithubStrategy, GoogleStrategy];
 
 @Module({
@@ -44,6 +53,19 @@ const strategies = [LocalStrategy, FortyTwoStrategy, GithubStrategy, GoogleStrat
 	],
 	controllers: [AuthController, ...controllers],
 	providers: [AuthService, SessionSerializer, ...services, ...guards, ...strategies],
-	exports: [AuthenticatedGuard],
+	exports: [AuthenticatedGuard, WsAuthenticatedGuard],
 })
-export class AuthModule {}
+export class AuthModule implements NestModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer.apply(TwoFactorMiddleware).forRoutes(
+			{
+				path: "/auth/2fa/enable",
+				method: RequestMethod.POST,
+			},
+			{
+				path: "/auth/2fa/disable",
+				method: RequestMethod.POST,
+			}
+		);
+	}
+}

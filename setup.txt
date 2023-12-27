@@ -1,0 +1,5 @@
+--- run prisma service:
+npm run prisma:studio
+
+--- run backend service
+npm run start:dev

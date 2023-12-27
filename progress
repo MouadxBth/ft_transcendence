@@ -1,0 +1,6 @@
+26 Dec | abed
+progress log:
+- set up the project backend and review database schema for front end implementation
+- figured how to use React useContext()
+- conversations are now being rendered dynamically from a const test object
+- integrate Ihssane's navabar component with my work

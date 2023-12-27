@@ -8,6 +8,10 @@ import { CacheModule } from "@nestjs/cache-manager";
 import { ioRedisStore } from "@tirke/node-cache-manager-ioredis";
 import { RedisClient } from "./redis/redis.provider";
 import { AuthModule } from "./auth/auth.module";
+import { ConversationModule } from "./conversation/conversation.module";
+import { BlockedModule } from "./blocked/blocked.module";
+import { FriendModule } from "./friend/friend.module";
+import { OnlineStatusModule } from "./online-status/online-status.module";
 
 @Module({
 	imports: [
@@ -33,6 +37,10 @@ import { AuthModule } from "./auth/auth.module";
 			},
 		}),
 		AuthModule,
+		ConversationModule,
+		BlockedModule,
+		FriendModule,
+		OnlineStatusModule,
 	],
 })
 export class AppModule {}

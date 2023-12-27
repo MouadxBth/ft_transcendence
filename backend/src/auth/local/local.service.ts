@@ -3,12 +3,13 @@ import { UserService } from "src/user/user.service";
 import { CreateUserDto } from "src/user/dto/create-user.dto";
 import * as bcrypt from "bcrypt";
 import { Request } from "express";
+import { AuthenticatedUser } from "../entities/authenticated-user.entity";
 
 @Injectable()
 export class LocalService {
 	constructor(private readonly userService: UserService) {}
 
-	async validate(username: string, pass: string) {
+	async validate(username: string, pass: string): Promise<AuthenticatedUser> {
 		const user = await this.userService.findOne(username);
 
 		const { password, twoFactorAuthenticationSecret, ...result } = user;
@@ -17,11 +18,12 @@ export class LocalService {
 
 		const comparison = await bcrypt.compare(pass, password);
 
-		if (!comparison) {
-			throw new HttpException("Invalid credentials!", HttpStatus.UNAUTHORIZED);
-		}
+		if (!comparison) throw new HttpException("Invalid credentials!", HttpStatus.UNAUTHORIZED);
 
-		return result;
+		return {
+			user: result,
+			valid2Fa: false,
+		};
 	}
 
 	async register(req: Request, dto: CreateUserDto) {

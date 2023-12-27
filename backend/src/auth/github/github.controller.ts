@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards } from "@nestjs/common";
+import { Controller, Get, HttpStatus, Req, UseGuards } from "@nestjs/common";
 import type { Request } from "express";
 import { GithubGuard } from "./guards/github.guard";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
@@ -13,9 +13,13 @@ export class GithubController {
 		summary: "Login/Authenticate a user",
 		description: "Used to Login/Authenticate a user",
 	})
-	@ApiResponse({ type: User, status: 201, description: "Authenticated User's profile" })
 	@ApiResponse({
-		status: 401,
+		type: User,
+		status: HttpStatus.CREATED,
+		description: "Authenticated User's profile",
+	})
+	@ApiResponse({
+		status: HttpStatus.UNAUTHORIZED,
 		description: "If the user's credentials don't match, a Unauthorized exception will be returned",
 	})
 	async githubLogin(@Req() req: Request) {
@@ -28,9 +32,13 @@ export class GithubController {
 		summary: "Github OAuth 2.0 Callback URL",
 		description: "Used as a redirection of the Github OAuth 2.0 provider a user",
 	})
-	@ApiResponse({ type: User, status: 201, description: "Authenticated User's profile" })
 	@ApiResponse({
-		status: 401,
+		type: User,
+		status: HttpStatus.CREATED,
+		description: "Authenticated User's profile",
+	})
+	@ApiResponse({
+		status: HttpStatus.UNAUTHORIZED,
 		description: "If the user's credentials don't match, a Unauthorized exception will be returned",
 	})
 	async githubRedirect(@Req() req: Request) {
