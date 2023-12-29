@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from "react";
 import ChatBar from "./ChatBar";
 import MessageContent from "./MessageContent";
 import SendBar from "./SendBar";
@@ -17,7 +20,6 @@ const messageData = [{
 	]
 }
 ]
-
 //case where there is none not handled
 
 function getItem(data: any, name: string) {
@@ -26,13 +28,24 @@ function getItem(data: any, name: string) {
 
 export default function ChatMessageView(props: {user: string}) {
 	const data = getItem(messageData, props.user);
+	const [conversationData, setConversationData] =  useState(data[0].data);
+
+	function onNewMessage(value: string) {
+		let tmp = conversationData.slice();
+		tmp.push({content: value, senderId: 1});
+		console.log(tmp);
+		setConversationData(tmp);
+		console.log("state updated");
+	}
+
+	console.log("chat rendered!");
 	return (
 		<div className="flex flex-col justify-between h-full w-full">
 			<ChatBar user={props.user}/>
-			<div className="flex flex-row w-full h-[80%]">
-				<MessageContent user={props.user} data={data[0].data}/>
+			<div className="flex flex-row w-full h-full overflow-y-scroll">
+				<MessageContent user={props.user} data={conversationData}/>
 			</div>
-			<SendBar user={props.user}/>
+			<SendBar user={props.user} onMessage={onNewMessage}/>
 		</div>
 	);
 }

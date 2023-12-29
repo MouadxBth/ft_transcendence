@@ -10,13 +10,13 @@ export default function Home() {
     <main>
 		<Chat>
 			<Tabs className='flex flex-row w-full h-screen' defaultValue="Dummy">
-				<TabsList className='h-full w-[30%]'>
+				<TabsList className='h-full w-[20%]'>
 						<ChatPanel/>
 				</TabsList>
-				<TabsContent className='w-full h-screnn' id="1" value="Dummy">
+				<TabsContent className='w-[80%] h-screnn' id="1" value="Dummy">
 					<ChatMessageView user="Dummy"/>
 				</TabsContent>
-				<TabsContent className='w-full h-scfeen' id="2" value={user}>
+				<TabsContent className='w-[80%] h-scfeen' id="2" value={user}>
 					<ChatMessageView user={user}/>
 				</TabsContent>
 			</Tabs>

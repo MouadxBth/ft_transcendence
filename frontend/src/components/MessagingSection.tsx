@@ -2,6 +2,7 @@ import Conversation from "./Conversation"
 import Channel from "./Channel"
 import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useId } from "react"
 
 
 const channelData = [
