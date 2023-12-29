@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${audiowide.className} bg-black`}>
-	<div className='grid'>
+	<div className='h-screen w-screen'>
 		{/* <Navbar/> */}
         {children}
 	</div>

@@ -2,11 +2,11 @@ import Image from "next/image";
 import { Input } from "./ui/input";
 
 
-export default function SendBar() {
+export default function SendBar(props: {user: string}) {
 	return (
-		<div className="flex flex-row bg-white w-full h-23">
+		<div className="flex flex-row bg-white w-full h-[10%]">
 			<div className="basis-3/4 flex flex-col justify-center p-2">
-				<Input placeholder="send a text message"/>
+				<Input placeholder={`send a text message to ${props.user}`}/>
 			</div>
 			<div className="basis-1/4 flex flex-col justify-center">
 				<div className="flex justify-end p-3">

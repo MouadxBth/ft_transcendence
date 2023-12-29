@@ -1,6 +1,8 @@
 import Conversation from "./Conversation"
 import Channel from "./Channel"
 import { useState } from "react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
 
 const channelData = [
 	{name: "random"},
@@ -15,8 +17,12 @@ export default function MessagingSection (props: {data: { id: number; CreatedAt:
 	if (props.showItem === 'chat')
 		return (
 			<div>
-				{props.data.map(conversation => <Conversation name={conversation.userName}/>)}
-			</div>	
+				{props.data.map(conversation => (
+								<TabsTrigger className="h-full w-full" value={conversation.userName}>
+									<Conversation name={conversation.userName}/>
+								</TabsTrigger>
+								))}
+			</div>
 		)
 		else
 			return (

@@ -1,16 +1,16 @@
 import Image from "next/image";
 
 
-export default function chatBar() {
+export default function chatBar(props: {user: string}) {
 	return (
-		<div className="flex flex-row bg-white w-full h-23">
+		<div className="flex flex-row bg-white w-full h-[10%]">
 			<div className="basis-1/12">
 				<Image src="/img/user-black.png" alt="a generic image of a user profile" width={100} height={100}/>
 			</div>
 			<div className="basis-2/12 flex flex-col justify-center">
 				<div>
 					<h2>
-						User
+						{props.user}
 					</h2>
 				</div>
 				<div>
