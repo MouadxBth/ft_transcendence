@@ -23,28 +23,28 @@ const messageSchema = z.object({
 
 export default function SendBar(props: {user: string, onMessage: any}) {
 
-	const form = useForm<z.infer<typeof messageSchema>>({
-		resolver: zodResolver(messageSchema),
-		shouldUnregister: true,
+	const {reset, handleSubmit, register}= useForm<{message: string}>({
+		// resolver: zodResolver(messageSchema),
+		// shouldUnregister: true,
 		defaultValues: {
 			message: ""
 		},
 	})
 
-	const {reset, resetField} = useForm({
-		mode: "onChange",
-		defaultValues: {
-			message: ""
-		},
-	})
+	// const {reset, resetField} = useForm({
+	// 	mode: "onChange",
+	// 	defaultValues: {
+	// 		message: ""
+	// 	},
+	// })
 
-	function onSubmit(value: z.infer<typeof messageSchema>, e: any) {
+	function onSubmit(value: any, e: any) {
 		console.log("form captured");
 		console.log(value);
-		resetField("message");
+		//resetField("message");
 		props.onMessage(value.message)
-		reset({message: ""}, {keepDefaultValues: false});
-		value.message = "";
+		//reset({message: ""}, {keepDefaultValues: false});
+		//value.message = "";
 		e.target.reset();
 		// useEffect(() => {form.reset()}, [value])
 	}
@@ -56,14 +56,13 @@ export default function SendBar(props: {user: string, onMessage: any}) {
 
 	return (
 		<div className="flex flex-col justify-center bg-white w-full h-[10%]">
-		<Form {...form}>
-		<form onSubmit={form.handleSubmit(onSubmit)} className="">
+		{/* <Form {...form}> */}
+		<form onSubmit={handleSubmit(onSubmit)} className="">
 		  <div className="flex flex-row">
 			<div className="basis-3/4 flex flex-col justify-center p-2">
-				<FormField
-					control={form.control}
+				{/* <FormField
+					//control={form.control}
 					name="message"
-					shouldUnregister={false}
 					render={({ field }) => (
 					<FormItem>
 						<FormControl>
@@ -72,11 +71,12 @@ export default function SendBar(props: {user: string, onMessage: any}) {
 						<FormMessage />
 					</FormItem>
 					)}
-				/>
+				/> */}
+				<input className="w-full h-full border rounded-full px-2" placeholder={`send a message to ${props.user}`} type="text" {...register("message")}/>
 		  </div>
 		  <div className="basis-1/4 flex flex-col justify-center">
 			<div className="flex justify-end p-3">
-				<button type="submit" onClick={handleClick}/>
+				{/* <button type="submit" onClick={handleClick}/> */}
 				<Button className="text-black" type="submit">
 					<Image src="/img/send-arrow.png" alt="a generic image of a user profile" width={30} height={30}/>
 				</Button>
@@ -84,7 +84,7 @@ export default function SendBar(props: {user: string, onMessage: any}) {
 			</div>
 		  </div>
 		</form>
-	  </Form>
+	  {/* </Form> */}
 	  </div>
 	)
 }

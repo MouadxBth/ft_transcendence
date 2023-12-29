@@ -35,7 +35,7 @@ export default function ChatPanel() {
 										border-2 border-white text-white"/>
 				<Image className="absolute top-[29%] right-[12%]" src="/img/search.png" alt="search" height={50} width={50} />
 			</div> */}
-			<div className="h-full overflow-y-scroll">
+			<div className="h-full w-full overflow-y-scroll p-2">
 				<MessagingSection data={conversationData} showItem={toggle}/>
 			</div>
 		</div>

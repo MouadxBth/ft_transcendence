@@ -3,7 +3,7 @@ import { useId } from "react";
 
 export default function MessageContent(props: {user: string, data: any}) {
 	return (
-	<div className="flex flex-col justify-start w-full m-7">
+	<div className="flex flex-col justify-start w-full p-7">
 		{/* <SingleMessage key="1" other={true} message="here we go again"/>
 		<SingleMessage key="2" other={false} message="say what"/>
 		<SingleMessage key="3" other={true} message="im just saying"/>

@@ -17,9 +17,9 @@ export default function MessagingSection (props: {data: { id: number; CreatedAt:
 	
 	if (props.showItem === 'chat')
 		return (
-			<div>
+			<div className="h-full w-full">
 				{props.data.map(conversation => (
-								<TabsTrigger className="h-full w-full" value={conversation.userName}>
+								<TabsTrigger className="w-full" value={conversation.userName}>
 									<Conversation name={conversation.userName}/>
 								</TabsTrigger>
 								))}
