@@ -1,34 +1,16 @@
-
 "use client";
-import Pong from "./Pong"
-import { useState } from "react"
-
-
+import Pong from "./Pong";
+import { useState } from "react";
+import ChooseColor from "./button";
 
 export default function Home() {
-  let [color, setColor] : any = useState("");
 
   return (
-    <div> 
-      <div>
-        <button onClick= {() => setColor("black")}>
-          black
-        </button>
-          <br />
-        <button onClick= {() => setColor("green")}>
-          green
-        </button>
-        <br />
-        <button onClick= {() => setColor("purple")}>
-          purple
-        </button>
-        <br />
-      </div>
-      <Pong  color = {color} />
+    <div>
+     <ChooseColor />
     </div>
-  )
+  );
 }
-
 
 // import React from 'react';
 // // import Pong from './Game';
