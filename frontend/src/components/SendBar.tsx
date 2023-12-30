@@ -38,11 +38,12 @@ export default function SendBar(props: {user: string, onMessage: any}) {
 	// 	},
 	// })
 
-	function onSubmit(value: any, e: any) {
+	function onSubmit(value: {message: string}, e: any) {
 		console.log("form captured");
 		console.log(value);
 		//resetField("message");
-		props.onMessage(value.message)
+		if (value.message.length)
+			props.onMessage(value.message)
 		//reset({message: ""}, {keepDefaultValues: false});
 		//value.message = "";
 		e.target.reset();

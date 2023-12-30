@@ -4,6 +4,7 @@ import { useState } from "react";
 import ChatBar from "./ChatBar";
 import MessageContent from "./MessageContent";
 import SendBar from "./SendBar";
+import { useEffect } from "react";
 
 const messageData = [{
 	user: "madsquirrel",
@@ -42,7 +43,7 @@ export default function ChatMessageView(props: {user: string}) {
 	return (
 		<div className="flex flex-col justify-between h-full w-full">
 			<ChatBar user={props.user}/>
-			<div className="flex flex-row w-full h-full overflow-y-scroll">
+			<div id="message-content" className="flex flex-row w-full h-full overflow-y-scroll">
 				<MessageContent user={props.user} data={conversationData}/>
 			</div>
 			<SendBar user={props.user} onMessage={onNewMessage}/>

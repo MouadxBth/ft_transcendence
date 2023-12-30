@@ -24,7 +24,7 @@ export default function ChatPanel() {
 	}
 	
 	return (
-		<div className="text-white bg-gray-600 h-full">
+		<div className="text-white bg-gray-600 h-full w-full">
 			<div className="flex flex-row">
 				<Tab value="chat" active={toggle === "chat" ? true : false}  handler={handleSectionClick} />
 				<Tab value="channel" active={toggle === "channel" ? true : false} handler={handleSectionClick} />
@@ -35,7 +35,7 @@ export default function ChatPanel() {
 										border-2 border-white text-white"/>
 				<Image className="absolute top-[29%] right-[12%]" src="/img/search.png" alt="search" height={50} width={50} />
 			</div> */}
-			<div className="h-full w-full overflow-y-scroll p-2">
+			<div className="overflow-y-scroll p-2">
 				<MessagingSection data={conversationData} showItem={toggle}/>
 			</div>
 		</div>
