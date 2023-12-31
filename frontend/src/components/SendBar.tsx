@@ -24,60 +24,28 @@ const messageSchema = z.object({
 export default function SendBar(props: {user: string, onMessage: any}) {
 
 	const {reset, handleSubmit, register}= useForm<{message: string}>({
-		// resolver: zodResolver(messageSchema),
-		// shouldUnregister: true,
 		defaultValues: {
 			message: ""
 		},
 	})
 
-	// const {reset, resetField} = useForm({
-	// 	mode: "onChange",
-	// 	defaultValues: {
-	// 		message: ""
-	// 	},
-	// })
-
 	function onSubmit(value: {message: string}, e: any) {
 		console.log("form captured");
 		console.log(value);
-		//resetField("message");
 		if (value.message.length)
 			props.onMessage(value.message)
-		//reset({message: ""}, {keepDefaultValues: false});
-		//value.message = "";
-		e.target.reset();
-		// useEffect(() => {form.reset()}, [value])
-	}
-
-	function handleClick() {
-		console.log("time has come");
-		resetField("message");
+		e.target.reset()
 	}
 
 	return (
 		<div className="flex flex-col justify-center bg-white w-full h-[10%]">
-		{/* <Form {...form}> */}
 		<form onSubmit={handleSubmit(onSubmit)} className="">
 		  <div className="flex flex-row">
 			<div className="basis-3/4 flex flex-col justify-center p-2">
-				{/* <FormField
-					//control={form.control}
-					name="message"
-					render={({ field }) => (
-					<FormItem>
-						<FormControl>
-						<Input placeholder="send the user a message" {...field}/>
-						</FormControl>
-						<FormMessage />
-					</FormItem>
-					)}
-				/> */}
 				<input className="w-full h-full border rounded-full px-2" placeholder={`send a message to ${props.user}`} type="text" {...register("message")}/>
 		  </div>
 		  <div className="basis-1/4 flex flex-col justify-center">
 			<div className="flex justify-end p-3">
-				{/* <button type="submit" onClick={handleClick}/> */}
 				<Button className="text-black" type="submit">
 					<Image src="/img/send-arrow.png" alt="a generic image of a user profile" width={30} height={30}/>
 				</Button>
@@ -85,16 +53,6 @@ export default function SendBar(props: {user: string, onMessage: any}) {
 			</div>
 		  </div>
 		</form>
-	  {/* </Form> */}
 	  </div>
 	)
 }
-
-
-// export default function SendBar(props: {user: string, onMessage: () => void}) {
-// 	return (
-// 		<div className="bg-white w-full h-[10%]">
-// 				<MessageForm/>
-// 		</div>
-// 	)
-// }

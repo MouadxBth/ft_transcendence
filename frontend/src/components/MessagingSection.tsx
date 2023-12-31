@@ -1,34 +1,32 @@
 import Conversation from "./Conversation"
 import Channel from "./Channel"
-import { useState } from "react"
+import { useState, useContext } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useId } from "react"
+import { userContext } from "@/app/chat/userContext"
 
 
-const channelData = [
-	{name: "random"},
-	{name: "general"},
-	{name: "frontend"},
-	{name: "backend"}
-]
+export default function MessagingSection (props: {showItem: string}) {
 
-export default function MessagingSection (props: {data: { id: number; CreatedAt: string; members: number[]; userName: string;}[], showItem: string}) {
+	const {userData} = useContext(userContext);
 
-	
 	if (props.showItem === 'chat')
 		return (
 			<div className="h-full w-full">
-				{props.data.map(conversation => (
-								<TabsTrigger className="w-full" value={conversation.userName}>
-									<Conversation name={conversation.userName}/>
+				{userData.conversations.map(conversation => (
+								<TabsTrigger className="w-full" value={conversation.user}>
+									<Conversation name={conversation.user}/>
 								</TabsTrigger>
 								))}
 			</div>
 		)
 		else
-			return (
-				<div>
-					{channelData.map(channel => <Channel name={channel.name}/>)}
-				</div>	
+		return (
+			<div className="h-full w-full">
+				{userData.channels.map(channel => (
+					<TabsTrigger className="w-full" value={channel.name}>
+						<Channel name={channel.name} />
+					</TabsTrigger>
+				))}
+			</div>	
 			)
 }

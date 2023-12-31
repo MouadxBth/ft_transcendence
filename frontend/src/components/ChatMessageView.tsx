@@ -5,6 +5,8 @@ import ChatBar from "./ChatBar";
 import MessageContent from "./MessageContent";
 import SendBar from "./SendBar";
 import { useEffect } from "react";
+import { UserDataType, userContext } from "@/app/chat/userContext";
+import { useContext } from "react";
 
 const messageData = [{
 	user: "madsquirrel",
@@ -23,20 +25,23 @@ const messageData = [{
 ]
 //case where there is none not handled
 
-function getItem(data: any, name: string) {
-	return messageData.filter((item) => item.user === name)
-}
 
 export default function ChatMessageView(props: {user: string}) {
-	const data = getItem(messageData, props.user);
-	const [conversationData, setConversationData] =  useState(data[0].data);
+	
+	const {userData, setUserData} = useContext(userContext);
+
+	function getItem(data: UserDataType, name: string) {
+		return data.conversations.filter((item) => item.user === name)
+	}
+
+	const data = getItem(userData, props.user);
 
 	function onNewMessage(value: string) {
-		let tmp = conversationData.slice();
-		tmp.push({content: value, senderId: 1});
-		console.log(tmp);
-		setConversationData(tmp);
-		console.log("state updated");
+		let tmp = data[0].data.slice();
+		var d = {...userData};
+		d.conversations.filter((item) => item.user === props.user)[0].data.push({content: value, senderId: 1});
+		console.log(d);
+		setUserData({...d});
 	}
 
 	console.log("chat rendered!");
@@ -44,7 +49,7 @@ export default function ChatMessageView(props: {user: string}) {
 		<div className="flex flex-col justify-between h-full w-full">
 			<ChatBar user={props.user}/>
 			<div id="message-content" className="flex flex-row w-full h-full overflow-y-scroll">
-				<MessageContent user={props.user} data={conversationData}/>
+				<MessageContent user={props.user} data={[...data[0].data]}/>
 			</div>
 			<SendBar user={props.user} onMessage={onNewMessage}/>
 		</div>

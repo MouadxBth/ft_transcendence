@@ -12,7 +12,7 @@ export default function Channel(props: {name: string}) {
 					{props.name}
 				</h3>
 			</div>
-			{/* <div className="text-gray-400">
+			{/* <div className="text-gray-400"> // maybe for last message
 				<h4>
 					Kouma: I'll beat your ass again haha
 				</h4>

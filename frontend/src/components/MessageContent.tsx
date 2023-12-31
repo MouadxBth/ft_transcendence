@@ -1,9 +1,10 @@
 import SingleMessage from "./SingleMessage";
 import {useEffect} from "react";
+import { useContext } from "react";
+import { userContext } from "@/app/chat/userContext";
 
 export default function MessageContent(props: {user: string, data: any}) {
 	console.log("render for message content");
-
 	useEffect(() => {
 		console.log("inside usEffect");
 		var elem = document.getElementById("message-content");
