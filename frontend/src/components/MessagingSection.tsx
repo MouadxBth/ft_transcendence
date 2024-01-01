@@ -13,7 +13,7 @@ export default function MessagingSection (props: {showItem: string}) {
 		return (
 			<div className="h-full w-full">
 				{userData.conversations.map(conversation => (
-								<TabsTrigger className="w-full" value={conversation.user}>
+								<TabsTrigger className="min-h-[70px] w-full" value={conversation.user}>
 									<Conversation name={conversation.user}/>
 								</TabsTrigger>
 								))}
@@ -23,8 +23,8 @@ export default function MessagingSection (props: {showItem: string}) {
 		return (
 			<div className="h-full w-full">
 				{userData.channels.map(channel => (
-					<TabsTrigger className="w-full" value={channel.name}>
-						<Channel name={channel.name} />
+					<TabsTrigger className="w-full" value={channel.user}>
+						<Channel name={channel.user} />
 					</TabsTrigger>
 				))}
 			</div>	

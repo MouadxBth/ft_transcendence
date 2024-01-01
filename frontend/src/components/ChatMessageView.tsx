@@ -26,12 +26,14 @@ const messageData = [{
 //case where there is none not handled
 
 
-export default function ChatMessageView(props: {user: string}) {
+export default function ChatMessageView(props: {user: string, tab: string}) {
 	
 	const {userData, setUserData} = useContext(userContext);
 
 	function getItem(data: UserDataType, name: string) {
-		return data.conversations.filter((item) => item.user === name)
+		if (props.tab === "chat")
+			return data.conversations.filter((item) => item.user === name)
+		return data.channels.filter((item) => item.user === name)
 	}
 
 	const data = getItem(userData, props.user);

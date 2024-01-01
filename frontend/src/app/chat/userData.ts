@@ -17,15 +17,15 @@ export const loggedUser = {
 	}],
 	channels: [
 		{
-			name: "random", 
-			messages: [
+			user: "random", 
+			data: [
 				{ user: "matt", message: "holi" },
 				{ user: "sean", message: "hoy!" }
 			]
 		},
 		{
-			name: "frontend", 
-			messages: [
+			user: "frontend", 
+			data: [
 				{ user: "matt", message: "kafka" },
 				{ user: "sean", message: "..." },
 				{ user: "double", message: "elab !" }

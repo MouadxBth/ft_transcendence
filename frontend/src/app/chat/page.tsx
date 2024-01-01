@@ -13,21 +13,41 @@ export default function Home() {
 	const [userData, setUserData] = useState(loggedUser);
 	console.log("triggered re-render of chat app");
 	
+	const [toggle, setToggle] = useState("chat");
+
+	function handleSectionClick(tab: string) {
+		console.log("was clicked!");
+		setToggle(tab);
+	}
+	
   return (
 	  <userContext.Provider value={{userData, setUserData}}>
 			<main>
 			  <Chat>
 				  <Tabs className='flex flex-row w-full h-screen' defaultValue="Dummy">
 					  <TabsList className='h-full w-[20%]'>
-						  <ChatPanel />
+						  <ChatPanel tab={toggle} changeTab={handleSectionClick} />
 					  </TabsList>
-					  {userData.conversations.map((conversation) => {
+					  {/* {userData.conversations.map((conversation) => {
 						return (
 							<TabsContent className='w-[80%] h-screnn' id="1" value={conversation.user}>
 								<ChatMessageView user={conversation.user} />
 							</TabsContent>
 						)
-					  })}
+					  })} */}
+					  {
+						toggle === "chat" ? (userData.conversations.map((conversation) => {
+							return (
+								<TabsContent className='w-[80%] h-screnn' id="1" value={conversation.user}>
+									<ChatMessageView tab={toggle} user={conversation.user} />
+								</TabsContent>
+							)})) : (userData.channels.map((channel) => {
+								return (
+									<TabsContent className='w-[80%] h-screnn' id="1" value={channel.user}>
+										<ChatMessageView tab={toggle} user={channel.user} />
+									</TabsContent>
+								)}))
+					  }
 					  {/* <TabsContent className='w-[80%] h-scfeen' id="2" value={userData.name}>
 						  <ChatMessageView user={userData.name} />
 					  </TabsContent> */}

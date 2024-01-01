@@ -12,8 +12,8 @@ export type UserDataType = {
         }[];
     }[];
     channels: {
-        name: string;
-        messages: {
+        user: string;
+        data: {
             user: string;
             message: string;
         }[];
