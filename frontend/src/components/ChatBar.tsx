@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function chatBar(props: {user: string}) {
 	return (
-		<div className="flex flex-row bg-white w-full h-[10%]">
+		<div className="flex flex-row bg-white w-full h-[10%] shrink-0">
 			<div className="basis-1/12 flex flex-col justify-center">
 				<div className="flex w-full">
 					<Image src="/img/user-black.png" alt="a generic image of a user profile" width={100} height={100}/>

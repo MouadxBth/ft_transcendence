@@ -9,6 +9,13 @@ import { useContext, createContext, useState } from 'react'
 import { userContext, type UserDataType } from './userContext'
 import { loggedUser } from './userData'
 
+const data = [
+	{id: 0, createdAt: "00", updatedAt: "11"},
+	{id: 1, createdAt: "00", updatedAt: "11"},
+	{id: 2, createdAt: "00", updatedAt: "11"},
+]
+
+
 export default function Home() {
 	const [userData, setUserData] = useState(loggedUser);
 	console.log("triggered re-render of chat app");
@@ -25,16 +32,9 @@ export default function Home() {
 			<main>
 			  <Chat>
 				  <Tabs className='flex flex-row w-full h-screen' defaultValue="Dummy">
-					  <TabsList className='h-full w-[20%]'>
+					  <TabsList className='h-screen w-[20%]'>
 						  <ChatPanel tab={toggle} changeTab={handleSectionClick} />
 					  </TabsList>
-					  {/* {userData.conversations.map((conversation) => {
-						return (
-							<TabsContent className='w-[80%] h-screnn' id="1" value={conversation.user}>
-								<ChatMessageView user={conversation.user} />
-							</TabsContent>
-						)
-					  })} */}
 					  {
 						toggle === "chat" ? (userData.conversations.map((conversation) => {
 							return (

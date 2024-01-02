@@ -5,6 +5,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { userContext } from "@/app/chat/userContext"
 import AddChat from "./addChat"
 import AddChannel from "./addChannel"
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+  } from "@/components/ui/dialog"
+  
 
 
 export default function MessagingSection (props: {showItem: string}) {
@@ -19,17 +28,26 @@ export default function MessagingSection (props: {showItem: string}) {
 								</TabsTrigger>
 								))}
 								<AddChat/>
+						<Dialog>
+							<DialogTrigger>Open</DialogTrigger>
+							<DialogContent>
+								<div className="text-white felx justify-center">
+								<AddChat/>
+									<h1>HEI</h1>
+								</div>
+							</DialogContent>
+						</Dialog>
 			</div>
 		)
 		else
 		return (
 			<div className="h-full w-full">
 				{userData.channels.map(channel => (
-					<TabsTrigger className="w-full" value={channel.user}>
+					<TabsTrigger className="min-h-[70px] w-full" value={channel.user}>
 						<Channel name={channel.user} />
 					</TabsTrigger>
 				))}
-				<AddChannel/>
+				{/* <AddChannel/> */}
 			</div>	
 			)
 }

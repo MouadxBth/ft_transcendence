@@ -16,6 +16,34 @@ export const loggedUser = {
 			{ content: "yo, homie?", senderId: 1 },
 			{ content: "what ya doing bro", senderId: 0 }
 		]
+	},
+	{
+		user: "dylan",
+		data: []
+	},
+	{
+		user: "troy",
+		data: []
+	},
+	{
+		user: "abed",
+		data: []
+	},
+	{
+		user: "syl",
+		data: []
+	},
+	{
+		user: "sonya",
+		data: []
+	},
+	{
+		user: "ben",
+		data: []
+	},
+	{
+		user: "sofia",
+		data: []
 	}],
 	channels: [
 		{

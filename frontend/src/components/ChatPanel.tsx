@@ -11,8 +11,8 @@ const conversationData = [
 ]
 export default function ChatPanel(props: {tab: string, changeTab: (tab: string) => void}) {
 	return (
-		<div className="flex flex-col text-white  h-full w-full">
-				<div className="flex flex-row">
+		<div className="flex flex-col overflow-auto text-white  w-full h-screen">
+				<div className="h-[10%] flex shrink-0 mb-2">
 					<Tab value="chat" active={props.tab === "chat" ? true : false}  handler={props.changeTab} />
 					<Tab value="channel" active={props.tab === "channel" ? true : false} handler={props.changeTab} />
 				</div>
@@ -22,8 +22,10 @@ export default function ChatPanel(props: {tab: string, changeTab: (tab: string) 
 											border-2 border-white text-white"/>
 					<Image className="absolute top-[29%] right-[12%]" src="/img/search.png" alt="search" height={50} width={50} />
 				</div> */}
-				<div className="flex flex-row w-full h-full overflow-y-scroll">
-					<MessagingSection showItem={props.tab}/>
+				<div>
+					<div className="flex flex-row w-full h-full overflow-y-scroll">
+						<MessagingSection showItem={props.tab}/>
+					</div>
 				</div>
 		</div>
 	)
