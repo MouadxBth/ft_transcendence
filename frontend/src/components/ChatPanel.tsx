@@ -1,29 +1,8 @@
 'use client'
-
-import InputField from "./InputField"
-import Conversation from "./Conversation"
-import Image from "next/image"
 import MessagingSection from "./MessagingSection"
 import React, { useState } from 'react';
 
 import Tab from "./Tab"
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-  } from "@/components/ui/dialog"
-import { Plus } from "lucide-react"
-import { Button } from "./ui/button"
-import { loggedUser } from "@/app/chat/userData"
-import { UserDataType } from "@/app/chat/userContext"
-import { useForm } from "react-hook-form"
-import AddChat from "./addChat"
-
-  
-
 
 const conversationData = [
 	{id: 3, CreatedAt: "2023-12-28T21:34:42.466Z", members: [1, 2], userName: "madsquirrel"},
@@ -31,21 +10,6 @@ const conversationData = [
 	{id: 0, CreatedAt: "2023-12-28T21:34:42.466Z", members: [1, 2], userName: "Ray"}
 ]
 export default function ChatPanel(props: {tab: string, changeTab: (tab: string) => void}) {
-	const [newlogged, setUser] = useState(loggedUser);
-	
-		const handleAddUserClick = () => {
-			const newUserName = prompt('Enter the name of the new user:');
-			if (newUserName) {
-				loggedUser.conversations.push({user: newUserName, data: []})
-				setUser(prevUser => ({
-					...prevUser,
-					conversations: [
-					  ...prevUser.conversations,
-					  { user: newUserName, data: [] },
-					],
-				  }));
-			}
-		  };
 	return (
 		<div className="flex flex-col text-white  h-full w-full">
 				<div className="flex flex-row">
