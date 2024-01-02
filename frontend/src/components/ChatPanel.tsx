@@ -35,7 +35,7 @@ export default function ChatPanel(props: {tab: string, changeTab: (tab: string) 
 		const handleAddUserClick = () => {
 			const newUserName = prompt('Enter the name of the new user:');
 			if (newUserName) {
-				newlogged.conversations.push({user: newUserName, data: []})
+				loggedUser.conversations.push({user: newUserName, data: []})
 				setUser(prevUser => ({
 					...prevUser,
 					conversations: [
