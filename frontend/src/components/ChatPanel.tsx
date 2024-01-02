@@ -20,6 +20,7 @@ import { Button } from "./ui/button"
 import { loggedUser } from "@/app/chat/userData"
 import { UserDataType } from "@/app/chat/userContext"
 import { useForm } from "react-hook-form"
+import AddChat from "./addChat"
 
   
 
@@ -46,8 +47,7 @@ export default function ChatPanel(props: {tab: string, changeTab: (tab: string) 
 			}
 		  };
 	return (
-		<div className="flex flex-col text-white bg-gray-600 h-full w-full">
-			<div>
+		<div className="flex flex-col text-white  h-full w-full">
 				<div className="flex flex-row">
 					<Tab value="chat" active={props.tab === "chat" ? true : false}  handler={props.changeTab} />
 					<Tab value="channel" active={props.tab === "channel" ? true : false} handler={props.changeTab} />
@@ -60,10 +60,6 @@ export default function ChatPanel(props: {tab: string, changeTab: (tab: string) 
 				</div> */}
 				<div className="flex flex-row w-full h-full overflow-y-scroll">
 					<MessagingSection showItem={props.tab}/>
-				</div>
-			</div>
-				<div>
-						<button className=" rounded-full bg-white text-black" onClick={handleAddUserClick}><Plus/></button>
 				</div>
 		</div>
 	)

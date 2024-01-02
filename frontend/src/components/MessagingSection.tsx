@@ -3,6 +3,8 @@ import Channel from "./Channel"
 import { useState, useContext } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { userContext } from "@/app/chat/userContext"
+import AddChat from "./addChat"
+import AddChannel from "./addChannel"
 
 
 export default function MessagingSection (props: {showItem: string}) {
@@ -16,6 +18,7 @@ export default function MessagingSection (props: {showItem: string}) {
 									<Conversation name={conversation.user}/>
 								</TabsTrigger>
 								))}
+								<AddChat/>
 			</div>
 		)
 		else
@@ -26,6 +29,7 @@ export default function MessagingSection (props: {showItem: string}) {
 						<Channel name={channel.user} />
 					</TabsTrigger>
 				))}
+				<AddChannel/>
 			</div>	
 			)
 }
