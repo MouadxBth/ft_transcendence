@@ -8,7 +8,6 @@ import { userContext } from "@/app/chat/userContext"
 export default function MessagingSection (props: {showItem: string}) {
 
 	const {userData} = useContext(userContext);
-
 	if (props.showItem === 'chat')
 		return (
 			<div className="h-full w-full">

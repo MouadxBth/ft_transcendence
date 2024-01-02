@@ -1,3 +1,5 @@
+import { UserDataType } from "./userContext";
+
 export const loggedUser = {
 	name: "abed",
 	conversations: [{
