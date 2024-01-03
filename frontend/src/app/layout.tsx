@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { Audiowide } from 'next/font/google'
 import Navbar from '@/components/ui/navbar'
 import { AUTHORS } from '@/lib/authors'
+import { Toaster } from '@/components/ui/toaster'
 
 AUTHORS = ["Abed"]
 
@@ -32,6 +33,7 @@ export default function RootLayout({
 		{/* <Navbar/> */}
         {children}
 	</div>
+	<Toaster/>
       </body>
     </html>
   )

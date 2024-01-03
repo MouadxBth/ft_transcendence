@@ -16,9 +16,12 @@ import {
 	DialogTrigger,
   } from "@/components/ui/dialog"
 import { DialogClose } from "@radix-ui/react-dialog";
+import { useToast } from "./ui/use-toast";
+import { Toaster } from "./ui/toaster";
   
 
 function AddChat() {
+	const { toast } = useToast();
 	const {userData, setUserData} = useContext(userContext);
 	const closeBtnRef = useRef(null);
 	const {reset, handleSubmit, register}= useForm<{username: string}>({
@@ -29,7 +32,15 @@ function AddChat() {
 
 	function onSubmit(value: {username: string}, e: any) {
 		e.preventDefault();
-		if (value.username.trim() && value.username.trim() !== '') {
+		if (value.username.trim() && value.username.trim() === "no_user")
+		{
+			toast({
+				variant: "destructive",
+				title: "Invalid username",
+				description: "please enter a valid username"
+			})
+		}
+		else if (value.username.trim() && value.username.trim() !== '') {
 			const userExists = userData.conversations.some(
 				conversation => conversation.user === value.username.trim()
 			);
