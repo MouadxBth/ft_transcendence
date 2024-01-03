@@ -31,8 +31,8 @@ export default function Home() {
 	  <userContext.Provider value={{userData, setUserData}}>
 			<main>
 			  <Chat>
-				  <Tabs className='flex flex-row w-full h-screen' defaultValue="Dummy">
-					  <TabsList className='h-screen w-[20%]'>
+				  <Tabs className='flex flex-row w-full h-screen' defaultValue="">
+					  <TabsList className='h-screen w-[20%] bg-black'>
 						  <ChatPanel tab={toggle} changeTab={handleSectionClick} />
 					  </TabsList>
 					  {

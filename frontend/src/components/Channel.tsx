@@ -2,8 +2,8 @@ import Image from "next/image"
 
 export default function Channel(props: {name: string}) {
 	return (
-		<div className="flex h-full bg-slate-900 w-full border-2 border-white rounded-xl p-2 mb-2">
-		<div className="h-full w-[40%] flex justtify-center">
+		<div className="flex justify-center items-center h-28 w-full">
+		<div className="flex h-full w-[40%] items-center">
 			<div>
 				<Image src={`https://robohash.org/${props.name}`} alt="a generic image of a user profile" width={60} height={60} className="rounded-full"/>
 			</div>

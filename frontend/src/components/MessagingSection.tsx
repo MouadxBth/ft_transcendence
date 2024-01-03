@@ -6,37 +6,55 @@ import { userContext } from "@/app/chat/userContext"
 import AddChat from "./addChat"
 import AddChannel from "./addChannel"
 import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-  } from "@/components/ui/dialog"
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu"
+
   
 
 
-export default function MessagingSection (props: {showItem: string}) {
+export default function MessagingSection (props: {className?: string,showItem: string}) {
 
+	const [activeConversation, setActiveConversation] = useState('');
 	const {userData} = useContext(userContext);
 	if (props.showItem === 'chat')
 		return (
-			<div className="h-full w-full">
+			<div className="h-full w-full ">
 				{userData.conversations.map(conversation => (
-								<TabsTrigger className="min-h-[70px] w-full" value={conversation.user}>
-									<Conversation name={conversation.user}/>
-								</TabsTrigger>
+					<div>
+						<ContextMenu>
+						<ContextMenuTrigger>
+						<TabsTrigger className={`min-h-[70px] w-full ${activeConversation === conversation.user ? 'bg-white text-black' : ''}`} value={conversation.user} onClick={() => setActiveConversation(conversation.user)}>
+										<div className=" hover:bg-white/20"><Conversation name={conversation.user}/></div>
+									</TabsTrigger>
+						</ContextMenuTrigger>
+						<ContextMenuContent>
+							<ContextMenuItem>Delete conversation</ContextMenuItem>
+						</ContextMenuContent>
+						</ContextMenu>
+					</div>
 								))}
-								<AddChat/>
+					<AddChat/>
 			</div>
 		)
 		else
 		return (
 			<div className="h-full w-full">
 				{userData.channels.map(channel => (
-					<TabsTrigger className="min-h-[70px] w-full" value={channel.user}>
-						<Channel name={channel.user} />
-					</TabsTrigger>
+					<div>
+					<ContextMenu>
+					<ContextMenuTrigger>
+					<TabsTrigger className={`min-h-[70px] w-full ${activeConversation === channel.user ? 'bg-white text-black' : ''}`} value={channel.user} onClick={() => setActiveConversation(channel.user)}>
+									<div className=" hover:bg-white/20"><Channel name={channel.user}/></div>
+								</TabsTrigger>
+					</ContextMenuTrigger>
+					<ContextMenuContent>
+						<ContextMenuItem>Leave channel</ContextMenuItem>
+					</ContextMenuContent>
+					</ContextMenu>
+								</div>
 				))}
 				<AddChannel/>
 			</div>	

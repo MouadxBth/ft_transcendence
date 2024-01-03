@@ -46,9 +46,9 @@ function AddChannel() {
     <>
         <div>
 			<Dialog>
-				<div className="shadow-inner shadow-white">
-				<DialogTrigger className=" rounded-full h-10 w-10 bg-white text-black absolute top-[93%] right-[81%] ">
-					<div className="flex justify-center">
+				<div className="w-full h-28 bg-gradient-to-t from-black to-transparent absolute top-[91%] ">
+				<DialogTrigger>
+					<div className="flex justify-center items-center rounded-full h-10 w-10 bg-white text-black absolute top-[40%] right-[10%]">
 						<Plus/>
 					</div>
 				</DialogTrigger>

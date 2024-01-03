@@ -1,3 +1,4 @@
+"use client"
 import { loggedUser } from "@/app/chat/userData";
 import { Plus, Send, UserPlus, X } from "lucide-react";
 import { useRef, useState } from "react";
@@ -60,10 +61,10 @@ function AddChat() {
     <>
         <div>
 			<Dialog>
-				<DialogTrigger className=" rounded-full h-10 w-10 bg-white text-black absolute top-[93%] right-[81%]">
-					<div className="flex justify-center">
-						<Plus/>
-					</div>
+				<DialogTrigger >
+						<div className="flex justify-center items-center rounded-full h-10 w-10 bg-white text-black absolute top-[95%] right-[10%]">
+							<Plus/>
+						</div>
 				</DialogTrigger>
 				<DialogContent className="flex flex-col text-white">
 					<div className="flex justify-between items-center">
