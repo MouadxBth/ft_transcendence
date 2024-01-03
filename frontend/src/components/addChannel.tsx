@@ -46,13 +46,11 @@ function AddChannel() {
     <>
         <div>
 			<Dialog>
-				<div className="w-full h-28 bg-gradient-to-t from-black to-transparent absolute top-[91%] ">
 				<DialogTrigger>
-					<div className="flex justify-center items-center rounded-full h-10 w-10 bg-white text-black absolute top-[40%] right-[10%]">
+					<div className="flex justify-center items-center rounded-full h-10 w-10 bg-black text-white absolute top-[95%] right-5">
 						<Plus/>
 					</div>
 				</DialogTrigger>
-				</div>
 				<DialogContent className="flex flex-col text-white">
 					<div className="flex justify-between items-center">
 						<DialogTitle >Enter channel name</DialogTitle>

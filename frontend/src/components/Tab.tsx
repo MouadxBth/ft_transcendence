@@ -10,7 +10,7 @@ export default function Tab(props: {value: string, active: boolean, handler: (a:
 		)
 	else
 	 return (
-		<div onClick={()=> props.handler(props.value)} className="h-20 flex flex-col w-full basis-1/2 justify-center text-white/20 hover:text-white/70 cursor-pointer bg-white/20">
+		<div onClick={()=> props.handler(props.value)} className="h-20 flex flex-col w-full basis-1/2 justify-center text-white/20 hover:text-gray-500/70 cursor-pointer">
 			<div>
 				<h2 className="text-center">{props.value}</h2>
 			</div>

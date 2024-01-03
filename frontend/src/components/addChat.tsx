@@ -62,7 +62,7 @@ function AddChat() {
         <div>
 			<Dialog>
 				<DialogTrigger >
-						<div className="flex justify-center items-center rounded-full h-10 w-10 bg-white text-black absolute top-[95%] right-[10%]">
+						<div className="flex justify-center items-center rounded-full h-10 w-10 bg-black text-white absolute top-[95%] right-5">
 							<Plus/>
 						</div>
 				</DialogTrigger>

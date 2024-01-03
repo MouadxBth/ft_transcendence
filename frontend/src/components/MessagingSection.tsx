@@ -26,8 +26,8 @@ export default function MessagingSection (props: {className?: string,showItem: s
 					<div>
 						<ContextMenu>
 						<ContextMenuTrigger>
-						<TabsTrigger className={`min-h-[70px] w-full ${activeConversation === conversation.user ? 'bg-white text-black' : ''}`} value={conversation.user} onClick={() => setActiveConversation(conversation.user)}>
-										<div className=" hover:bg-white/20"><Conversation name={conversation.user}/></div>
+						<TabsTrigger className={`min-h-[70px] w-full ${activeConversation === conversation.user ? 'bg-gray-500/50 text-black' : ''}`} value={conversation.user} onClick={() => setActiveConversation(conversation.user)}>
+										<div className=" hover:bg-gray-500/50"><Conversation name={conversation.user}/></div>
 									</TabsTrigger>
 						</ContextMenuTrigger>
 						<ContextMenuContent>
@@ -46,8 +46,8 @@ export default function MessagingSection (props: {className?: string,showItem: s
 					<div>
 					<ContextMenu>
 					<ContextMenuTrigger>
-					<TabsTrigger className={`min-h-[70px] w-full ${activeConversation === channel.user ? 'bg-white text-black' : ''}`} value={channel.user} onClick={() => setActiveConversation(channel.user)}>
-									<div className=" hover:bg-white/20"><Channel name={channel.user}/></div>
+					<TabsTrigger className={`min-h-[70px] w-full ${activeConversation === channel.user ? 'bg-gray-500/50 text-black' : ''}`} value={channel.user} onClick={() => setActiveConversation(channel.user)}>
+									<div className=" hover:bg-gray-500/50"><Channel name={channel.user}/></div>
 								</TabsTrigger>
 					</ContextMenuTrigger>
 					<ContextMenuContent>
