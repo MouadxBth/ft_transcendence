@@ -28,15 +28,6 @@ export default function MessagingSection (props: {showItem: string}) {
 								</TabsTrigger>
 								))}
 								<AddChat/>
-						<Dialog>
-							<DialogTrigger>Open</DialogTrigger>
-							<DialogContent>
-								<div className="text-white felx justify-center">
-								<AddChat/>
-									<h1>HEI</h1>
-								</div>
-							</DialogContent>
-						</Dialog>
 			</div>
 		)
 		else
@@ -47,7 +38,7 @@ export default function MessagingSection (props: {showItem: string}) {
 						<Channel name={channel.user} />
 					</TabsTrigger>
 				))}
-				{/* <AddChannel/> */}
+				<AddChannel/>
 			</div>	
 			)
 }

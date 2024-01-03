@@ -19,11 +19,15 @@ function AddChannel() {
 			}
 		  };
    return(
-    <>
-        <div>
-            <button className=" rounded-full bg-white text-black" onClick={handleAddUserClick}><Plus/></button>
-        </div>
-    </>
+	<>
+	<div>
+		<button className=" rounded-full h-10 w-10 bg-white text-black absolute top-[93%] right-[81%]" onClick={handleAddUserClick}>
+			<div className="flex justify-center">
+				<Plus/>
+			</div>
+		</button>
+	</div>
+</>
    )
   }
   
