@@ -34,7 +34,9 @@ export default function SendBar(props: {user: string, onMessage: any}) {
 		console.log(value);
 		if (value.message.length)
 			props.onMessage(value.message)
-		e.target.reset()
+			reset({
+				message: ""
+			})
 	}
 
 	return (
