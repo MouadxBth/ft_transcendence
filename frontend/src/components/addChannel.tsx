@@ -46,11 +46,13 @@ function AddChannel() {
     <>
         <div>
 			<Dialog>
-				<DialogTrigger className=" rounded-full h-10 w-10 bg-white text-black absolute top-[93%] right-[81%]">
+				<div className="shadow-inner shadow-white">
+				<DialogTrigger className=" rounded-full h-10 w-10 bg-white text-black absolute top-[93%] right-[81%] ">
 					<div className="flex justify-center">
 						<Plus/>
 					</div>
 				</DialogTrigger>
+				</div>
 				<DialogContent className="flex flex-col text-white">
 					<div className="flex justify-between items-center">
 						<DialogTitle >Enter channel name</DialogTitle>
@@ -66,7 +68,7 @@ function AddChannel() {
 							<div>
 								<Button variant="ghost" className="mt-4 hover:bg-white hover:text-black border rounded-xl w-20 h-6 text-white" type="submit">
 										Done
-									</Button>
+								</Button>
 							</div>
 					</div>
 					</form>
@@ -75,32 +77,6 @@ function AddChannel() {
         </div>
     </>
    )
-//     const [newlogged, setUser] = useState(loggedUser);
-	
-// 		const handleAddUserClick = () => {
-// 			const newUserName = prompt('Enter the name of the new channel:');
-// 			if (newUserName) {
-// 				loggedUser.channels.push({user: newUserName, data: []})
-// 				setUser(prevUser => ({
-// 					...prevUser,
-// 					channels: [
-// 					  ...prevUser.channels,
-// 					  { user: newUserName, data: [] },
-// 					],
-// 				  }));
-// 			}
-// 		  };
-//    return(
-// 	<>
-// 	<div>
-// 		<button className=" rounded-full h-10 w-10 bg-white text-black absolute top-[93%] right-[81%]" onClick={handleAddUserClick}>
-// 			<div className="flex justify-center">
-// 				<Plus/>
-// 			</div>
-// 		</button>
-// 	</div>
-// </>
-//    )
   }
   
   export default AddChannel

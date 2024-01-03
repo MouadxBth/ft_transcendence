@@ -3,6 +3,7 @@ import MessagingSection from "./MessagingSection"
 import React, { useState } from 'react';
 
 import Tab from "./Tab"
+import { ScrollArea } from "./ui/scroll-area";
 
 const conversationData = [
 	{id: 3, CreatedAt: "2023-12-28T21:34:42.466Z", members: [1, 2], userName: "madsquirrel"},
@@ -22,11 +23,9 @@ export default function ChatPanel(props: {tab: string, changeTab: (tab: string) 
 											border-2 border-white text-white"/>
 					<Image className="absolute top-[29%] right-[12%]" src="/img/search.png" alt="search" height={50} width={50} />
 				</div> */}
-				<div>
-					<div className="flex flex-row w-full h-full overflow-y-scroll">
-						<MessagingSection showItem={props.tab}/>
-					</div>
-				</div>
+						<ScrollArea className="flex flex-row w-full h-full">
+							<MessagingSection showItem={props.tab}/>
+						</ScrollArea>
 		</div>
 	)
 }

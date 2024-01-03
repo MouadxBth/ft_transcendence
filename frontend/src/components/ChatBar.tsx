@@ -1,4 +1,6 @@
+import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
+import { Button } from "./ui/button";
 
 
 export default function chatBar(props: {user: string}) {
@@ -24,7 +26,9 @@ export default function chatBar(props: {user: string}) {
 			<div className="basis-9/12 flex flex-col justify-center">
 				<div className="flex justify-end p-3">
 					<div>
-						<Image src="/img/Ellipsis.png" alt="a generic image of a user profile" width={30} height={30}/>
+						<Button>
+							<MoreHorizontal className="h-10 w-10"/>
+						</Button>
 					</div>
 				</div>
 			</div>
