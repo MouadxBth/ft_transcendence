@@ -17,6 +17,7 @@ enum ChannelStatus {
 }
 
 enum MatchType {
+
 	CLASSIC
 	CUSTOM
 }

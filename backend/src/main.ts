@@ -15,6 +15,7 @@ declare const module: any;
 let sessionMiddleware: RequestHandler;
 
 function configureApp(app: INestApplication<any>) {
+	useContainer(app.select(AppModule), { fallbackOnErrors: true });
 	app.setGlobalPrefix("api/v1");
 	app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
 }
