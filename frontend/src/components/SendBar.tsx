@@ -16,6 +16,7 @@ import {
   } from "@/components/ui/form"
 import { Button } from "./ui/button";
 import { useEffect } from "react";
+import { SendHorizontal } from "lucide-react";
 
 const messageSchema = z.object({
 	message: z.string().min(0).max(999),
@@ -40,16 +41,16 @@ export default function SendBar(props: {user: string, onMessage: any}) {
 	}
 
 	return (
-		<div className="flex flex-col justify-center bg-white w-full h-[10%]">
+		<div className="flex flex-col justify-center w-full">
 		<form onSubmit={handleSubmit(onSubmit)} className="">
 		  <div className="flex flex-row">
-			<div className="basis-3/4 flex flex-col justify-center p-2">
-				<input className="w-full h-full border rounded-full px-2" placeholder={`send a message to ${props.user}`} type="text" {...register("message")}/>
+			<div className="flex flex-col justify-center p-2 w-full">
+				<input className="w-full h-14 border rounded-xl px-2 bg-zinc-900 text-white" placeholder={`send a message to ${props.user}`} type="text" {...register("message")}/>
 		  </div>
-		  <div className="basis-1/4 flex flex-col justify-center">
-			<div className="flex justify-end p-3">
-				<Button className="text-black" type="submit">
-					<Image src="/img/send-arrow.png" alt="a generic image of a user profile" width={30} height={30}/>
+		  <div className="flex flex-col justify-center">
+			<div className="flex items-center p-3">
+				<Button className="text-white rounded-2xl bg-white/40 border border-white w-14 h-14" type="submit">
+					<SendHorizontal size={30} />
 				</Button>
 			</div>
 			</div>
