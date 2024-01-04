@@ -14,6 +14,7 @@ export default function ChatPanel(props: {tab: string, changeTab: (tab: string) 
 	return (
 		<div className="flex flex-col overflow-auto text-black w-full h-full border rounded-xl bg-white border-gray-500 ">
 				<div className="h-[5.5%] flex mb-2">
+
 					<Tab value="chat" active={props.tab === "chat" ? true : false}  handler={props.changeTab} />
 					<Tab value="channel" active={props.tab === "channel" ? true : false} handler={props.changeTab} />
 				</div>
