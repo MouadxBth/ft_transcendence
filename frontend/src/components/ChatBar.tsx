@@ -6,12 +6,12 @@ import { Button } from "./ui/button";
 export default function chatBar(props: {user: string}) {
 	return (
 		<div className="flex flex-row border border-gray-500 bg-zinc-900 w-full h-[10%] shrink-0 rounded-2xl text-white">
-			<div className="basis-1/12 flex flex-col justify-center">
-				<div className="flex w-full">
-					<Image src="/img/user-black.png" alt="a generic image of a user profile" width={100} height={100}/>
-				</div>
+			<div className="flex-initial h-full shrink-0">
+				{/* <div className=""> */}
+					<img src="/img/user-black.png" alt="a generic image of a user profile" className="max-w-none h-[100%]"/>
+				{/* </div> */}
 			</div>
-			<div className="basis-2/12 flex flex-col justify-center">
+			<div className="flex flex-col justify-center">
 				<div>
 					<h2>
 						{props.user}
@@ -23,8 +23,8 @@ export default function chatBar(props: {user: string}) {
 					</h4>
 				</div>
 			</div>
-			<div className="basis-9/12 flex flex-col justify-center">
-				<div className="flex justify-end p-3">
+			<div className="flex flex-row w-full justify-end">
+				<div className="flex justify-center flex-col p-3">
 					<div>
 						<Button>
 							<MoreHorizontal className="h-10 w-10"/>
