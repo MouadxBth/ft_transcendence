@@ -6,7 +6,6 @@ import Navbar from '@/components/ui/navbar'
 import { AUTHORS } from '@/lib/authors'
 import { Toaster } from '@/components/ui/toaster'
 
-AUTHORS = ["Abed"]
 
 const audiowide = Audiowide({ subsets: ['latin'] , weight: ['400']})
 

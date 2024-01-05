@@ -32,7 +32,7 @@ export default function Home() {
 			<main>
 			  <Chat>
 				  <Tabs className='flex flex-row w-full h-screen' defaultValue="">
-					  <TabsList className='h-screen w-[20%] bg-black'>
+					  <TabsList className='h-screen flex-initial w-[200px] bg-black'>
 						  <ChatPanel tab={toggle} changeTab={handleSectionClick} />
 					  </TabsList>
 					  {
