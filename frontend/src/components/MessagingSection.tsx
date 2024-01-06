@@ -19,24 +19,20 @@ export default function MessagingSection (props: {className?: string,showItem: s
 
 	const [activeConversation, setActiveConversation] = useState('');
 	const {userData} = useContext(userContext);
+	
 	if (props.showItem === 'chat')
 		return (
 			<div className="h-full w-full ">
 				{userData.conversations.map(conversation => (
 					<div>
-						<ContextMenu>
-						<ContextMenuTrigger>
 						<TabsTrigger className={`min-h-[70px] w-full ${activeConversation === conversation.user ? 'bg-gray-500/50 text-black' : ''}`} value={conversation.user} onClick={() => setActiveConversation(conversation.user)}>
-										<div className=" hover:bg-gray-500/50"><Conversation name={conversation.user}/></div>
-									</TabsTrigger>
-						</ContextMenuTrigger>
-						<ContextMenuContent>
-							<ContextMenuItem>Delete conversation</ContextMenuItem>
-						</ContextMenuContent>
-						</ContextMenu>
+							<div className=" hover:bg-gray-500/50">
+								<Conversation name={conversation.user} />
+							</div>
+						</TabsTrigger>
 					</div>
-								))}
-					<AddChat/>
+				))}
+				<AddChat />
 			</div>
 		)
 		else

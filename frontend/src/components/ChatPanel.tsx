@@ -1,9 +1,8 @@
 'use client'
-import MessagingSection from "./MessagingSection"
-import React, { useState } from 'react';
 
 import Tab from "./Tab"
-import { ScrollArea } from "./ui/scroll-area";
+import ConversationList from "./ConversationList";
+import ChannelList from "./ChannelList";
 
 
 export default function  ChatPanel(props: {tab: string, changeTab: (tab: string) => void}) {
@@ -13,9 +12,7 @@ export default function  ChatPanel(props: {tab: string, changeTab: (tab: string)
 				<Tab value="chat" active={props.tab === "chat" ? true : false} handler={props.changeTab} />
 				<Tab value="channel" active={props.tab === "channel" ? true : false} handler={props.changeTab} />
 			</div>
-			<ScrollArea className="h-screen">
-				<MessagingSection className="border-white" showItem={props.tab} />
-			</ScrollArea>
+			{props.tab === "chat" ? <ConversationList/> : <ChannelList/>}
 		</div>
 	)
 }
