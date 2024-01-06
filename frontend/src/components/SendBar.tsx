@@ -42,7 +42,7 @@ export default function SendBar(props: {user: string, onMessage: any}) {
 
 	return (
 		<div className="flex flex-col justify-center w-full">
-		<form onSubmit={handleSubmit(onSubmit)} className="">
+		<form autoComplete="off" onSubmit={handleSubmit(onSubmit)} className="">
 		  <div className="flex flex-row">
 			<div className="flex flex-col justify-center p-2 w-full">
 				<input className="w-full h-14 border rounded-xl px-2 bg-zinc-900 text-white" placeholder={`send a message to ${props.user}`} type="text" {...register("message")}/>

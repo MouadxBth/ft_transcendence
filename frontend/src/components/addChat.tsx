@@ -73,7 +73,7 @@ function AddChat() {
 							<X/>
 						</DialogClose>
 					</div>
-						<form onSubmit={handleSubmit(onSubmit)}>
+						<form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
 					<div className="flex flex-col justify-between items-center">
 							<div>
 								<input className="bg-black w-96 h-12 border rounded-full px-2" placeholder="username" type="text" {...register("username")}/>

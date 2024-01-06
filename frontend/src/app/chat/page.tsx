@@ -8,23 +8,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useContext, createContext, useState } from 'react'
 import { userContext, type UserDataType } from './userContext'
 import { loggedUser } from './userData'
-
-const data = [
-	{id: 0, createdAt: "00", updatedAt: "11"},
-	{id: 1, createdAt: "00", updatedAt: "11"},
-	{id: 2, createdAt: "00", updatedAt: "11"},
-]
+import ConverationMessageView from '@/components/ConversationMessageView'
+import ChannelMessageView from '@/components/ChannelMessageView'
 
 
 export default function Home() {
 	const [userData, setUserData] = useState(loggedUser);
 	console.log("triggered re-render of chat app");
 	
-	const [toggle, setToggle] = useState("chat");
+	const [tab, setTab] = useState("chat");
 
 	function handleSectionClick(tab: string) {
 		console.log("was clicked!");
-		setToggle(tab);
+		setTab(tab);
 	}
 	
 return (
@@ -32,20 +28,20 @@ return (
 		<main>
 			<Chat>
 				<Tabs className='flex flex-row w-full h-screen' defaultValue="">
-					<TabsList className='h-screen flex-initial py-1 w-[200px] bg-black'>
-						<ChatPanel tab={toggle} changeTab={handleSectionClick} />
+					<TabsList className='h-full flex-initial py-1 w-[250px] bg-black'>
+						<ChatPanel tab={tab} changeTab={handleSectionClick} />
 					</TabsList>
 					{
-						toggle === "chat" ? (userData.conversations.map((conversation) => {
+						tab === "chat" ? (userData.conversations.map((conversation) => {
 							return (
 								<TabsContent className='w-full h-screnn' id="1" value={conversation.user}>
-									<ChatMessageView tab={toggle} user={conversation.user} />
+									<ConverationMessageView user={conversation.user} />
 								</TabsContent>
 							)
 						})) : (userData.channels.map((channel) => {
 							return (
 								<TabsContent className='w-full h-screnn' id="1" value={channel.user}>
-									<ChatMessageView tab={toggle} user={channel.user} />
+									<ChannelMessageView user={channel.user} />
 								</TabsContent>
 							)
 						}))
