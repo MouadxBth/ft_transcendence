@@ -27,33 +27,32 @@ export default function Home() {
 		setToggle(tab);
 	}
 	
-  return (
-	  <userContext.Provider value={{userData, setUserData}}>
-			<main>
-			  <Chat>
-				  <Tabs className='flex flex-row w-full h-screen' defaultValue="">
-					  <TabsList className='h-screen flex-initial w-[200px] bg-black'>
-						  <ChatPanel tab={toggle} changeTab={handleSectionClick} />
-					  </TabsList>
-					  {
+return (
+	<userContext.Provider value={{ userData, setUserData }}>
+		<main>
+			<Chat>
+				<Tabs className='flex flex-row w-full h-screen' defaultValue="">
+					<TabsList className='h-screen flex-initial py-1 w-[200px] bg-black'>
+						<ChatPanel tab={toggle} changeTab={handleSectionClick} />
+					</TabsList>
+					{
 						toggle === "chat" ? (userData.conversations.map((conversation) => {
 							return (
-								<TabsContent className='w-[80%] h-screnn' id="1" value={conversation.user}>
+								<TabsContent className='w-full h-screnn' id="1" value={conversation.user}>
 									<ChatMessageView tab={toggle} user={conversation.user} />
 								</TabsContent>
-							)})) : (userData.channels.map((channel) => {
-								return (
-									<TabsContent className='w-[80%] h-screnn' id="1" value={channel.user}>
-										<ChatMessageView tab={toggle} user={channel.user} />
-									</TabsContent>
-								)}))
-					  }
-					  {/* <TabsContent className='w-[80%] h-scfeen' id="2" value={userData.name}>
-						  <ChatMessageView user={userData.name} />
-					  </TabsContent> */}
-				  </Tabs>
-			  </Chat>
-		  </main>
-	  </userContext.Provider>
-  )
+							)
+						})) : (userData.channels.map((channel) => {
+							return (
+								<TabsContent className='w-full h-screnn' id="1" value={channel.user}>
+									<ChatMessageView tab={toggle} user={channel.user} />
+								</TabsContent>
+							)
+						}))
+					}
+				</Tabs>
+			</Chat>
+		</main>
+	</userContext.Provider>
+)
 }

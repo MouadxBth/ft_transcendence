@@ -48,10 +48,10 @@ export default function ChatMessageView(props: {user: string, tab: string}) {
 
 	console.log("chat rendered!");
 	return (
-		<div className="flex flex-col justify-between h-screen w-full px-12 py-6">
+		<div className="flex flex-col justify-between h-screen w-full px-3 py-1">
 			<ChatBar user={props.user}/>
 			<div id="message-content" className="flex flex-row w-full h-full overflow-y-scroll">
-				<MessageContent user={props.user} data={[...data[0].data]}/>
+				<MessageContent user={props.user} tab={props.tab} data={[...data[0].data]}/>
 			</div>
 			<SendBar user={props.user} onMessage={onNewMessage}/>
 		</div>
