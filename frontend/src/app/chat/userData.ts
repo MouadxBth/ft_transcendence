@@ -50,7 +50,8 @@ export const loggedUser = {
 			user: "random", 
 			data: [
 				{ user: "matt", message: "holi" },
-				{ user: "sean", message: "hoy!" }
+				{ user: "sean", message: "hoy!" },
+				{ user: "sean", message: "soy sadoi sdfoksa asdoisdf asdlonasd fasdofiasd f" }
 			]
 		},
 		{
