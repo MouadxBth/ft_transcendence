@@ -27,7 +27,10 @@ export class ChannelService {
 				HttpStatus.BAD_REQUEST
 			);
 
-		if (createChannelDto.status === ChannelStatus.PUBLIC && createChannelDto.password)
+		if (
+			(!createChannelDto.status || createChannelDto.status === ChannelStatus.PUBLIC) &&
+			createChannelDto.password
+		)
 			throw new HttpException(
 				"No password is required for public channels.",
 				HttpStatus.BAD_REQUEST
@@ -52,7 +55,7 @@ export class ChannelService {
 	}
 
 	async findOne(id: string) {
-		const channelResult = await this.prisma.channel.findUnique({ where: { name: id }});
+		const channelResult = await this.prisma.channel.findUnique({ where: { name: id } });
 
 		if (!channelResult)
 			throw new HttpException("No such channel with that name!", HttpStatus.BAD_REQUEST);
@@ -64,13 +67,12 @@ export class ChannelService {
 		return await this.prisma.channel.findMany({
 			select: {
 				name: true,
-				members: 
-				{
+				members: {
 					where: {
-						userId : user.username,
-					}
-				}
-			}
+						userId: user.username,
+					},
+				},
+			},
 		});
 	}
 
@@ -137,5 +139,4 @@ export class ChannelService {
 
 		return await this.prisma.channel.delete({ where: { name: id } });
 	}
-
 }
