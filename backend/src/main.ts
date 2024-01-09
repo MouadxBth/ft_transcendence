@@ -9,6 +9,7 @@ import RedisStore from "connect-redis";
 import passport from "passport";
 import { RequestHandler } from "express";
 import { WsSessionAdapter } from "./socket-io/ws-session.adapter";
+import { useContainer } from "class-validator";
 
 declare const module: any;
 
