@@ -62,12 +62,14 @@ export class ChannelMessageService {
 		return result;
 	}
 
-	async update(user: User, channel: string, id: number, dto: MessageDto) {
+	async update(user: User, channel: string, id: number, message: string) {
 		const messageResult = await this.prisma.message.findUnique({
 			where: {
 				id: id,
 			},
 		});
+
+		if (!message || message.length === 0) throw new HttpException("Message is empty!", HttpStatus.BAD_REQUEST);
 
 		if (!messageResult) throw new HttpException("No such message!", HttpStatus.BAD_REQUEST);
 
@@ -85,7 +87,7 @@ export class ChannelMessageService {
 				id: id,
 			},
 			data: {
-				content: dto.message,
+				content: message,
 			},
 		});
 	}
