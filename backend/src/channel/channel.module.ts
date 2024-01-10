@@ -12,12 +12,14 @@ import { ChannelOwnerService } from "./owner/channel-owner.service";
 import { ChannelAdminService } from "./admin/channel-admin.service";
 import { TwoFactorMiddleware } from "src/auth/two-factor/middleware/two-factor.middleware";
 import { UserModule } from "src/user/user.module";
+import { ChannelMessageController } from "./message/channel-message.controller";
 
 @Module({
 	imports: [forwardRef(() => AuthModule), UserModule],
 	controllers: [
 		ChannelController,
 		ChannelMemberController,
+		ChannelMessageController,
 		ChannelOwnerController,
 		ChannelAdminController,
 	],
