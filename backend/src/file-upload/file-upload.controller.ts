@@ -8,6 +8,7 @@ import {
 	Post,
 	Req,
 	UploadedFile,
+	UseGuards,
 	UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -16,6 +17,7 @@ import { diskStorage } from "multer";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import { FileUploadService } from "./file-upload.service";
+import { AuthenticatedGuard } from "src/auth/guards/authenticated.guard";
 
 const storageConf = diskStorage({
 	destination: "/uploads/avatars",
@@ -26,24 +28,25 @@ const storageConf = diskStorage({
 });
 
 @Controller("avatar")
+@UseGuards(AuthenticatedGuard)
 export class FileUploadController {
 	constructor(private readonly fileUploadService: FileUploadService) {}
 
-	@UseInterceptors(FileInterceptor("file", { storage: storageConf }))
 	@Post()
+	@UseInterceptors(FileInterceptor("file", { storage: storageConf }))
 	async addAvatar(
 		@Req() req: Request,
 		@UploadedFile(
 			new ParseFilePipe({
 				validators: [
 					new MaxFileSizeValidator({ maxSize: 4000000 }),
-					new FileTypeValidator({ fileType: "image/jpeg" }),
+					new FileTypeValidator({ fileType: "image/(jpeg|gif|png)" }),
 				],
 			})
 		)
 		file: Express.Multer.File
 	) {
-		await this.fileUploadService.addAvatar(req, file);
+		return await this.fileUploadService.addAvatar(req, file);
 	}
 
 	@Get(":username")

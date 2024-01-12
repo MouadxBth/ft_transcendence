@@ -15,12 +15,14 @@ export class FileUploadService {
 			!(authenticatedUser.avatar.includes("http") || authenticatedUser.avatar.includes("https"))
 		) {
 			try {
-				fs.accessSync(`../${authenticatedUser.avatar}`, fs.constants.F_OK);
-				fs.unlinkSync(`../${authenticatedUser.avatar}`);
-			} catch (err) {}
+				fs.accessSync(authenticatedUser.avatar, fs.constants.F_OK);
+				fs.unlinkSync(authenticatedUser.avatar);
+			} catch (err) {
+				console.log(err);
+			}
 		}
 
-		this.userService.update(req, authenticatedUser.username, {
+		return await this.userService.update(req, authenticatedUser.username, {
 			avatar: `${file.destination}/${file.filename}`,
 		});
 	}
@@ -28,11 +30,18 @@ export class FileUploadService {
 	async getAvatar(username: string) {
 		const user = await this.userService.findOne(username);
 
+		let base64Image;
 		if (!user.avatar || user.avatar.includes("http") || user.avatar.includes("https"))
 			throw new HttpException("No profile picture was uploaded!", HttpStatus.BAD_REQUEST);
 
-		const image = fs.readFileSync(`../${(await user).avatar}`);
-		const base64Image = "data:image/jpeg;base64," + image.toString("base64");
+		try {
+			const image = fs.readFileSync(user.avatar);
+			base64Image =
+				`data:image/${user.avatar.substring(user.avatar.search("(jpeg|png|gif)"))};base64,` +
+				image.toString("base64");
+		} catch (error: unknown) {
+			console.log(error);
+		}
 
 		return base64Image;
 	}
