@@ -18,6 +18,7 @@ import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import { FileUploadService } from "./file-upload.service";
 import { AuthenticatedGuard } from "src/auth/guards/authenticated.guard";
+import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 const storageConf = diskStorage({
 	destination: "/uploads/avatars",
@@ -26,7 +27,7 @@ const storageConf = diskStorage({
 		cb(null, `${uuidv4()}${path.parse(file.originalname).ext}`);
 	},
 });
-
+@ApiTags("avatar")
 @Controller("avatar")
 @UseGuards(AuthenticatedGuard)
 export class FileUploadController {
@@ -34,6 +35,11 @@ export class FileUploadController {
 
 	@Post()
 	@UseInterceptors(FileInterceptor("file", { storage: storageConf }))
+	@ApiConsumes("multipart/form-data")
+	@ApiOperation({ summary: "Upload avatar for the user" })
+	@ApiBody({ description: "Image file", type: Object })
+	@ApiResponse({ status: 200, description: "Successfully uploaded avatar" })
+	@ApiResponse({ status: 400, description: "Bad Request - Invalid file or file type" })
 	async addAvatar(
 		@Req() req: Request,
 		@UploadedFile(
@@ -50,6 +56,9 @@ export class FileUploadController {
 	}
 
 	@Get(":username")
+	@ApiOperation({ summary: "Get avatar for the specified user" })
+	@ApiResponse({ status: 200, description: "Successfully retrieved avatar" })
+	@ApiResponse({ status: 400, description: "Bad Request - No avatar found for the user" })
 	async getAvatar(@Param("username") username: string) {
 		return this.fileUploadService.getAvatar(username);
 	}
