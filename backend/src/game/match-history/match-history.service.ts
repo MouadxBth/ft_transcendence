@@ -36,19 +36,32 @@ export class MatchHistoryService {
 	}
 
 	async findAll(username: string) {
-		const user = await this.userService.findOne(username);
-
-		const matchResults = await this.prismaService.matchResult.findMany({
+		return this.prismaService.matchHistory.findMany({
 			where: {
-				userId: user.username,
+				members: {
+					some: {
+						user: {
+							username: username,
+						},
+					},
+				},
+			},
+			include: {
+				members: {
+					select: {
+						winner: true,
+						draw: true,
+						score: true,
+						points: true,
+						user: {
+							select: {
+								username: true,
+							},
+						},
+					},
+				},
 			},
 		});
-
-		const matchHistories = matchResults.map(async (matchResult) => {
-			await this.findOne(matchResult.matchId);
-		});
-
-		return matchHistories;
 	}
 
 	async delete(id: number) {
