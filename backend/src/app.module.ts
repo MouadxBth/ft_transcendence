@@ -12,6 +12,8 @@ import { ConversationModule } from "./conversation/conversation.module";
 import { BlockedModule } from "./blocked/blocked.module";
 import { FriendModule } from "./friend/friend.module";
 import { OnlineStatusModule } from "./online-status/online-status.module";
+import { MatchHistoryModule } from "./game/match-history/match-history.module";
+import { GameModule } from "./game/game.module";
 
 @Module({
 	imports: [
@@ -41,6 +43,8 @@ import { OnlineStatusModule } from "./online-status/online-status.module";
 		BlockedModule,
 		FriendModule,
 		OnlineStatusModule,
+		MatchHistoryModule,
+		GameModule,
 	],
 })
 export class AppModule {}
