@@ -14,6 +14,7 @@ import { FriendModule } from "./friend/friend.module";
 import { OnlineStatusModule } from "./online-status/online-status.module";
 import { FileUploadModule } from "./file-upload/file-upload.module";
 import { ChannelModule } from "./channel/channel.module";
+import { MatchHistoryModule } from "./match-history/match-history.module";
 
 @Module({
 	imports: [
@@ -45,6 +46,7 @@ import { ChannelModule } from "./channel/channel.module";
 		OnlineStatusModule,
 		FileUploadModule,
 		ChannelModule,
+		MatchHistoryModule
 	],
 })
 export class AppModule {}
