@@ -13,6 +13,7 @@ import { BlockedModule } from "./blocked/blocked.module";
 import { FriendModule } from "./friend/friend.module";
 import { OnlineStatusModule } from "./online-status/online-status.module";
 import { FileUploadModule } from "./file-upload/file-upload.module";
+import { ChannelModule } from "./channel/channel.module";
 
 @Module({
 	imports: [
@@ -43,6 +44,7 @@ import { FileUploadModule } from "./file-upload/file-upload.module";
 		FriendModule,
 		OnlineStatusModule,
 		FileUploadModule,
+		ChannelModule,
 	],
 })
 export class AppModule {}
