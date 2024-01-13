@@ -12,6 +12,7 @@ import { ConversationModule } from "./conversation/conversation.module";
 import { BlockedModule } from "./blocked/blocked.module";
 import { FriendModule } from "./friend/friend.module";
 import { OnlineStatusModule } from "./online-status/online-status.module";
+import { FileUploadModule } from "./file-upload/file-upload.module";
 import { ChannelModule } from "./channel/channel.module";
 
 @Module({
@@ -42,6 +43,7 @@ import { ChannelModule } from "./channel/channel.module";
 		BlockedModule,
 		FriendModule,
 		OnlineStatusModule,
+		FileUploadModule,
 		ChannelModule,
 	],
 })
