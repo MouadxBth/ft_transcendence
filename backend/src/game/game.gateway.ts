@@ -48,6 +48,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		console.log(client.id + " is disconnected.");
 
 		this.connnectedPlayers.delete(authenticatedUser.user.username);
+		this.playersQueue = this.playersQueue.filter(
+			(player) => player !== authenticatedUser.user.username
+		);
 		// client.leave(authenticatedUser.user.username);
 		this.activeGames.forEach((gameRoom) => {
 			if (gameRoom.player1 === authenticatedUser.user.username) {
@@ -135,6 +138,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@SubscribeMessage("broadcast_movement")
 	async broadcastMovment(@ConnectedSocket() client: Socket, @MessageBody() dto: PlayerMovementDto) {
 		client;
+
+		let activeGame;
+		this.activeGames.forEach((element) => {
+			if (element.matchId === dto.matchId) activeGame = element;
+		});
+		if (!activeGame) throw new WsException("You're not in an active game !");
 
 		this.server.to(dto.target).emit("player_moved", dto);
 	}
