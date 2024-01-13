@@ -9,7 +9,7 @@ import {
 	ValidateNested,
 } from "class-validator";
 
-class PlayerDto {
+export class PlayerDto {
 	@IsString()
 	@IsNotEmpty()
 	username: string;
@@ -29,6 +29,8 @@ class PlayerDto {
 	@IsNotEmpty()
 	points: number;
 }
+
+export type Player = Omit<PlayerDto, "matchId" | "username">;
 
 export class MatchResultDto {
 	@IsObject()
