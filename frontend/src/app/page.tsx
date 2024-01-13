@@ -1,7 +1,12 @@
+import Pong from "@/components/game/Pong";
 import React from "react";
 
 const Home = () => {
-	return <main>Home!</main>;
+	return (
+		<main>
+			<Pong />
+		</main>
+	);
 };
 
 export default Home;
