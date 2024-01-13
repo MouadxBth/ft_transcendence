@@ -41,5 +41,7 @@ export class PlayerMovementDto {
 	matchId: number;
 
 	//variables related to the actual movements are still to be discussed
+	@IsNumber()
+	@IsNotEmpty()
 	y: number;
 }
