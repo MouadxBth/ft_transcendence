@@ -40,4 +40,6 @@ export const ConfigSchema = Joi.object({
 			scheme: ["http", "https"],
 		})
 		.required(),
+	FRONTEND_LANDING_PAGE: Joi.string().required(),
+	FRONTEND_HOME_PAGE: Joi.string().required(),
 }).unknown(false);

@@ -9,6 +9,13 @@ export class TwoFactorMiddleware implements NestMiddleware {
 
 		if (!authenticatedUser || !authenticatedUser.user.twoFactorAuthenticationEnabled) return next();
 
+		if (
+			req.path.endsWith("qrcode") &&
+			req.method === "GET" &&
+			authenticatedUser.user.twoFactorAuthenticationFirstTime
+		)
+			return next();
+
 		if (!authenticatedUser.valid2Fa) return res.redirect("/api/v1/auth/2fa");
 
 		next();

@@ -1,12 +1,15 @@
-import { Controller, Get, HttpStatus, Req, UseGuards } from "@nestjs/common";
-import type { Request } from "express";
+import { Controller, Get, HttpStatus, Req, Res, UseGuards } from "@nestjs/common";
+import type { Request, Response } from "express";
 import { GithubGuard } from "./guards/github.guard";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { User } from "src/user/entities/user.entity";
+import { GithubService } from "./github.service";
 
 @ApiTags("Auth | Github")
 @Controller("auth/github")
 export class GithubController {
+	constructor(private readonly service: GithubService) {}
+
 	@Get("login")
 	@UseGuards(GithubGuard)
 	@ApiOperation({
@@ -41,7 +44,7 @@ export class GithubController {
 		status: HttpStatus.UNAUTHORIZED,
 		description: "If the user's credentials don't match, a Unauthorized exception will be returned",
 	})
-	async githubRedirect(@Req() req: Request) {
-		return req.user;
+	async githubRedirect(@Res() res: Response) {
+		return this.service.redirect(res);
 	}
 }

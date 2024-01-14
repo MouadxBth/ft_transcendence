@@ -1,42 +1,29 @@
-import { HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { UserService } from "src/user/user.service";
-import z, { ZodError } from "zod";
+import { ZodError } from "zod";
 import { AuthenticatedUser } from "../entities/authenticated-user.entity";
-
-const profileSchema = z.object({
-	id: z.string(),
-	displayName: z.string(),
-	photos: z.array(
-		z.object({
-			value: z.string(),
-		})
-	),
-	name: z
-		.object({
-			givenName: z.string().optional(),
-			familyName: z.string().optional(),
-		})
-		.optional(),
-});
-
-type UserProfile = z.infer<typeof profileSchema>;
+import { Response } from "express";
+import googleProfileSchema, { GoogleUserProfile } from "./schemas/profile.schema";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class GoogleService {
-	constructor(private readonly userService: UserService) {}
+	constructor(
+		private readonly userService: UserService,
+		private readonly configService: ConfigService
+	) {}
 
 	async validate(profile: unknown): Promise<AuthenticatedUser | null> {
-		let userProfile: UserProfile;
+		let userProfile: GoogleUserProfile;
 
 		try {
-			userProfile = profileSchema.parse(profile);
+			userProfile = googleProfileSchema.parse(profile);
 		} catch (error: unknown) {
 			if (error instanceof ZodError) {
-				console.log(`Invalid profile: ${error.message}}`, HttpStatus.BAD_REQUEST);
+				throw new HttpException(`Invalid profile: ${error.message}}`, HttpStatus.BAD_REQUEST);
 			} else {
-				console.log(`Unexpected issue: ${error}`, HttpStatus.BAD_REQUEST);
+				throw new HttpException(`Unexpected issue: ${error}`, HttpStatus.BAD_REQUEST);
 			}
-			return null;
 		}
 
 		let user;
@@ -55,13 +42,18 @@ export class GoogleService {
 		};
 	}
 
-	async handleFirstTime(profile: UserProfile) {
+	redirect(res: Response) {
+		const landingPage = this.configService.get<string>("FRONTEND_HOME_PAGE")!;
+		return res.redirect(landingPage);
+	}
+
+	async handleFirstTime(profile: GoogleUserProfile) {
 		const avatar =
 			profile.photos[0]?.value ||
 			encodeURI(`https://robohash.org/${profile.displayName.toLocaleLowerCase()}`);
 
 		return await this.userService.create({
-			username: profile.id,
+			username: profile.displayName.replace(" ", "."),
 			password: undefined,
 			firstName: profile.name?.givenName || "unknown",
 			lastName: profile.name?.familyName || "unknown",

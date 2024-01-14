@@ -12,6 +12,7 @@ export class AuthService {
 			throw new HttpException("You are not logged in!", HttpStatus.BAD_REQUEST);
 
 		const sessionName = this.configService.get<string>("SESSION_NAME")!;
+		const landingPage = this.configService.get<string>("FRONTEND_LANDING_PAGE")!;
 
 		response.clearCookie(sessionName);
 
@@ -23,6 +24,6 @@ export class AuthService {
 				);
 		});
 
-		return "Logged out";
+		return response.redirect(landingPage);
 	}
 }

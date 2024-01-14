@@ -28,7 +28,7 @@ function configureExpressSession(app: INestApplication<any>) {
 	sessionMiddleware = session({
 		name: configService.get<string>("SESSION_NAME"),
 		secret: configService.get<string>("SESSION_SECRET")!,
-		resave: false,
+		resave: true,
 		saveUninitialized: false,
 		store: new RedisStore({
 			client: redis,
@@ -50,6 +50,13 @@ function configurePassport(app: INestApplication<any>) {
 
 function configureWebsocketAdapter(app: INestApplication<any>) {
 	app.useWebSocketAdapter(new WsSessionAdapter(sessionMiddleware, app));
+}
+
+function configureCors(app: INestApplication<any>) {
+	app.enableCors({
+		origin: "http://localhost:4000",
+		credentials: true,
+	});
 }
 
 function configureSwagger(app: INestApplication<any>) {
@@ -77,6 +84,7 @@ async function bootstrap() {
 	configureExpressSession(app);
 	configurePassport(app);
 	configureWebsocketAdapter(app);
+	configureCors(app);
 	configureSwagger(app);
 	hotModuleReplacement(app);
 

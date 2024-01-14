@@ -12,6 +12,7 @@ import { ConversationModule } from "./conversation/conversation.module";
 import { BlockedModule } from "./blocked/blocked.module";
 import { FriendModule } from "./friend/friend.module";
 import { OnlineStatusModule } from "./online-status/online-status.module";
+import { AchievementModule } from "./achievement/achievement.module";
 import { FileUploadModule } from "./file-upload/file-upload.module";
 import { ChannelModule } from "./channel/channel.module";
 import { MatchHistoryModule } from "./match-history/match-history.module";
@@ -44,6 +45,7 @@ import { MatchHistoryModule } from "./match-history/match-history.module";
 		BlockedModule,
 		FriendModule,
 		OnlineStatusModule,
+		AchievementModule,
 		FileUploadModule,
 		ChannelModule,
 		MatchHistoryModule

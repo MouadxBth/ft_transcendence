@@ -69,6 +69,18 @@ export class ConversationService {
 			where: {
 				members: { some: { username } },
 			},
+			include: {
+				members: {
+					select: {
+						nickname: true,
+					},
+					where: {
+						username: {
+							not: username,
+						},
+					},
+				},
+			},
 		});
 	}
 
