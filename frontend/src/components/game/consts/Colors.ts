@@ -1,5 +1,3 @@
-const White = 0xffffff
+const White = 0xffffff;
 
-export {
-	White
-}
+export { White };
