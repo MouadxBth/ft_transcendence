@@ -18,7 +18,9 @@ export class LocalGuard extends AuthGuard("local") implements CanActivate {
 		}
 
 		const result = (await super.canActivate(context)) as boolean;
-		await super.logIn(request);
+
+		if (result) await super.logIn(request);
+
 		return result;
 	}
 }
