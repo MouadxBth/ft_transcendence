@@ -57,15 +57,18 @@ const strategies = [LocalStrategy, FortyTwoStrategy, GithubStrategy, GoogleStrat
 })
 export class AuthModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(TwoFactorMiddleware).forRoutes(
-			{
-				path: "/auth/2fa/enable",
-				method: RequestMethod.POST,
-			},
-			{
-				path: "/auth/2fa/disable",
-				method: RequestMethod.POST,
-			}
-		);
+		consumer
+			.apply(TwoFactorMiddleware)
+			.exclude(
+				{
+					path: "/auth/2fa",
+					method: RequestMethod.GET,
+				},
+				{
+					path: "/auth/2fa",
+					method: RequestMethod.POST,
+				}
+			)
+			.forRoutes(TwoFactorController);
 	}
 }
