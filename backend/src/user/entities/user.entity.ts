@@ -9,6 +9,19 @@ export class User {
 	username: string;
 
 	@ApiProperty({
+		description: "Used as a status check to set a nickname, by default, it's true",
+		example: true,
+	})
+	firstTime: boolean;
+
+	@ApiProperty({
+		description: "This represents the nickname of a user",
+		example: "Gojo",
+		nullable: true,
+	})
+	nickname: string | null;
+
+	@ApiProperty({
 		description: "Represents the first name of a user",
 		example: "Mouad",
 		nullable: true,
@@ -30,8 +43,29 @@ export class User {
 	avatar: string | null;
 
 	@ApiProperty({
+		description: "This represents the level of a user",
+		example: 19,
+		nullable: true,
+	})
+	level: number;
+
+	@ApiProperty({
+		description: "This represents the experience of a user",
+		example: 420,
+		nullable: true,
+	})
+	experience: number;
+
+	@ApiProperty({
 		description: "Used to enable/disable 2FA (Two Factor Authentication), by default, it's false",
 		example: true,
 	})
 	twoFactorAuthenticationEnabled: boolean;
+
+	@ApiProperty({
+		description:
+			"Used as a check for accessing the QR Code 2FA (Two Factor Authentication), by default, it's true",
+		example: true,
+	})
+	twoFactorAuthenticationFirstTime: boolean;
 }
