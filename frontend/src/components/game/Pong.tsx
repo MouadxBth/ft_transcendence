@@ -3,7 +3,13 @@
 import React, { useEffect, useRef } from "react";
 
 import { Game } from "phaser";
-import { PreloadSceneKey, TitleSceneKey } from "./consts/SceneKeys";
+import {
+	PreloadSceneKey,
+	TitleSceneKey,
+	GameSceneKey,
+	GameBackgroundSceneKey,
+	GameOverSceneKey,
+} from "./consts/SceneKeys";
 
 const Pong = () => {
 	const gameRef = useRef<Game>();
@@ -14,6 +20,9 @@ const Pong = () => {
 				const Phaser = await import("phaser");
 				const { Preload } = await import("./scenes/Preload");
 				const { TitleScene } = await import("./scenes/TitleScene");
+				const { PongGame } = await import("./scenes/Game");
+				const { GameBackground } = await import("./scenes/GameBackground");
+				const { GameOver } = await import("./scenes/GameOver");
 
 				if (gameRef.current !== undefined) return;
 
@@ -38,6 +47,9 @@ const Pong = () => {
 
 				gameRef.current.scene.add(TitleSceneKey, TitleScene);
 				gameRef.current.scene.add(PreloadSceneKey, Preload);
+				gameRef.current.scene.add(GameSceneKey, PongGame);
+				gameRef.current.scene.add(GameBackgroundSceneKey, GameBackground);
+				gameRef.current.scene.add(GameOverSceneKey, GameOver);
 
 				gameRef.current.scene.start(PreloadSceneKey);
 			} catch (error: any) {

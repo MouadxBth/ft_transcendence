@@ -1,4 +1,4 @@
-import WebFontFile from "@/utils/WebFontFile";
+import WebFontFile from "@/lib/game/WebFontFile";
 import { TitleSceneKey } from "../consts/SceneKeys";
 
 export class Preload extends Phaser.Scene {

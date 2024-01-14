@@ -1,4 +1,5 @@
 import { PressStart2P } from "../consts/FontKeys";
+import { GameSceneKey } from "../consts/SceneKeys";
 export class TitleScene extends Phaser.Scene {
 	preload() {}
 
@@ -18,7 +19,7 @@ export class TitleScene extends Phaser.Scene {
 			.setOrigin(0.5);
 
 		this.input.keyboard?.once("keydown-SPACE", () => {
-			// this.scene.start(GameSceneKey);
+			this.scene.start(GameSceneKey);
 		});
 	}
 }
