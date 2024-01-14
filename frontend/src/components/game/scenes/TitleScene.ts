@@ -1,12 +1,9 @@
-import Phaser from "phaser";
-
 import { PressStart2P } from "../consts/FontKeys";
-import { GameSceneKey } from "../consts/SceneKeys";
-
-export class TitleScreen extends Phaser.Scene {
+export class TitleScene extends Phaser.Scene {
 	preload() {}
 
 	create() {
+		console.log("STARTED TITLE SCENE");
 		this.add
 			.text(400, 200, "Ping Pong", {
 				fontSize: 38,
@@ -21,7 +18,7 @@ export class TitleScreen extends Phaser.Scene {
 			.setOrigin(0.5);
 
 		this.input.keyboard?.once("keydown-SPACE", () => {
-			this.scene.start(GameSceneKey);
+			// this.scene.start(GameSceneKey);
 		});
 	}
 }

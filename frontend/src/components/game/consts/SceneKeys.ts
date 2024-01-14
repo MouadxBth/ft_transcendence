@@ -1,13 +1,7 @@
 const PreloadSceneKey = "preload";
-const TitleScreenSceneKey = "titlescreen";
+const TitleSceneKey = "titlescene";
 const GameSceneKey = "game";
 const GameBackgroundSceneKey = "game-background";
 const GameOverSceneKey = "game-over";
 
-export {
-	PreloadSceneKey,
-	TitleScreenSceneKey,
-	GameSceneKey,
-	GameBackgroundSceneKey,
-	GameOverSceneKey,
-};
+export { PreloadSceneKey, TitleSceneKey, GameSceneKey, GameBackgroundSceneKey, GameOverSceneKey };
