@@ -30,6 +30,14 @@ export class UserController {
 		return collection.map(({ twoFactorAuthenticationSecret, password, ...result }) => result);
 	}
 
+	@Get("search/:nickname")
+	@ApiOperation({ summary: "Fetch all users", description: "Used to fetch all Users" })
+	@ApiResponse({ type: Array<User>, status: HttpStatus.OK, description: "Successful retrieval" })
+	async search(@Param("nickname") nickname: string) {
+		const collection = await this.userService.search(nickname);
+		return collection.map(({ twoFactorAuthenticationSecret, password, ...result }) => result);
+	}
+
 	@Get(":id")
 	@ApiOperation({
 		summary: "Fetch a User by username",
@@ -55,12 +63,8 @@ export class UserController {
 		description: "If the user does not exist, a Not Found will be returned",
 	})
 	async update(@Req() req: Request, @Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
-		const { twoFactorAuthenticationSecret, password, ...result } = await this.userService.update(
-			req,
-			id,
-			updateUserDto
-		);
-		return result;
+		await this.userService.update(req, id, updateUserDto);
+		return req.user;
 	}
 
 	@Delete(":id")
@@ -72,10 +76,7 @@ export class UserController {
 	@ApiResponse({ status: HttpStatus.FORBIDDEN, description: "Not allowed to delete another User" })
 	@ApiResponse({ status: HttpStatus.NOT_FOUND, description: "User does not exist" })
 	async remove(@Req() req: Request, @Param("id") id: string) {
-		const { twoFactorAuthenticationSecret, password, ...result } = await this.userService.remove(
-			req,
-			id
-		);
+		const result = await this.userService.remove(req, id);
 		return result;
 	}
 }
