@@ -14,6 +14,9 @@ const Pong = () => {
 				const Phaser = await import("phaser");
 				const { Preload } = await import("./scenes/Preload");
 				const { TitleScene } = await import("./scenes/TitleScene");
+				const { PongGame } = await import ("./scenes/Game");
+				const { GameBackground } = await import ("./scenes/GameBackground");
+				const {GameOver} = await import ("./scenes/GameOver")
 
 				if (gameRef.current !== undefined) return;
 

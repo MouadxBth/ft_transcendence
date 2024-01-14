@@ -3,7 +3,7 @@ import Phaser from 'phaser'
 import { TitleSceneKey } from '../consts/SceneKeys'
 import { PressStart2P } from '../consts/FontKeys'
 
-export default class GameOver extends Phaser.Scene
+export class GameOver extends Phaser.Scene
 {
 	create(data : any)
 	{

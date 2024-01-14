@@ -1,12 +1,13 @@
-import WebFontFile from "@/utils/WebFontFile";
+// import WebFontFile from "@/utils/WebFontFile";
 import { TitleSceneKey } from "../consts/SceneKeys";
 
 export class Preload extends Phaser.Scene {
 	preload() {
 		console.log("STARTED PRELOAD SCENE");
 
-		const fonts = new WebFontFile(this.load, "Press Start 2P");
-		this.load.addFile(fonts);
+		// const fonts = new WebFontFile(this.load, "Press Start 2P");
+		const fonts = "Arial";
+		// this.load.addFile(fonts);
 	}
 
 	create() {

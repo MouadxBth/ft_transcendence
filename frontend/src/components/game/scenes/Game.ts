@@ -9,7 +9,7 @@ const GameState  = {
 	Running: 'running',
 	PlayerWon: 'player-won',
 }
-class Game extends Phaser.Scene
+export class PongGame extends Phaser.Scene
 {
 	gameState : any;
 
@@ -193,4 +193,3 @@ class Game extends Phaser.Scene
 	}
 }
 
-export default Game
