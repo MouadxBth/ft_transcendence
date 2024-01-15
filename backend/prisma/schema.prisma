@@ -41,6 +41,8 @@ model User {
 	level				Int @default(0)
 	experience	Float @default(0.0)
 
+	eloRating	Int @default(1200)
+
 	twoFactorAuthenticationEnabled	Boolean @default(false)
 	twoFactorAuthenticationFirstTime	Boolean @default(true)
 	twoFactorAuthenticationSecret	String?
