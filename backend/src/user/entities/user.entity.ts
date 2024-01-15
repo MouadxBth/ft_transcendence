@@ -57,6 +57,13 @@ export class User {
 	experience: number;
 
 	@ApiProperty({
+		description: "This represents the elo rating of a user",
+		example: 19,
+		nullable: true,
+	})
+	eloRating: number;
+
+	@ApiProperty({
 		description: "Used to enable/disable 2FA (Two Factor Authentication), by default, it's false",
 		example: true,
 	})
