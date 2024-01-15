@@ -38,18 +38,18 @@ export class EloRankingService {
 	}
 
 	async updateElo(matchId: number) {
-		const matchHistory = await this.matchHistoryService.findOne(matchId);
+		const matchHistory = await this.matchHistoryService.findOneInclusive(matchId);
 
 		const member1 = matchHistory.members[0];
 		const member2 = matchHistory.members[1];
 
 		const result = this.eloRating(
 			{
-				rating: (await this.userService.findOne(member1!.userId)).eloRating,
+				rating: member1!.user.eloRating,
 				winner: member1!.winner,
 			},
 			{
-				rating: (await this.userService.findOne(member2!.userId)).eloRating,
+				rating: member2!.user.eloRating,
 				winner: member2!.winner,
 			},
 			member1!.draw ? true : member2!.draw
