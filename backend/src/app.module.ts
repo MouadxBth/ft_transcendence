@@ -48,7 +48,7 @@ import { MatchHistoryModule } from "./match-history/match-history.module";
 		AchievementModule,
 		FileUploadModule,
 		ChannelModule,
-		MatchHistoryModule
+		MatchHistoryModule,
 	],
 })
 export class AppModule {}
