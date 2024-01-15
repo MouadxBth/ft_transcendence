@@ -69,7 +69,8 @@ export class ChannelMessageService {
 			},
 		});
 
-		if (!message || message.length === 0) throw new HttpException("Message is empty!", HttpStatus.BAD_REQUEST);
+		if (!message || message.length === 0)
+			throw new HttpException("Message is empty!", HttpStatus.BAD_REQUEST);
 
 		if (!messageResult) throw new HttpException("No such message!", HttpStatus.BAD_REQUEST);
 
