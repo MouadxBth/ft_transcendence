@@ -44,8 +44,8 @@
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
     "@types/webfontloader": "^1.6.38",
     "autoprefixer": "^10",
     "eslint": "^8",
