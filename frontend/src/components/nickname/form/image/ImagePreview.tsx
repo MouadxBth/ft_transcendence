@@ -6,7 +6,6 @@ export interface ImagePreviewProps {
 }
 
 const ImagePreview = ({ src }: ImagePreviewProps) => {
-	console.log(src.length);
 	return (
 		<Avatar
 			className={cn("w-32 h-32", {
