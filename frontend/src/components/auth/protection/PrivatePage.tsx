@@ -23,7 +23,7 @@ export default function privatePage(Component: any) {
 
 		if (isLoading || !authenticatedUser) {
 			return (
-				<div className="w-full h-full flex items-center justify-center">
+				<div className="w-full min-h-screen flex items-center justify-center">
 					<Loading />
 				</div>
 			);
