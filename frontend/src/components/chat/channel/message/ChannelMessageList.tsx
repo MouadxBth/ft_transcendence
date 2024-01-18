@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ChannelMessageSkeleton from "./ChannelMessageSkeleton";
 import ChannelMessage, { ChannelMessageProps } from "./ChannelMessage";
-import { useChannelContext } from "@/hooks/useChannelData";
+import { useChannelContext } from "@/hooks/useChannelContext";
 
 export interface ChannelMessageListProps {
 	data: ChannelMessageProps[] | undefined;

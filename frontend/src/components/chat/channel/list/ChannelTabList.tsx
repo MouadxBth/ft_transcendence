@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import ChannelTabListItem, { ChannelTabListItemProps } from "./ChannelTabListItem";
 import ChannelTabListItemSkeleton from "./ChannelTabListItemSkeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChannelList } from "@/hooks/useChannelData";
+import { ChannelList } from "@/hooks/useChannelContext";
 
 export interface ChannelTabListProps {
 	data: ChannelTabListItemProps[] | undefined;

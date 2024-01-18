@@ -6,7 +6,7 @@ import ChannelTabSearch from "./ChannelTabSearch";
 import ChannelTabPlus from "./ChannelTabPlus";
 import ChannelTabList from "./list/ChannelTabList";
 import { ChannelTabListItemProps } from "./list/ChannelTabListItem";
-import { useChannelContext } from "@/hooks/useChannelData";
+import { useChannelContext } from "@/hooks/useChannelContext";
 
 const random = Array.from({ length: 10 }).map((_, i, a) => {
 	return {
@@ -23,18 +23,17 @@ const ChannelTab = () => {
 	const {channelData, setChannelData} = useChannelContext();
 
 	return (
-		<TabsContent
-			value="channels"
-			className="flex flex-col w-full p-0 m-0 h-[calc(100vh-40px)]"
-		>
-			<div className="p-2 flex space-x-1">
-				<ChannelTabSearch
-					all={all}
-					setAll={setAll}
-				/>
-				<ChannelTabPlus />
+		<TabsContent value="channels">
+			<div className="flex flex-col w-full p-0 m-0 h-[calc(100vh-40px)]">
+				<div className="p-2 flex space-x-1">
+					<ChannelTabSearch
+						all={all}
+						setAll={setAll}
+						/>
+					<ChannelTabPlus />
+				</div>
+				<ChannelTabList data={channelData} />
 			</div>
-			<ChannelTabList data={channelData} />
 		</TabsContent>
 	);
 };

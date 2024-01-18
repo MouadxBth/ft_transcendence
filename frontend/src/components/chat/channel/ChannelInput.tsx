@@ -1,6 +1,6 @@
 import { Textarea } from "@/components/ui/textarea";
 import { useAuthentication } from "@/contexts/AuthenticationContext";
-import { useChannelContext } from "@/hooks/useChannelData";
+import { useChannelContext } from "@/hooks/useChannelContext";
 import React from "react";
 
 const ChannelInput = ({ name } : {name: string}) => {

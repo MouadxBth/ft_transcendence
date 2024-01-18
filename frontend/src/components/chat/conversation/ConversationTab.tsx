@@ -20,18 +20,17 @@ const ConversationTab = () => {
 	const [all, setAll] = useState<ConversationTabListItemProps[]>(random);
 
 	return (
-		<TabsContent
-			value="conversations"
-			className="flex flex-col w-full p-0 m-0 h-[calc(100vh-40px)]"
-		>
-			<div className="p-2 flex space-x-1">
-				<ConversationTabSearch
-					all={all}
-					setAll={setAll}
-				/>
-				<ConversationTabPlus />
+		<TabsContent value="conversations">
+			<div className="flex flex-col w-full p-0 m-0 h-[calc(100vh-40px)]">
+				<div className="p-2 flex space-x-1">
+					<ConversationTabSearch
+						all={all}
+						setAll={setAll}
+						/>
+					<ConversationTabPlus />
+				</div>
+				<ConversationTabList data={all} />
 			</div>
-			<ConversationTabList data={all} />
 		</TabsContent>
 	);
 };

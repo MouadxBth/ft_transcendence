@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChannelList, channelContext } from "@/hooks/useChannelData";
+import { ChannelList, channelContext } from "@/hooks/useChannelContext";
 import { ChannelMessageProps } from "@/components/chat/channel/message/ChannelMessage";
 
 const random = Array.from({ length: 20 }).map((_, i, a) => {
