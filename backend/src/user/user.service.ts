@@ -33,7 +33,7 @@ export class UserService {
 		return this.prisma.user.findMany({
 			where: {
 				nickname: {
-					startsWith: nickname,
+					contains: nickname,
 				},
 			},
 		});
