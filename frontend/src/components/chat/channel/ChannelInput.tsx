@@ -8,13 +8,14 @@ const ChannelInput = ({ name } : {name: string}) => {
 	const {channelData, setChannelData} = useChannelContext();
 	const { authenticatedUser } = useAuthentication();
 
+	console.log(authenticatedUser);
 	function handleSubmit(value: string) {
 		console.log("msg", value);
 		const channelMessages = channelData.find((ele) => ele.name === name)?.messages
 		channelMessages!.push({
 			id: 90,
-			sender: "troy",
-			avatar: 'df',
+			sender: authenticatedUser?.user.nickname!,
+			avatar: `http://localhost:3000/api/v1/avatar/${authenticatedUser?.user.avatar!}`,
 			message: value,
 			date: new Date()
  		})
