@@ -12,6 +12,9 @@ const GameState = {
 };
 export class PongGame extends Phaser.Scene {
 	gameState: any;
+	lastScored : number = 1; //1 for left paddle 2 for right paddle
+	p1Score : number = 0;
+	p2Score : number = 0;
 
 	//paddles variables
 	paddleLeft: any;
@@ -27,6 +30,9 @@ export class PongGame extends Phaser.Scene {
 
 	//cursos variables
 	cursors: any;
+
+	//power up
+	powerUp = true;
 
 	init() {
 		this.gameState = GameState.Running;
@@ -89,9 +95,10 @@ export class PongGame extends Phaser.Scene {
 		if (this.gameState !== GameState.Running) {
 			return;
 		}
-		this.ballVelocity()
+		this.ballVelocity();
 		this.processPlayerInput();
 		this.checkScore();
+		this.powerUpActivation();
 	}
 
 	ballVelocity() {
@@ -122,9 +129,23 @@ export class PongGame extends Phaser.Scene {
 		if (this.ball.body.x < this.paddleLeft.body.x - 20) {
 			this.incrementRightScore();
 			this.resetBall();
+			if (this.lastScored === 2)
+			{
+				this.lastScored = 1;
+				this.p1Score = 1;
+			}
+			else
+				this.p1Score++;
 		} else if (this.ball.body.x > this.paddleRight.body.x + 20) {
 			this.incrementLeftScore();
 			this.resetBall();
+			if (this.lastScored === 1)
+			{
+				this.lastScored = 2;
+				this.p2Score = 1;
+			}
+			else
+				this.p2Score++;
 		}
 		const maxScore = 7;
 		if (this.leftScore >= maxScore) {
@@ -164,5 +185,17 @@ export class PongGame extends Phaser.Scene {
 		const vec = this.physics.velocityFromAngle(angle, 300);
 
 		this.ball.body.setVelocity(vec.x, vec.y);
+	}
+	powerUpActivation()
+	{
+		if (this.p1Score === 2)
+			//logic for powerup
+		this.paddleLeft.displayHeight = 150;
+		else if (this.p2Score === 2)
+			this.paddleRight.displayHeight = 150;
+		else if (this.p1Score !== 0)
+			this.paddleLeft.displayHeight = 100;
+		else if (this.p2Score !== 0)
+			this.paddleRight.displayHeight = 100;
 	}
 }
