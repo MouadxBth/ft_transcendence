@@ -154,12 +154,13 @@ export class PongGame extends Phaser.Scene {
 
 	resetBall() {
 		let angle;
-		this.ball.setPosition(400, 250);
-		if (Math.random() % 2 === 0) {
-			angle = Phaser.Math.Between(0, -60);
+		this.ball.setPosition(400, 300);
+		if (Math.random() < 0.5) {
+			angle = Phaser.Math.Between(-120, -170);
 		} else {
 			angle = Phaser.Math.Between(0, 60);
 		}
+		console.log("angle " + angle);
 		const vec = this.physics.velocityFromAngle(angle, 300);
 
 		this.ball.body.setVelocity(vec.x, vec.y);
