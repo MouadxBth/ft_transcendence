@@ -8,12 +8,12 @@ import { PressStart2P } from "../consts/FontKeys";
 const GameState = {
 	Running: "running",
 	PlayerWon: "player-won",
+	Start : false
 };
 export class PongGame extends Phaser.Scene {
 	gameState: any;
 
 	//paddles variables
-	paddleRightVelocity: any; //types should be modifed later
 	paddleLeft: any;
 	paddleRight: any;
 	//score variables
@@ -30,31 +30,27 @@ export class PongGame extends Phaser.Scene {
 
 	init() {
 		this.gameState = GameState.Running;
-
-		this.paddleRightVelocity = new Phaser.Math.Vector2(0, 0);
-
 		this.leftScore = 0;
 		this.rightScore = 0;
 	}
 	preload() {
 		this.load.image("paddle", "paddle.png");
+		this.load.image("ball", "ball.png");
 	}
 	create() {
 		this.scene.run(GameBackgroundSceneKey);
 		this.scene.sendToBack(GameBackgroundSceneKey);
 
-
-		this.ball = this.add.circle(400, 250, 10, Colors.White, 1);
+		this.ball = this.physics.add.sprite(400, 300, "ball");
 		this.physics.add.existing(this.ball);
-		this.ball.body.setCircle(10);
 		this.ball.body.setBounce(1, 1);
-		this.ball.body.setMaxSpeed(400);
+		this.ball.body.setMaxSpeed(800);
 		this.ball.body.setCollideWorldBounds(true, 1, 1);
 
-		this.paddleLeft = this.physics.add.sprite(50, 250, "paddle");
+		this.paddleLeft = this.physics.add.sprite(50, 300, "paddle");
 		this.paddleLeft.setCollideWorldBounds(true);
 		this.paddleLeft.setImmovable(true);
-		this.paddleRight = this.physics.add.sprite(750, 250, "paddle");
+		this.paddleRight = this.physics.add.sprite(750, 300	, "paddle");
 		this.paddleRight.setCollideWorldBounds(true);
 		this.paddleRight.setImmovable(true);
 
@@ -84,33 +80,36 @@ export class PongGame extends Phaser.Scene {
 
 		this.cursors = this.input.keyboard?.createCursorKeys();
 
-		this.time.delayedCall(1500, () => {
-			this.resetBall();
-		});
+		// this.time.delayedCall(1500, () => {
+		// 	this.resetBall();
+		// });
 	}
 
 	update() {
-		console.log("?????")
 		if (this.gameState !== GameState.Running) {
 			return;
 		}
-
+		this.ballVelocity()
 		this.processPlayerInput();
-		this.checkScore()
+		this.checkScore();
 	}
 
+	ballVelocity() {
+		if (GameState.Start === false) {
+			GameState.Start = true;
+			this.ball.setVelocityX(300);
+			this.ball.setVelocityY(300);
+		}
+	}
 	handlePaddleBallCollision() {
 		const body = this.ball.body;
 		const vel = body.velocity;
-		vel.x *= 1.05;
-		vel.y *= 1.05;
-
+		vel.x *= 1.5;
+		vel.y *= 1.5;
 		body.setVelocity(vel.x, vel.y);
 	}
 
 	processPlayerInput() {
-		const body = this.paddleLeft.body;
-
 		if (this.cursors.up.isDown) {
 			this.paddleLeft.y -= 10;
 		} else if (this.cursors.down.isDown) {
@@ -120,33 +119,22 @@ export class PongGame extends Phaser.Scene {
 	}
 
 	checkScore() {
-		
-		if (this.ball.x <= this.paddleLeft.body.x) {
-			// scored on the left side
+		if (this.ball.body.x < this.paddleLeft.body.x - 20) {
 			this.incrementRightScore();
-		} else if (this.ball.x >= this.paddleRight.body.x) {
-			console.log("ball x " + this.ball.x)
-
-			// scored on the right side
+			this.resetBall();
+		} else if (this.ball.body.x > this.paddleRight.body.x + 20) {
 			this.incrementLeftScore();
+			this.resetBall();
 		}
-
 		const maxScore = 7;
 		if (this.leftScore >= maxScore) {
 			this.gameState = GameState.PlayerWon;
 		} else if (this.rightScore >= maxScore) {
 			this.gameState = GameState.PlayerWon; //shoudl be changed later
-		}
-
-		if (this.gameState === GameState.Running) {
-			this.resetBall();
-		} else {
+		} else if (this.gameState === this.gameState.PlayerWon) {
 			this.ball.active = false;
 			this.physics.world.remove(this.ball.body);
-
 			this.scene.stop(GameBackgroundSceneKey);
-
-			// show the game over/win screen
 			this.scene.start(GameOverSceneKey, {
 				leftScore: this.leftScore,
 				rightScore: this.rightScore,
