@@ -29,7 +29,7 @@ function CustomAvatar() {
 		<div>
 			<Dialog>
 				<DialogTrigger>
-					<Avatar className="h-22 w-22 text-white border-amber-500 border-2">
+					<Avatar className="h-[150px] w-[150px] text-white border-amber-500 border-2">
 						<AvatarImage
 							className="object-cover"
 							src={selectedAvatar}
