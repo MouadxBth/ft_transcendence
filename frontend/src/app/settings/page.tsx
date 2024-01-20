@@ -19,23 +19,19 @@ import CustomAvatar from "@/components/settings/CustomAvatar";
 
 function Settings() {
 	return (
-		<article className="flex flex-col h-screen w-screen">
-			<Navbar></Navbar>
-			<Card className="h-full">
-				<CardHeader>
-					<CardTitle>Settings</CardTitle>
-					<CardDescription>Manage your account</CardDescription>
-				</CardHeader>
-				<CardContent className="flex justify-evenly items-center">
+		<main>
+			<ScrollArea className="h-screen p-10">
+				<div>
+					<h2 className="text-2xl tracking-tight">Settings</h2>
+					<p className="text-muted-foreground">Manage your account.</p>
+				</div>
+				<Separator className="shrink-0 h-[1px] w-full my-6" />
+				<div className="flex flex-col justify-center items-center">
 					<CustomAvatar />
-					<div className="flex flex-col">
-						<ProfileForm />
-					</div>
-					<div className="h-80 w-1 bg-white/10"></div>
-					<div className=" w-96 flex justify-center items-center">2fa</div>
-				</CardContent>
-			</Card>
-		</article>
+					<ProfileForm />
+				</div>
+			</ScrollArea>
+		</main>
 	);
 }
 
