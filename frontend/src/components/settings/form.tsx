@@ -137,12 +137,8 @@ function ProfileForm() {
 						</FormItem>
 					)}
 				/>
-				<Button
-					className="col-span-2"
-					type="submit"
-				>
-					Submit
-				</Button>
+				<Button type="submit">Submit</Button>
+				<Button variant="outline">Cancel</Button>
 			</form>
 		</Form>
 	);
