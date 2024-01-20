@@ -53,6 +53,8 @@ export default function ConversationContextProvider({ children }: any) {
 				lastMessage: "a test message..."
 			})
 		}
+		await new Promise(r => setTimeout(r, 2000));
+		
 		return data;
 	}
 	
@@ -69,8 +71,10 @@ export default function ConversationContextProvider({ children }: any) {
 	
 	if (isLoading) {
 		return (
-			<div className="felx flex-col justify-center">
-				<h1 className="text-center"></h1>
+			<div className="flex flex-col justify-center w-full">
+				<div className="w-full">
+					<h1 className="text-center w-full"> Loading data....</h1>
+				</div>
 			</div>
 		)
 	}

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import Resizeable from "@/components/ui/resizeable";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
+import useAuthenticatedUser from "@/hooks/authentication/useAuthenticatedUser";
 import { useConversationContext } from "@/hooks/useConversationContext";
 import { useEffect, useRef } from "react";
 
@@ -54,7 +55,22 @@ const ChatPage = ({ params }: { params: { id: string } }) => {
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
 	const {conversationData, setConversationData} = useConversationContext();
-	
+	const { username: targetUser } = useAuthenticatedUser().data!.user;
+
+	function handleSubmit(value: string) {
+		const conversation = conversationData.find((ele) => ele.username === params.id)
+
+		conversation?.messages!.push({
+			id: 1,
+			createdAt: Date(),
+			updatedAt: Date(),
+			content: value,
+			senderId: targetUser,
+			read: false
+		})
+		setConversationData(conversationData.slice());
+	}
+
 	function getUserMessages() {
 		return conversationData.find((ele) => ele.username === params.id);
 	}
@@ -102,6 +118,7 @@ const ChatPage = ({ params }: { params: { id: string } }) => {
 			{/* </div> */}
 			<div className="h-20">
 				<Textarea
+					callback={handleSubmit}
 					className="max-h-80 resize-none"
 					placeholder="Type a message..."
 				/>
