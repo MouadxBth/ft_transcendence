@@ -40,10 +40,7 @@ function Settings() {
 						<AvatarFallback>{"test".toUpperCase().slice(0, 2)}</AvatarFallback>
 					</Avatar>
 					<div className="flex flex-col">
-						<ScrollArea className="h-96">
-							<ProfileForm />
-						</ScrollArea>
-						<Button type="submit">Submit</Button>
+						<ProfileForm />
 					</div>
 					<div className="h-80 w-1 bg-white/10"></div>
 					<div className=" w-96 flex justify-center items-center">2fa</div>
