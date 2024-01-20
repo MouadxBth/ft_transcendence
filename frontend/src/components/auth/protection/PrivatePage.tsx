@@ -1,12 +1,12 @@
 "use client";
 
-import { useAuthentication } from "@/contexts/AuthenticationContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import Loading from "@/components/ui/loading";
-import OtpCard from "@/components/2fa/otp/OtpCard";
-import NicknameCard from "@/components/username/NicknameCard";
+import NicknameCard from "@/components/nickname/NicknameCard";
+import OtpCard from "../2fa/otp/OtpCard";
+import { useAuthentication } from "@/hooks/authentication/useAuthentication";
 
 export default function privatePage(Component: any) {
 	return function PrivatePage(props: any) {
@@ -15,22 +15,18 @@ export default function privatePage(Component: any) {
 
 		useEffect(() => {
 			if (isLoading) {
-				console.log("PRIVATE PAGE LOADING");
 				return;
 			}
 
-			console.log("PRIVATE PAGE DONE LOADING");
-
-			if (authenticatedUser === null) {
-				console.log("PRIVATE PAGE USER NOT FOUND!");
-				push("/");
-			} else {
-				console.log("PRIVATE PAGE USER FOUND ", authenticatedUser);
-			}
+			if (authenticatedUser === null) push("/");
 		}, [isLoading, authenticatedUser, push]);
 
 		if (isLoading || !authenticatedUser) {
-			return <Loading />;
+			return (
+				<div className="w-full min-h-screen flex items-center justify-center">
+					<Loading />
+				</div>
+			);
 		}
 
 		if (authenticatedUser.user.firstTime) return <NicknameCard />;
@@ -40,7 +36,5 @@ export default function privatePage(Component: any) {
 		}
 
 		return <Component {...props} />;
-
-		//return <>{authenticatedUser.user.firstTime ? <UsernameCard /> : <Component {...props} />}</>;
 	};
 }

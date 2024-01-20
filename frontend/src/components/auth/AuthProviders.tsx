@@ -42,7 +42,7 @@ const AuthProviders = ({ width, height }: AuthProvidersProps) => {
 				<li key={index}>
 					<Button
 						className="h-full rounded-full"
-						onClick={() => push(`http://localhost:3000/api/v1/auth/${href}/login`)}
+						onClick={() => push(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/${href}/login`)}
 					>
 						<Image
 							src={src}

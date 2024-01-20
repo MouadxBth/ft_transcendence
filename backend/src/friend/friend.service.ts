@@ -10,7 +10,9 @@ export class FriendService {
 			where: { username },
 			select: {
 				username: true,
-				friends: { select: { username: true } },
+				friends: {
+					select: { username: true, nickname: true, avatar: true, firstName: true, lastName: true },
+				},
 			},
 		});
 
@@ -18,7 +20,7 @@ export class FriendService {
 
 		return {
 			username: result.username,
-			friends: result.friends.map((friend) => friend.username),
+			friends: result.friends,
 		};
 	}
 
@@ -28,7 +30,7 @@ export class FriendService {
 
 		const userWithFriends = await this.friends(username);
 
-		if (userWithFriends.friends.find((friend) => friend === target))
+		if (userWithFriends.friends.find((friend) => friend.username === target))
 			throw new HttpException("Target is already a friend of you!", HttpStatus.BAD_REQUEST);
 
 		const senderRequest = await this.prismaService.friendRequest.findFirst({
@@ -101,7 +103,7 @@ export class FriendService {
 
 		const userWithFriends = await this.friends(username);
 
-		if (userWithFriends.friends.find((value) => value === sender))
+		if (userWithFriends.friends.find((value) => value.username === sender))
 			throw new HttpException("Target is already a friend of you!", HttpStatus.BAD_REQUEST);
 
 		const friendRequest = await this.prismaService.friendRequest.findFirst({
@@ -152,7 +154,7 @@ export class FriendService {
 
 		const userWithFriends = await this.friends(username);
 
-		if (userWithFriends.friends.find((value) => value === sender))
+		if (userWithFriends.friends.find((value) => value.username === sender))
 			throw new HttpException("Target is already a friend! of you", HttpStatus.BAD_REQUEST);
 
 		const friendRequest = await this.prismaService.friendRequest.findFirst({
@@ -184,7 +186,7 @@ export class FriendService {
 
 		const userWithFriends = await this.friends(username);
 
-		if (!userWithFriends.friends.find((friend) => friend === target))
+		if (!userWithFriends.friends.find((friend) => friend.username === target))
 			throw new HttpException("Target is not your friend!", HttpStatus.BAD_REQUEST);
 
 		const [_, result] = await Promise.all([

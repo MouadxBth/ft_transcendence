@@ -3,29 +3,30 @@ import { DirectMessageApiResponse, DirectMessageApiResponseSchema } from "@/lib/
 import axios from "axios"
 
 const conversationEndpoint = axios.create({
-	baseURL: `${process.env.NEXT_PUBLIC_BACKEND_API_HOST}/api/v1/conversation`,
+	baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/conversation`,
 	withCredentials: true
 })
 
 const directMessageEndpoint = axios.create({
-	baseURL: `${process.env.NEXT_PUBLIC_BACKEND_API_HOST}/api/v1/conversation`,
+	baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/conversation`,
 	withCredentials: true
 })
 
 export const userEndpoint = axios.create({
-	baseURL: `${process.env.NEXT_PUBLIC_BACKEND_API_HOST}/api/v1/user`,
+	baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/user`,
 	withCredentials: true
 })
 
 export async function fetchAllConversations() : Promise<ConversationApiResponse> {
-	const res = conversationEndpoint.get('');
-	return res.then((res) => {
-		const parsedRes = ConversationApiResponseSchema.safeParse(res.data); 
-		if (!parsedRes.success) {
+	const res = await conversationEndpoint.get('');
+	const parsedRes = ConversationApiResponseSchema.safeParse(res.data);
+	
+	console.log(parsedRes);
+	
+	if (!parsedRes.success) {
 			throw parsedRes.error;
-		}
-		return parsedRes.data;
-	})
+	}
+	return parsedRes.data;
 }
 
 export async function fetchAllDirectMessages(target: string) : Promise<DirectMessageApiResponse> {

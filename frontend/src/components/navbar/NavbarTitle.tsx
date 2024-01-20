@@ -1,7 +1,8 @@
 "use client";
 
-import { useAuthentication } from "@/contexts/AuthenticationContext";
+import { useAuthentication } from "@/hooks/authentication/useAuthentication";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import Link from "next/link";
 
 const NavbarTitle = () => {
 	const { authenticatedUser } = useAuthentication();
@@ -11,7 +12,10 @@ const NavbarTitle = () => {
 	const avatar = authenticatedUser.user.avatar;
 
 	return (
-		<div className="flex flex-row items-center space-x-3 w-1/2">
+		<Link
+			href="/profile"
+			className="flex flex-row items-center space-x-3 w-1/2"
+		>
 			<Avatar className="h-14 w-auto text-white border-amber-500 border-2">
 				<AvatarImage
 					className="object-cover"
@@ -19,7 +23,7 @@ const NavbarTitle = () => {
 						avatar
 							? avatar.startsWith("http")
 								? avatar
-								: `http://localhost:3000/api/v1/avatar/${avatar}`
+								: `${process.env.NEXT_PUBLIC_BACKEND_URL}/avatar/${avatar}`
 							: ""
 					}
 				/>
@@ -34,7 +38,7 @@ const NavbarTitle = () => {
 					authenticatedUser.user.lastName || ""
 				}`}</p>
 			</div>
-		</div>
+		</Link>
 	);
 };
 

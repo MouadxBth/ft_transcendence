@@ -54,6 +54,13 @@ export class ConversationService {
 						{ members: { some: { username: second } } },
 					],
 				},
+				// include: {
+				// 	members: {
+				// 		select: {
+				// 			avatar: true
+				// 		}
+				// 	}
+				// }
 			});
 
 			if (!result) throw new HttpException("Conversation does not exist!", HttpStatus.NOT_FOUND);
@@ -72,7 +79,7 @@ export class ConversationService {
 			include: {
 				members: {
 					select: {
-						nickname: true,
+						username: true,
 					},
 					where: {
 						username: {

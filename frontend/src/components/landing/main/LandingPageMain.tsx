@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import TitleSection from "./TitleSection";
-import TabsSection from "./TabsSection";
-import { useAuthentication } from "@/contexts/AuthenticationContext";
+import TitleSection from "./sections/TitleSection";
+import TabsSection from "./sections/TabsSection";
+import { useAuthentication } from "@/hooks/authentication/useAuthentication";
 
 const LandingPageMain = () => {
 	const { authenticatedUser } = useAuthentication();

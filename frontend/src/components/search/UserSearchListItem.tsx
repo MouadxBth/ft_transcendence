@@ -1,26 +1,40 @@
-import Image from "next/image";
+"use client";
+
 import { Separator } from "../ui/separator";
+import { User } from "@/lib/types/user";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import Link from "next/link";
+import { useSearch } from "@/hooks/search/useSearch";
 
-export interface UserSearchListItemProps {
-	nickname: string;
-	avatar: string;
-}
-
-const UserSearchListItem = ({ nickname, avatar }: UserSearchListItemProps) => {
+const UserSearchListItem = ({ username, nickname, firstName, lastName, avatar }: User) => {
+	const { setOpen } = useSearch();
 	return (
 		<>
-			<div className="flex justify-between">
+			<Link
+				href={`/profile/${username}`}
+				className="flex justify-between"
+				onClick={() => setOpen(false)}
+			>
 				<div className="flex space-x-2">
-					<Image
-						className=" rounded-full"
-						src={avatar}
-						alt={nickname}
-						width={32}
-						height={32}
-					/>
-					<span className="text-md">{nickname}</span>
+					<Avatar className="h-12 w-12">
+						<AvatarImage
+							className="object-cover"
+							src={
+								avatar
+									? avatar.startsWith("http")
+										? avatar
+										: `${process.env.NEXT_PUBLIC_BACKEND_URL}/avatar/${avatar}`
+									: ""
+							}
+						/>
+						<AvatarFallback>CN</AvatarFallback>
+					</Avatar>
+					<div className="flex flex-col items-start">
+						<div className="text-md">{nickname}</div>
+						<div className="text-xs text-muted-foreground">{`${firstName} ${lastName}`}</div>
+					</div>
 				</div>
-			</div>
+			</Link>
 			<Separator className="my-2" />
 		</>
 	);

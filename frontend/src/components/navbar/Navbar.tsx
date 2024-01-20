@@ -1,10 +1,9 @@
-"use client";
-
 import React from "react";
 import { CircleUserRound, Gamepad2, Home, MessagesSquare } from "lucide-react";
 import NavbarTitle from "./NavbarTitle";
-import NavbarLinks, { NavbarItemContent } from "./NavbarLinks";
 import UserSearch from "../search/UserSearch";
+import SearchContextProvider from "@/providers/SearchContextProvider";
+import NavbarLinkList, { NavbarItemContent } from "./NavbarLinkList";
 
 export const links: NavbarItemContent[] = [
 	{
@@ -33,8 +32,10 @@ const Navbar = () => {
 	return (
 		<nav className="flex flex-row items-center h-20 justify-between px-5">
 			<NavbarTitle />
-			<UserSearch />
-			<NavbarLinks links={links} />
+			<SearchContextProvider>
+				<UserSearch />
+			</SearchContextProvider>
+			<NavbarLinkList links={links} />
 		</nav>
 	);
 };

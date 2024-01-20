@@ -1,7 +1,8 @@
-import UserSearchListItem, { UserSearchListItemProps } from "./UserSearchListItem";
+import { User } from "@/lib/types/user";
+import UserSearchListItem from "./UserSearchListItem";
 
 export interface UserSearchListProps {
-	data: UserSearchListItemProps[] | undefined;
+	data: User[];
 }
 
 const UserSearchList = ({ data }: UserSearchListProps) => {
@@ -9,11 +10,10 @@ const UserSearchList = ({ data }: UserSearchListProps) => {
 		<div className="p-4 max-h-32 text-center w-full">
 			{!data || !data.length
 				? "No Results"
-				: data.map(({ nickname, avatar }) => (
+				: data.map((user) => (
 						<UserSearchListItem
-							key={nickname}
-							nickname={nickname}
-							avatar={avatar}
+							key={user.nickname}
+							{...user}
 						/>
 				  ))}
 		</div>

@@ -1,13 +1,12 @@
 "use client";
 
-import * as React from "react";
-
 import { cn } from "@/lib/utils";
 import { useRef, useState } from "react";
-import useAutosizeTextArea from "@/hooks/useAutosizeTextArea";
+import useAutosizeTextArea from "@/hooks/utils/useAutosizeTextArea";
+import React from "react";
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-	callback: (value: string)=>(void)
+	callback: (value: string) => void;
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -17,21 +16,15 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
 		useAutosizeTextArea(textAreaRef.current, value);
 
-		const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-			const val = evt.target?.value;
-
-			setValue(val);
+		const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+			setValue(event.target?.value);
 		};
 
 		const handleEnter = (event: any) => {
 			if (event.key === "Enter" && !event.shiftKey) {
 				event.preventDefault(); // Prevents new line insertion
-				console.log("ENTER§");
-				if (typeof callback === 'function')
-					callback(value);
+				callback(value);
 				setValue("");
-				// event.target.value = "";
-				// event.target.style.height = "36px";
 			}
 		};
 

@@ -17,11 +17,12 @@ const random = Array.from({ length: 20 }).map((_, i, a) => {
 export interface ConversationItem {
 	id: number,
 	nickname: string,
+	username: string,
 	avatar: string,
 	createdAt: Date,
 	updatedAt: Date,
 	lastMessage: string,
-	messages: DirectMessageApiResponse[],
+	messages: DirectMessageApiResponse,
 }
 
 export type ConversationList = Array<ConversationItem>;

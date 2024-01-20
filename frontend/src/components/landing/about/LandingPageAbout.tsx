@@ -1,6 +1,6 @@
 import React from "react";
 
-import TeamMembers from "./TeamMembers";
+import TeamMembers from "./team/TeamMembers";
 import Title from "@/components/ui/title";
 
 const LandingPageAbout = () => {

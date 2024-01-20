@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
 import UserSearchContent from "./UserSearchContent";
+import { useSearch } from "@/hooks/search/useSearch";
 
 const UserSearch = () => {
-	const [query, setQuery] = useState("");
-	const [open, setOpen] = useState(false);
+	const { open, setOpen, query, setQuery } = useSearch();
+	const contentRef = useRef<HTMLDivElement>(null);
 
 	return (
 		<HoverCard open={query !== "" && open}>
@@ -18,10 +19,17 @@ const UserSearch = () => {
 					placeholder="Search for someone..."
 					onChange={(e) => setQuery(e.target.value)}
 					onFocus={() => setOpen(true)}
-					onBlur={() => setOpen(false)}
+					onBlur={(event) => {
+						const isInsideSpecificDiv =
+							contentRef.current && contentRef.current.contains(event.relatedTarget);
+						if (!isInsideSpecificDiv) setOpen(false);
+					}}
 				/>
 			</HoverCardTrigger>
-			<HoverCardContent className="p-0">
+			<HoverCardContent
+				className="p-0"
+				ref={contentRef}
+			>
 				<UserSearchContent query={query} />
 			</HoverCardContent>
 		</HoverCard>

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import Resizeable from "@/components/ui/resizeable";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
+import { useConversationContext } from "@/hooks/useConversationContext";
 import { useEffect, useRef } from "react";
 
 const random = Array.from({ length: 20 }).map((_, i, a) => {
@@ -52,6 +53,12 @@ const Message = ({ id, sender, avatar, message, date }: MessageProps) => {
 const ChatPage = ({ params }: { params: { id: string } }) => {
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
+	const {conversationData, setConversationData} = useConversationContext();
+	
+	function getUserMessages() {
+		return conversationData.find((ele) => ele.username === params.id);
+	}
+
 	const scrollToBottom = () => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	};
@@ -59,6 +66,8 @@ const ChatPage = ({ params }: { params: { id: string } }) => {
 	useEffect(() => {
 		scrollToBottom();
 	}, []);
+
+	const { messages, avatar, username } = getUserMessages()!;
 
 	return (
 		<article className="w-3/4 flex flex-col">
@@ -74,17 +83,17 @@ const ChatPage = ({ params }: { params: { id: string } }) => {
 			</div>
 			{/* <div className="bg-blue-500 "> */}
 			<ScrollArea className=" scroll">
-				{!random || !random.length ? (
+				{!messages || !messages.length ? (
 					<div className="p-5 bg-black">You don&apos;t any conversations yet!</div>
 				) : (
-					random.map(({ id, sender, message, avatar, date }) => (
+					messages.map((item) => (
 						<Message
-							key={sender}
-							id={id}
-							sender={sender}
+							key={item.id}
+							id={item.id}
+							sender={item.senderId}
 							avatar={avatar}
-							message={message}
-							date={date}
+							message={item.content}
+							date={new Date(item.updatedAt)}
 						/>
 					))
 				)}

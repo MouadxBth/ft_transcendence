@@ -1,17 +1,5 @@
-"use client";
-
 import React from "react";
-import { Button } from "../../ui/button";
-import {
-	Card,
-	CardHeader,
-	CardTitle,
-	CardDescription,
-	CardContent,
-	CardFooter,
-} from "../../ui/card";
-import HorizontalSeparator from "../../ui/horizontal-separator";
-import AuthProviders from "../AuthProviders";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../ui/card";
 import { RegistrationForm } from "./form/RegisterForm";
 
 const RegisterCard = () => {

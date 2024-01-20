@@ -23,7 +23,7 @@ const NavbarSettings = () => {
 				<DropdownMenuItem>Settings</DropdownMenuItem>
 				<DropdownMenuItem>
 					<Link
-						href="http://localhost:3000/api/v1/auth/logout"
+						href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/logout`}
 						className="flex space-x-2"
 					>
 						<div>Log Out</div>

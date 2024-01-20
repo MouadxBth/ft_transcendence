@@ -16,6 +16,12 @@ export const userSchema = z.object({
 	twoFactorAuthenticationFirstTime: z.boolean(),
 
 	twoFactorAuthenticationEnabled: z.boolean(),
+
+	level: z.number(),
+
+	experience: z.number(),
+
+	eloRating: z.number(),
 });
 
 export type User = z.infer<typeof userSchema>;

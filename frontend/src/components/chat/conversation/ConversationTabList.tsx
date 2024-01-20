@@ -19,10 +19,11 @@ const ConversationTabList = ({ data }: ConversationTabListProps) => {
 			{!conversationData || !conversationData.length ? (
 				<div className="p-5 ">You don&apos;t any conversations yet!</div>
 			) : (
-				conversationData.map(({ nickname, avatar, lastMessage, updatedAt: date }) => (
+				conversationData.map(({ nickname, username, avatar, lastMessage, updatedAt: date }) => (
 					<ConversationTabListItem
 						key={nickname}
-						active={pathname === `/chat/conversation/${nickname}`}
+						username={username}
+						active={pathname === `/chat/conversation/${username}`}
 						nickname={nickname}
 						avatar={avatar}
 						lastMessage={lastMessage}
