@@ -39,39 +39,6 @@ function Settings() {
 						<ProfileForm />
 					</div>
 				</div>
-				{/* <Tabs className="space-y-24 flex">
-					<TabsList className="flex flex-col h-fit bg-white/0 w-96 space-y-3">
-						<TabsTrigger
-							value="profile"
-							className="w-full"
-						>
-							Profile
-						</TabsTrigger>
-						<TabsTrigger
-							value="2fa"
-							className="w-full"
-						>
-							2FA
-						</TabsTrigger>
-					</TabsList>
-					<TabsContent
-						value="profile"
-						className="flex flex-col justify-center items-start  w-full bg-red-700"
-					>
-						<CustomAvatar />
-						<ProfileForm />
-					</TabsContent>
-					<TabsContent
-						value="2fa"
-						className="flex flex-col justify-center items-start"
-					>
-						2FA settings
-					</TabsContent>
-				</Tabs> */}
-				{/* <div className="flex flex-col justify-center items-center">
-					<CustomAvatar />
-					<ProfileForm />
-				</div> */}
 			</ScrollArea>
 		</main>
 	);
