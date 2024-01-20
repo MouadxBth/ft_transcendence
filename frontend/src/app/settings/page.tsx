@@ -15,14 +15,9 @@ import { useAuthentication } from "@/hooks/authentication/useAuthentication";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
+import CustomAvatar from "@/components/settings/CustomAvatar";
 
 function Settings() {
-	// const avatar = "https://robohash.org/test";
-	// const [newavatar, setNewAvatar] = useState(avatar);
-	// const addNew = () => {
-	// 	setNewAvatar()
-	// }
-
 	return (
 		<article className="flex flex-col h-screen w-screen">
 			<Navbar></Navbar>
@@ -32,13 +27,7 @@ function Settings() {
 					<CardDescription>Manage your account</CardDescription>
 				</CardHeader>
 				<CardContent className="flex justify-evenly items-center">
-					<Avatar className="h-22 w-22 text-white border-amber-500 border-2">
-						<AvatarImage
-							className="object-cover"
-							src={"https://robohash.org/test"}
-						/>
-						<AvatarFallback>{"test".toUpperCase().slice(0, 2)}</AvatarFallback>
-					</Avatar>
+					<CustomAvatar />
 					<div className="flex flex-col">
 						<ProfileForm />
 					</div>
