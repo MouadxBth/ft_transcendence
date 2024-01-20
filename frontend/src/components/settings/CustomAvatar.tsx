@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
 	Dialog,
@@ -11,54 +11,61 @@ import {
 } from "../ui/dialog";
 import Image from "next/image";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 function CustomAvatar() {
-	const avatars: string[] = [
-		"https://robohash.org/test",
-		"https://robohash.org/test0",
-		"https://robohash.org/test2",
-		"https://robohash.org/test3",
-		"https://robohash.org/test4",
-		"https://robohash.org/test5",
-	];
-	const [selectedAvatar, setSelectedAvatar] = useState("https://robohash.org/test");
-	const handleAvatarClick = ({ avatar }: { avatar: string }) => {
-		setSelectedAvatar(avatar);
+	const currentImage = "https://robohash.org/test";
+
+	const [image, setImage] = useState<string | "">(currentImage);
+
+	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				const url = reader.result as string;
+				setImage(url);
+				console.log(url);
+			};
+			reader.readAsDataURL(file);
+		}
 	};
 	return (
-		<div>
+		<main>
+			<div className="flex flex-col justify-center items-start pb-5">
+				<h2 className="text-sm">Avatar</h2>
+				<p className="text-muted-foreground text-xs">Edit your avatar here</p>
+			</div>
 			<Dialog>
 				<DialogTrigger>
-					<Avatar className="h-[150px] w-[150px] text-white border-amber-500 border-2">
+					<Avatar className="h-[200px] w-[200px] text-white border-amber-500 border-2">
 						<AvatarImage
 							className="object-cover"
-							src={selectedAvatar}
+							src={image}
 						/>
 						<AvatarFallback>{"test".toUpperCase().slice(0, 2)}</AvatarFallback>
 					</Avatar>
 				</DialogTrigger>
 				<DialogContent>
-					<DialogTitle>Choose an avatar</DialogTitle>
-					<DialogHeader className="flex flex-row justify-between items-center py-14">
-						{avatars.map((avatar, index) => (
-							<Avatar
-								key={index}
-								className={`w-20 h-20 cursor-pointer ${
-									selectedAvatar === avatar ? "border-2 border-amber-500" : "border-none"
-								}`}
-								onClick={() => handleAvatarClick({ avatar })}
-							>
-								<AvatarImage
-									className="object-cover"
-									src={avatar}
-								/>
-								<AvatarFallback>{"test".toUpperCase().slice(0, 2)}</AvatarFallback>
-							</Avatar>
-						))}
+					<DialogTitle className="flex flex-col justify-start items-start">
+						Upload an avatar
+					</DialogTitle>
+					<DialogHeader>
+						<input
+							className="h-full w-full"
+							type="file"
+							accept="image/*"
+							onChange={handleChange}
+						/>
 					</DialogHeader>
+					<DialogFooter>
+						<DialogClose>
+							<Button variant="outline">Done</Button>
+						</DialogClose>
+					</DialogFooter>
 				</DialogContent>
 			</Dialog>
-		</div>
+		</main>
 	);
 }
 
