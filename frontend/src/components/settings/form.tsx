@@ -137,7 +137,7 @@ function ProfileForm() {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit">Submit</Button>
+				<Button type="submit">Update profile</Button>
 				<Button variant="outline">Cancel</Button>
 			</form>
 		</Form>
