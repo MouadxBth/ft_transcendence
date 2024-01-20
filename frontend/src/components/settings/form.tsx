@@ -48,7 +48,7 @@ function ProfileForm() {
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className="grid grid-cols-2 gap-2 w-96 p-2 space-y-10"
+				className="grid grid-cols-2 gap-2 w-96 p-2 space-y-6"
 			>
 				<FormField
 					control={form.control}
