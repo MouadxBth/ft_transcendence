@@ -14,8 +14,6 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { AuthenticationContext } from "@/contexts/AuthenticationContext";
-import { ScrollArea } from "../ui/scroll-area";
 
 const formSchema = z
 	.object({
