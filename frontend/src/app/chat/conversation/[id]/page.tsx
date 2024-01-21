@@ -9,6 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import useAuthenticatedUser from "@/hooks/authentication/useAuthenticatedUser";
 import { useConversationContext } from "@/hooks/useConversationContext";
+import { handleClientScriptLoad } from "next/script";
 import { useEffect, useRef } from "react";
 
 const random = Array.from({ length: 20 }).map((_, i, a) => {
@@ -52,14 +53,17 @@ const Message = ({ id, sender, avatar, message, date }: MessageProps) => {
 };
 
 const ChatPage = ({ params }: { params: { id: string } }) => {
+	
+	console.log("rendered Channel Page...")
+	
 	const messagesEndRef = useRef<HTMLDivElement>(null);
-
+	
 	const {conversationData, setConversationData} = useConversationContext();
 	const { username: targetUser } = useAuthenticatedUser().data!.user;
-
+	
 	function handleSubmit(value: string) {
 		const conversation = conversationData.find((ele) => ele.username === params.id)
-
+		
 		conversation?.messages!.push({
 			id: 1,
 			createdAt: Date(),
@@ -68,60 +72,61 @@ const ChatPage = ({ params }: { params: { id: string } }) => {
 			senderId: targetUser,
 			read: false
 		})
-		setConversationData(conversationData.slice());
+		setConversationData({...conversationData});
 	}
-
+	
 	function getUserMessages() {
 		return conversationData.find((ele) => ele.username === params.id);
 	}
-
+	
 	const scrollToBottom = () => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	};
-
+	
 	useEffect(() => {
 		scrollToBottom();
-	}, []);
-
+	});
+		
 	const { messages, avatar, username } = getUserMessages()!;
-
+	
 	return (
-		<article className="w-3/4 flex flex-col">
-			<div className="flex items-center justify-center p-2 space-x-2">
+		<article className="w-3/4 flex flex-col h-screen">
+			<div className="flex h-20 items-center justify-center p-2 space-x-2">
 				<Avatar>
 					<AvatarImage
 						src="https://github.com/shadcn.png"
 						alt={params.id}
-					/>
+						/>
 					<AvatarFallback>{params.id}</AvatarFallback>
 				</Avatar>
 				<div>{params.id}</div>
 			</div>
 			{/* <div className="bg-blue-500 "> */}
-			<ScrollArea className=" scroll">
+			<ScrollArea className="h-full scroll">
 				{!messages || !messages.length ? (
 					<div className="p-5 bg-black">You don&apos;t any conversations yet!</div>
-				) : (
-					messages.map((item) => (
-						<Message
+					) : (
+						messages.map((item) => (
+							<Message
 							key={item.id}
 							id={item.id}
 							sender={item.senderId}
 							avatar={avatar}
 							message={item.content}
 							date={new Date(item.updatedAt)}
-						/>
-					))
-				)}
+								/>
+						))
+						)}
 				<div ref={messagesEndRef} />
 			</ScrollArea>
-			{/* </div> */}
-			<div className="h-20">
+			<div className="h-20 flex-col justify-center">
+				<div>
 				<Textarea
 					callback={handleSubmit}
 					className="max-h-80 resize-none"
 					placeholder="Type a message..."
-				/>
+					/>
+				</div>
 			</div>
 		</article>
 	);

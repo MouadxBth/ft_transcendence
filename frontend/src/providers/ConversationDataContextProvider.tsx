@@ -53,7 +53,7 @@ export default function ConversationContextProvider({ children }: any) {
 				lastMessage: "a test message..."
 			})
 		}
-		await new Promise(r => setTimeout(r, 2000));
+		await new Promise(r => setTimeout(r, 500));
 		
 		return data;
 	}

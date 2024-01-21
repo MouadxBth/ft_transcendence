@@ -27,7 +27,7 @@ const ChannelMessageList = ({name}: {name: string}) => {
 
 	useEffect(() => {
 		scrollToBottom();
-	}, [channelData]);
+	});
 
 	console.log("finished rendering channel list...");
 	return (
@@ -35,15 +35,15 @@ const ChannelMessageList = ({name}: {name: string}) => {
 			{!channelMessages || !channelMessages.length ? (
 				<div className="p-5 bg-black">You don&apos;t any conversations yet!</div>
 			) : (
-				channelMessages.map(({ id, sender, message, avatar, date }) => (
+				channelMessages.map(({ id, senderId, content, createdAt, updatedAt}) => (
 					// <ChannelMessageSkeleton key={sender} />
 					<ChannelMessage
-						key={sender}
+						key={senderId}
 						id={id}
-						sender={sender}
-						avatar={avatar}
-						message={message}
-						date={date}
+						senderId={senderId}
+						content={content}
+						createdAt={createdAt}
+						updatedAt={updatedAt}
 					/>
 				))
 			)}

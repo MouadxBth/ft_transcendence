@@ -14,10 +14,10 @@ const ChannelInput = ({ name } : {name: string}) => {
 		const channelMessages = channelData.find((ele) => ele.name === name)?.messages
 		channelMessages!.push({
 			id: 90,
-			sender: authenticatedUser?.user.nickname!,
-			avatar: `http://localhost:3000/api/v1/avatar/${authenticatedUser?.user.avatar!}`,
-			message: value,
-			date: new Date()
+			senderId: authenticatedUser?.user.nickname!,
+			content: value,
+			createdAt: Date(),
+			updatedAt: Date(),
  		})
 		setChannelData(channelData.slice());
 	}

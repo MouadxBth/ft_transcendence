@@ -1,23 +1,12 @@
+import { ChannelDmItem } from "@/lib/types/channel-api-response";
 import { createContext, useContext } from "react"
-import { ChannelMessageProps } from "@/components/chat/channel/message/ChannelMessage";
-
-const random = Array.from({ length: 20 }).map((_, i, a) => {
-	return {
-		id: i,
-		sender: `nickname-${a.length - i}`,
-		avatar: `https://robohash.org/${encodeURI(`nickname-${a.length - i}`)}`,
-		message:
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eleifend sem et interdum euismod.",
-		date: new Date(),
-	} as ChannelMessageProps;
-});
 
 export interface ChannelItem {
 	name: string,
 	avatar: string,
 	date: Date,
 	lastMessage: string,
-	messages: ChannelMessageProps[],
+	messages: ChannelDmItem[],
 }
 
 export type ChannelList = Array<ChannelItem>;
