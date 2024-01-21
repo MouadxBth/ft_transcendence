@@ -9,9 +9,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "../ui/dialog";
-import Image from "next/image";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 
 function CustomAvatar() {
 	const currentImage = "https://robohash.org/test";
@@ -32,7 +30,7 @@ function CustomAvatar() {
 	};
 	return (
 		<main>
-			<div className="flex flex-col justify-center items-start pb-5">
+			<div className="flex flex-col justify-center items-start pb-4">
 				<h2 className="text-sm">Avatar</h2>
 				<p className="text-muted-foreground text-xs">Edit your avatar here</p>
 			</div>
