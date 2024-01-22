@@ -16,14 +16,14 @@ const NavbarTitle = () => {
 			href="/profile"
 			className="flex flex-row items-center space-x-3 w-1/2"
 		>
-			<Avatar className="h-14 w-auto text-white border-amber-500 border-2">
+			<Avatar className="h-14 w-14 text-white border-amber-500 border-2">
 				<AvatarImage
 					className="object-cover"
 					src={
 						avatar
 							? avatar.startsWith("http")
 								? avatar
-								: `${process.env.NEXT_PUBLIC_BACKEND_URL}/avatar/${avatar}`
+								: `${process.env.NEXT_PUBLIC_BACKEND_URL}/upload/avatar/${avatar}`
 							: ""
 					}
 				/>
