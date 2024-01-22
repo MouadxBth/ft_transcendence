@@ -3,8 +3,10 @@ import React from "react";
 
 const Home = () => {
 	return (
-		<main>
-			<Pong />
+		<main className="flex justify-center w-full items-center h-screen">
+			<div className="border">
+				<Pong />
+			</div>
 		</main>
 	);
 };
