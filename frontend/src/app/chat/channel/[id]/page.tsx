@@ -21,7 +21,7 @@ const random = Array.from({ length: 20 }).map((_, i, a) => {
 
 const ChannelPage = ({ params }: { params: { id: string } }) => {
 	return (
-		<article className="w-3/4 flex flex-col">
+		<article className="w-3/4 flex flex-col h-screen">
 				<ChannelHeader name={params.id} />
 				<ChannelMessageList name={params.id} />
 				<ChannelInput name={params.id} />

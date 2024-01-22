@@ -119,15 +119,11 @@ const ChatPage = ({ params }: { params: { id: string } }) => {
 						)}
 				<div ref={messagesEndRef} />
 			</ScrollArea>
-			<div className="h-20 flex-col justify-center">
-				<div>
 				<Textarea
 					callback={handleSubmit}
 					className="max-h-80 resize-none"
 					placeholder="Type a message..."
-					/>
-				</div>
-			</div>
+				/>
 		</article>
 	);
 };

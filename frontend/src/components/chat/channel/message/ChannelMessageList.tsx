@@ -31,7 +31,7 @@ const ChannelMessageList = ({name}: {name: string}) => {
 
 	console.log("finished rendering channel list...");
 	return (
-		<ScrollArea>
+		<ScrollArea className="h-full">
 			{!channelMessages || !channelMessages.length ? (
 				<div className="p-5 bg-black">You don&apos;t any conversations yet!</div>
 			) : (
