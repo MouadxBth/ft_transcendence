@@ -20,7 +20,7 @@ const Pong = () => {
 				const Phaser = await import("phaser");
 				const { Preload } = await import("./scenes/Preload");
 				const { TitleScene } = await import("./scenes/TitleScene");
-				const { PongGame } = await import("./scenes/Game");
+				const { GameScene } = await import("./scenes/GameScene");
 				const { GameBackground } = await import("./scenes/GameBackground");
 				const { GameOver } = await import("./scenes/GameOver");
 
@@ -29,7 +29,6 @@ const Pong = () => {
 				const config = {
 					type: Phaser.AUTO,
 					parent: "phaser-game",
-					backgroundColor: "#FF0000",
 					scale: {
 						width: 800,
 						height: 600,
@@ -45,9 +44,9 @@ const Pong = () => {
 
 				gameRef.current = new Phaser.Game(config);
 
-				gameRef.current.scene.add(TitleSceneKey, TitleScene);
 				gameRef.current.scene.add(PreloadSceneKey, Preload);
-				gameRef.current.scene.add(GameSceneKey, PongGame);
+				gameRef.current.scene.add(TitleSceneKey, TitleScene);
+				gameRef.current.scene.add(GameSceneKey, GameScene);
 				gameRef.current.scene.add(GameBackgroundSceneKey, GameBackground);
 				gameRef.current.scene.add(GameOverSceneKey, GameOver);
 

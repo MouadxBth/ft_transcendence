@@ -3,11 +3,7 @@ import { PressStart2P } from "../consts/FontKeys";
 
 export class GameOver extends Phaser.Scene {
 	create(data: any) {
-		let titleText = "Game Over";
-		if (data.leftScore > data.rightScore) {
-			// player won
-			titleText = "You Win!";
-		}
+		const titleText = data.leftScore > data.rightScore ? "You Win" : "Game Over";
 
 		this.add
 			.text(400, 200, titleText, {
