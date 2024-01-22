@@ -39,7 +39,7 @@ model User {
   avatar     String?
   banner     String?
 
-	level				Int @default(0)
+	level				Int @default(1)
 	experience	Float @default(0.0)
 
 	eloRating	Int @default(1200)
