@@ -23,7 +23,7 @@ export class ChannelController {
 		const authenticatedUser = request.user! as AuthenticatedUser;
 		const { password, ...channel } = await this.channelService.create(
 			createChannelDto,
-			authenticatedUser.user	
+			authenticatedUser.user
 		);
 		return channel;
 	}
@@ -64,7 +64,7 @@ export class ChannelController {
 		const { password, ...channel } = await this.channelService.update(
 			id,
 			updateChannelDto,
-			authenticatedUser.user	
+			authenticatedUser.user
 		);
 		return channel;
 	}

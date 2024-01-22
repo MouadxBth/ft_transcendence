@@ -7,6 +7,7 @@ import {
 	ParseFilePipe,
 	Post,
 	Req,
+	Res,
 	UploadedFile,
 	UseGuards,
 	UseInterceptors,
@@ -14,14 +15,15 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 import type { Request } from "express";
 import { diskStorage } from "multer";
-import path from "path";
+import path, { join } from "path";
 import { v4 as uuidv4 } from "uuid";
 import { FileUploadService } from "./file-upload.service";
 import { AuthenticatedGuard } from "src/auth/guards/authenticated.guard";
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { type Response } from "express";
 
 const storageConf = diskStorage({
-	destination: "/uploads/avatars",
+	destination: join(process.cwd(), "/uploads/avatars"),
 	filename: (req, file, cb) => {
 		req;
 		cb(null, `${uuidv4()}${path.parse(file.originalname).ext}`);
@@ -45,8 +47,8 @@ export class FileUploadController {
 		@UploadedFile(
 			new ParseFilePipe({
 				validators: [
-					new MaxFileSizeValidator({ maxSize: 4000000 }),
-					new FileTypeValidator({ fileType: "image/(jpeg|gif|png)" }),
+					new MaxFileSizeValidator({ maxSize: 5242880 }),
+					new FileTypeValidator({ fileType: "image/(jpeg|jpg|webp|gif|png)" }),
 				],
 			})
 		)
@@ -59,7 +61,10 @@ export class FileUploadController {
 	@ApiOperation({ summary: "Get avatar for the specified user" })
 	@ApiResponse({ status: 200, description: "Successfully retrieved avatar" })
 	@ApiResponse({ status: 400, description: "Bad Request - No avatar found for the user" })
-	async getAvatar(@Param("username") username: string) {
-		return this.fileUploadService.getAvatar(username);
+	async getAvatar(
+		@Param("username") username: string,
+		@Res({ passthrough: true }) response: Response
+	) {
+		return this.fileUploadService.getAvatar(username, response);
 	}
 }

@@ -63,4 +63,13 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 		nullable: true,
 	})
 	experience?: number;
+
+	@IsNumber()
+	@IsOptional()
+	@ApiProperty({
+		description: "This represents the elo rating of a user",
+		example: 420,
+		nullable: true,
+	})
+	eloRating?: number;
 }

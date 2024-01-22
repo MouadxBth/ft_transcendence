@@ -33,7 +33,7 @@ export class UserService {
 		return this.prisma.user.findMany({
 			where: {
 				nickname: {
-					startsWith: nickname,
+					contains: nickname,
 				},
 			},
 		});
@@ -56,6 +56,52 @@ export class UserService {
 		}
 
 		return result;
+	}
+
+	async updateTarget(usernameValue: string, updateUserDto: UpdateUserDto) {
+		const user = await this.prisma.user.findUnique({
+			where: { username: usernameValue },
+		});
+
+		if (!user)
+			throw new HttpException("User with that username doesnt exist!", HttpStatus.NOT_FOUND);
+
+		if (updateUserDto.username && usernameValue !== updateUserDto.username) {
+			const check = await this.prisma.user.findUnique({
+				where: { username: updateUserDto.username },
+			});
+
+			if (check)
+				throw new HttpException("User with that username already exists!", HttpStatus.BAD_REQUEST);
+		}
+
+		if (updateUserDto.nickname) {
+			const check = await this.prisma.user.findFirst({
+				where: { nickname: updateUserDto.nickname },
+			});
+
+			if (check)
+				throw new HttpException("User with that nickname already exists!", HttpStatus.BAD_REQUEST);
+		}
+
+		if (updateUserDto.password)
+			updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+
+		return await this.prisma.$transaction(async (client) => {
+			const updatedUser = await client.user.update({
+				where: { username: usernameValue },
+				data: updateUserDto,
+			});
+
+			if (!updatedUser)
+				throw new HttpException("Unable to update user!", HttpStatus.INTERNAL_SERVER_ERROR);
+
+			await this.userCache.update(usernameValue, updatedUser);
+
+			const { password, twoFactorAuthenticationSecret, ...result } = updatedUser;
+
+			return result;
+		});
 	}
 
 	async update(req: Request, usernameValue: string, updateUserDto: UpdateUserDto) {
