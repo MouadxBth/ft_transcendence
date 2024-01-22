@@ -16,6 +16,7 @@ import { AchievementModule } from "./achievement/achievement.module";
 import { FileUploadModule } from "./file-upload/file-upload.module";
 import { ChannelModule } from "./channel/channel.module";
 import { MatchHistoryModule } from "./match-history/match-history.module";
+import { NotificationsModule } from "./notifications/notifications.module";
 
 @Module({
 	imports: [
@@ -49,6 +50,7 @@ import { MatchHistoryModule } from "./match-history/match-history.module";
 		FileUploadModule,
 		ChannelModule,
 		MatchHistoryModule,
+		NotificationsModule,
 	],
 })
 export class AppModule {}
