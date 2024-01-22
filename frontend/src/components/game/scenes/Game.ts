@@ -19,6 +19,7 @@ export class PongGame extends Phaser.Scene {
 	//paddles variables
 	paddleLeft: any;
 	paddleRight: any;
+	paddleHeight : any;
 	//score variables
 	leftScore: any;
 	rightScore: any;
@@ -89,6 +90,8 @@ export class PongGame extends Phaser.Scene {
 		// this.time.delayedCall(1500, () => {
 		// 	this.resetBall();
 		// });
+		this.paddleHeight = this.paddleRight.displayHeight;
+
 	}
 
 	update() {
@@ -124,20 +127,10 @@ export class PongGame extends Phaser.Scene {
 			// body.updateFromGameObject()
 		}
 	}
-
+	
 	checkScore() {
-		if (this.ball.body.x < this.paddleLeft.body.x - 20) {
+		if (this.ball.body.x < this.paddleLeft.body.x - 20){ //right paddle scored
 			this.incrementRightScore();
-			this.resetBall();
-			if (this.lastScored === 2)
-			{
-				this.lastScored = 1;
-				this.p1Score = 1;
-			}
-			else
-				this.p1Score++;
-		} else if (this.ball.body.x > this.paddleRight.body.x + 20) {
-			this.incrementLeftScore();
 			this.resetBall();
 			if (this.lastScored === 1)
 			{
@@ -146,6 +139,16 @@ export class PongGame extends Phaser.Scene {
 			}
 			else
 				this.p2Score++;
+		} else if (this.ball.body.x > this.paddleRight.body.x + 20) {
+			this.incrementLeftScore();
+			this.resetBall();
+			if (this.lastScored === 2)
+			{
+				this.lastScored = 1;
+				this.p1Score = 1;
+			}
+			else
+				this.p1Score++;
 		}
 		const maxScore = 7;
 		if (this.leftScore >= maxScore) {
@@ -186,16 +189,25 @@ export class PongGame extends Phaser.Scene {
 
 		this.ball.body.setVelocity(vec.x, vec.y);
 	}
-	powerUpActivation()
+	powerUpActivation()//need to check if power ups are enabled	
 	{
 		if (this.p1Score === 2)
+		{
 			//logic for powerup
-		this.paddleLeft.displayHeight = 150;
+			this.paddleLeft.displayHeight = 150;
+			this.p1Score = 0;
+			this.p2Score = 0;
+			
+		}
 		else if (this.p2Score === 2)
+		{
 			this.paddleRight.displayHeight = 150;
-		else if (this.p1Score !== 0)
-			this.paddleLeft.displayHeight = 100;
-		else if (this.p2Score !== 0)
-			this.paddleRight.displayHeight = 100;
+			this.p1Score = 0;
+			this.p2Score = 0;
+		}
+		if (this.p1Score !== 0)
+			this.paddleLeft.displayHeight = this.paddleHeight;
+		if (this.p2Score !== 0)
+			this.paddleRight.displayHeight = this.paddleHeight;
 	}
 }
