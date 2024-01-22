@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import { LucideIcon } from "lucide-react";
-import NavbarSettings from "./NavbarSettings";
 import NavbarItem from "./NavbarLinkItem";
 
 export interface NavbarItemContent {
@@ -28,7 +27,6 @@ const NavbarLinkList = ({ links }: NavbarLinkListProps) => {
 					active={pathname === link.toLowerCase()}
 				/>
 			))}
-			<NavbarSettings />
 		</ul>
 	);
 };
