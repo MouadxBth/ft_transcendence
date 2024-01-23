@@ -1,6 +1,6 @@
 import { ApiProperty, PartialType } from "@nestjs/swagger";
 import { CreateUserDto } from "./create-user.dto";
-import { IsBoolean, IsNumber, IsOptional, IsString, IsUrl } from "class-validator";
+import { IsBoolean, IsNumber, IsOptional, IsString, IsUrl, Length, Matches } from "class-validator";
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
 	@IsBoolean()
@@ -39,6 +39,8 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
 	@IsString()
 	@IsOptional()
+	@Length(3, 20, { message: "Nickname must be between 3 and 20 characters" })
+	@Matches(/^[^\s]+$/, { message: "Nickname cannot contain whitespaces" })
 	@ApiProperty({
 		description: "This represents the nickname of a user",
 		example: "Gojo",
