@@ -2,7 +2,6 @@
 
 import privatePage from "@/components/auth/protection/PrivatePage";
 import ChatSideBar from "@/components/chat/ChatSideBar";
-import { ChannelMessageProps } from "@/components/chat/channel/message/ChannelMessage";
 import Navbar from "@/components/navbar/Navbar";
 import { ChannelList, channelContext } from "@/hooks/useChannelContext";
 import ChannelContextProvider from "@/providers/ChannelDataContextProvider";
