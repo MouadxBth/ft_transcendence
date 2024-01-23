@@ -3,7 +3,7 @@ import { ChannelApiResponse,
 		ChannelDmApiResponse, 
 		ChannelDmApiResponseSchema } from "@/lib/types/channel-api-response";
 
-		import axios from "axios"
+import axios from "axios"
 
 const ChannelEndpoint = axios.create({
 	baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/channel`,
@@ -23,8 +23,13 @@ export async function fetchAllChannels() : Promise<ChannelApiResponse> {
 }
 
 export async function fetchChannelDirectMessages(target: string) : Promise<ChannelDmApiResponse> {
+	
 	const res = ChannelEndpoint.get(`/${target}/messages`);
+
 	return res.then((res) => {
+		
+		console.log("dms data", res.data);
+		
 		const parsedRes = ChannelDmApiResponseSchema.safeParse(res.data); 
 		if (!parsedRes.success) {
 			throw parsedRes.error;

@@ -19,7 +19,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
 				<ConversationContextProvider>
 
 				<ChatSideBar />
-				{/* <article>Main content</article> */}
+			
 				{children}
 
 				</ConversationContextProvider>

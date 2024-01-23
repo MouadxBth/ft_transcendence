@@ -21,9 +21,9 @@ const ChatSideBar = () => {
 			className="w-1/4 h-full flex flex-col"
 			defaultValue="channels"
 		>
-			<TabsList className="flex w-full rounded-lg ">
-				<TabsTrigger value="conversations">Conversations</TabsTrigger>
-				<TabsTrigger value="channels">Channels</TabsTrigger>
+			<TabsList className="flex w-full rounded-lg">
+				<TabsTrigger className="basis-1/2" value="conversations">Conversations</TabsTrigger>
+				<TabsTrigger className="basis-1/2" value="channels">Channels</TabsTrigger>
 			</TabsList>
 
 			{/* <TabsContent value="conversations">Convs</TabsContent>

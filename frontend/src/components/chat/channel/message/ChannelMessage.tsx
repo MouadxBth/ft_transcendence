@@ -15,7 +15,7 @@ const ChannelMessage = ({senderId, content, createdAt: date }: ChannelDmItem) =>
 					</Avatar>
 					<div>{senderId}</div>
 				</div>
-				<div className="text-sm text-muted-foreground">{date}</div>
+				<div className="text-sm text-muted-foreground">{new Date(date).toDateString()}</div>
 			</div>
 			<div className="break-all whitespace-pre-wrap p-4">{content}</div>
 		</div>

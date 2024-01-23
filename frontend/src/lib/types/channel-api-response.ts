@@ -8,6 +8,7 @@ export const ChannelApiResponseSchema = z.array(
 		updatedAt: z.string(),
 		topic: z.string().nullable(),
 		ownerId: z.string(),
+		status: z.string(),
 	})
 )
 

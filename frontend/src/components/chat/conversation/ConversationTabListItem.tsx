@@ -33,7 +33,7 @@ const ConversationTabListItem = ({
 						src={avatar}
 						alt={nickname}
 					/>
-					<AvatarFallback>{nickname}</AvatarFallback>
+					<AvatarFallback>{nickname.substring(0, 2)}</AvatarFallback>
 				</Avatar>
 
 				<div className="flex flex-col w-full">

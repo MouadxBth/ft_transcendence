@@ -14,7 +14,7 @@ const UserSearch = () => {
 		<HoverCard open={query !== "" && open}>
 			<HoverCardTrigger asChild>
 				<Input
-					className=" w-1/3 mr-4"
+					className=" mr-4"
 					type="text"
 					placeholder="Search for someone..."
 					onChange={(e) => setQuery(e.target.value)}

@@ -8,10 +8,16 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
 import React from "react";
 
 const ChannelTabPlus = () => {
+
+	const handleSubmit = (val: string) => {
+		
+	}
+
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -21,9 +27,13 @@ const ChannelTabPlus = () => {
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Create or Join a Channel</DialogTitle>
+					<DialogTitle className="text-center my-2">Create or Join a Channel</DialogTitle>
 					<DialogDescription>
-						<UserSearch />
+						{/* <UserSearch /> */}
+						<Textarea
+						callback={handleSubmit}
+						className=""
+						/>
 					</DialogDescription>
 				</DialogHeader>
 			</DialogContent>

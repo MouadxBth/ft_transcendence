@@ -9,6 +9,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import useAuthenticatedUser from "@/hooks/authentication/useAuthenticatedUser";
 import { useConversationContext } from "@/hooks/useConversationContext";
+import { sendDM } from "@/lib/chat/chat-service-endpoints";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { handleClientScriptLoad } from "next/script";
 import { useEffect, useRef } from "react";
 
@@ -41,7 +43,7 @@ const Message = ({ id, sender, avatar, message, date }: MessageProps) => {
 							src={avatar}
 							alt={sender}
 						/>
-						<AvatarFallback>{sender}</AvatarFallback>
+						<AvatarFallback>{sender.substring(0,2)}</AvatarFallback>
 					</Avatar>
 					<div>{sender}</div>
 				</div>
@@ -62,18 +64,31 @@ const ChatPage = ({ params }: { params: { id: string } }) => {
 	const { username: targetUser } = useAuthenticatedUser().data!.user;
 	
 	function handleSubmit(value: string) {
-		const conversation = conversationData.find((ele) => ele.username === params.id)
-		
-		conversation?.messages!.push({
-			id: 1,
-			createdAt: Date(),
-			updatedAt: Date(),
-			content: value,
-			senderId: targetUser,
-			read: false
-		})
-		setConversationData({...conversationData});
+		console.log("on handle submit");
+		directMessage.mutate({content: value, target: params.id})
 	}
+	
+	const directMessage = useMutation({
+		mutationFn: sendDM,
+		onSuccess: (variables) => {
+			console.log("success..");
+			const conversation = getUserMessages();
+			conversation?.messages!.push({
+				id: 1,
+				createdAt: Date(),
+				updatedAt: Date(),
+				content: variables.content.value,
+				senderId: targetUser,
+				read: false
+			})
+			setConversationData({...conversationData});
+		},
+		onError: (e) => {
+			console.log("error..");
+			console.log(e.message);
+			throw Error(e.message);
+		}
+	})
 	
 	function getUserMessages() {
 		return conversationData.find((ele) => ele.username === params.id);
@@ -97,7 +112,7 @@ const ChatPage = ({ params }: { params: { id: string } }) => {
 						src="https://github.com/shadcn.png"
 						alt={params.id}
 						/>
-					<AvatarFallback>{params.id}</AvatarFallback>
+					<AvatarFallback>{params.id.substring(0, 2)}</AvatarFallback>
 				</Avatar>
 				<div>{params.id}</div>
 			</div>
