@@ -6,10 +6,11 @@ import { Form } from "@/components/ui/form";
 import FormButton from "@/components/auth/FormButton";
 import { NicknameFormType, nicknameFormSchema } from "@/lib/types/nickname-form";
 import { useState } from "react";
-import ImageField from "./image/ImageField";
 import NicknameField from "./NicknameField";
 import ImagePreview from "./image/ImagePreview";
 import useNickname from "@/hooks/useNickname";
+import AvatarImageField from "./image/AvatarImageField";
+import BannerImageField from "./image/BannerImageField";
 
 export const NicknameForm = () => {
 	const form = useForm<NicknameFormType>({
@@ -19,7 +20,8 @@ export const NicknameForm = () => {
 		},
 	});
 
-	const [preview, setPreview] = useState("");
+	const [avatarPreview, setAvatarPreview] = useState("");
+	const [bannerPreview, setBannerPreview] = useState("");
 	const nickname = useNickname();
 
 	async function onSubmit(data: NicknameFormType) {
@@ -34,14 +36,19 @@ export const NicknameForm = () => {
 				className="space-y-4"
 			>
 				<div className="w-full flex justify-center space-x-8 items-center py-4">
-					<ImagePreview src={preview} />
+					<ImagePreview src={avatarPreview} />
 					<div className="flex flex-col space-y-4">
-						<ImageField
+						<AvatarImageField
 							control={form.control}
-							setPreview={setPreview}
+							setPreview={setAvatarPreview}
+						/>
+						<BannerImageField
+							control={form.control}
+							setPreview={setBannerPreview}
 						/>
 						<NicknameField control={form.control} />
 					</div>
+					<ImagePreview src={bannerPreview} />
 				</div>
 			</form>
 
