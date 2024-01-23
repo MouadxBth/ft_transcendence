@@ -44,4 +44,10 @@ export class LevelService {
 		await this.userService.update(req, user.username, { level: updatedLevel, experience: newExp });
 		return { updatedLevel, newExp };
 	}
+
+	async getRequiredExperience(target: string) {
+		const user = await this.userService.findOne(target);
+
+		return Math.abs(this.calculateRequiredExperience(user.experience, user.level + 1));
+	}
 }
