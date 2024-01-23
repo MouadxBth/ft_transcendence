@@ -47,3 +47,13 @@ export function getImageData(event: ChangeEvent<HTMLInputElement>) {
 
 	return { files, displayUrl };
 }
+
+export const backgroundStyles = (banner: string | null) =>
+	banner
+		? {
+				backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKEND_URL}/upload/banner/${banner})`,
+				backgroundSize: "cover",
+				backgroundRepeat: "no-repeat",
+				backgroundPosition: "center",
+			}
+		: {};

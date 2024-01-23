@@ -14,11 +14,23 @@ const useNickname = () => {
 	return useMutation({
 		mutationKey: ["nickname"],
 		mutationFn: async (data: NicknameFormType) => {
-			if (data.image) {
+			if (data.avatar) {
 				const formData = new FormData();
-				formData.append("file", data.image![0]);
+				formData.append("file", data.avatar![0]);
 
-				await axiosClient.post("/avatar/", formData, {
+				await axiosClient.post("/upload/avatar/", formData, {
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+					withCredentials: true,
+				});
+			}
+
+			if (data.banner) {
+				const formData = new FormData();
+				formData.append("file", data.banner![0]);
+
+				await axiosClient.post("/upload/banner/", formData, {
 					headers: {
 						"Content-Type": "multipart/form-data",
 					},
@@ -39,7 +51,6 @@ const useNickname = () => {
 		},
 		onSuccess: ({ data }) => {
 			setAuthenticatedUser(parseAuthenticatedUser(data));
-			// push("/profile");
 		},
 		onError: (error: Error) => {
 			const message =

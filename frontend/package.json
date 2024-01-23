@@ -17,6 +17,7 @@
     "@radix-ui/react-hover-card": "^1.0.7",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-popover": "^1.0.7",
+    "@radix-ui/react-progress": "^1.0.3",
     "@radix-ui/react-scroll-area": "^1.0.5",
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
@@ -37,10 +38,12 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.49.2",
     "react-icons": "^4.12.0",
+    "socket.io": "^4.7.4",
+    "socket.io-client": "^4.7.4",
     "tailwind-merge": "^2.1.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.22.4",
-    "webfontloader": "^1.6.28"
+    "webfontloader": "^1.6.28",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20",

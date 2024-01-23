@@ -17,8 +17,26 @@ export class FileUploadService {
 		});
 	}
 
+	async addBanner(req: Request, file: Express.Multer.File) {
+		const authenticatedUser = (req.user as AuthenticatedUser).user;
+
+		return await this.userService.update(req, authenticatedUser.username, {
+			banner: `${file.filename}`,
+		});
+	}
+
 	async getAvatar(path: string, response: Response) {
 		const stream = createReadStream(join(process.cwd(), `/uploads/avatars/${path}`));
+
+		response.set({
+			"Content-Disposition": `inline; filename="${path}"`,
+			"Content-Type": `image/${path.substring(path.search("(jpeg|jpg|webp|gif|png)"))}`,
+		});
+		return new StreamableFile(stream);
+	}
+
+	async getBanner(path: string, response: Response) {
+		const stream = createReadStream(join(process.cwd(), `/uploads/banners/${path}`));
 
 		response.set({
 			"Content-Disposition": `inline; filename="${path}"`,

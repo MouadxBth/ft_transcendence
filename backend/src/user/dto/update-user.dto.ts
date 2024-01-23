@@ -1,6 +1,6 @@
 import { ApiProperty, PartialType } from "@nestjs/swagger";
 import { CreateUserDto } from "./create-user.dto";
-import { IsBoolean, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsNumber, IsOptional, IsString, IsUrl, Length, Matches } from "class-validator";
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
 	@IsBoolean()
@@ -39,6 +39,8 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
 	@IsString()
 	@IsOptional()
+	@Length(3, 20, { message: "Nickname must be between 3 and 20 characters" })
+	@Matches(/^[^\s]+$/, { message: "Nickname cannot contain whitespaces" })
 	@ApiProperty({
 		description: "This represents the nickname of a user",
 		example: "Gojo",
@@ -72,4 +74,14 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 		nullable: true,
 	})
 	eloRating?: number;
+
+	@IsString({ message: "Banner URL must be a string" })
+	@IsOptional()
+	@IsUrl({}, { message: "Invalid banner URL format" })
+	@ApiProperty({
+		description: "Represents a URL to the banner of a user",
+		example: "https://images.alphacoders.com/131/thumb-1920-1312794.png",
+		nullable: true,
+	})
+	banner?: string | null;
 }
