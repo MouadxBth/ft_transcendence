@@ -14,13 +14,20 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useAuthentication } from "@/hooks/authentication/useAuthentication";
 
 const formSchema = z
 	.object({
-		firstname: z.string().min(2),
-		nickname: z.string().min(2),
-		lastname: z.string().min(2),
-		password: z.string().min(2),
+		firstname: z.string().refine((value) => value === "" || value.length >= 2, {
+			message: "String must contain at least 2 character(s)",
+		}),
+		nickname: z.string().refine((value) => value === "" || value.length >= 2, {
+			message: "String must contain at least 2 character(s)",
+		}),
+		lastname: z.string().refine((value) => value === "" || value.length >= 2, {
+			message: "String must contain at least 2 character(s)",
+		}),
+		password: z.string(),
 		confirmpassword: z.string(),
 	})
 	.refine((data) => data.password === data.confirmpassword, {
@@ -29,14 +36,15 @@ const formSchema = z
 	});
 
 function ProfileForm() {
+	const { authenticatedUser } = useAuthentication();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			nickname: "current nickname",
-			firstname: "current first name",
-			lastname: "current last name",
-			password: "123456789",
-			confirmpassword: "123456789",
+			nickname: "",
+			firstname: "",
+			lastname: "",
+			password: "",
+			confirmpassword: "",
 		},
 	});
 	function onSubmit(values: z.infer<typeof formSchema>) {
@@ -56,8 +64,11 @@ function ProfileForm() {
 							<FormLabel>Nickname</FormLabel>
 							<FormControl>
 								<Input
-									placeholder="nickname"
-									{...field}
+									placeholder={authenticatedUser?.user?.nickname || ""}
+									{...{
+										...field,
+										value: field.value ?? "",
+									}}
 								/>
 							</FormControl>
 							<FormDescription className="text-xs">this is you public display name</FormDescription>
@@ -73,8 +84,11 @@ function ProfileForm() {
 							<FormLabel>First Name</FormLabel>
 							<FormControl>
 								<Input
-									placeholder="First Name"
-									{...field}
+									placeholder={authenticatedUser?.user?.firstName || ""}
+									{...{
+										...field,
+										value: field.value ?? "",
+									}}
 								/>
 							</FormControl>
 							<FormDescription className="text-xs">Please enter your first name</FormDescription>
@@ -90,8 +104,11 @@ function ProfileForm() {
 							<FormLabel>Last Name</FormLabel>
 							<FormControl>
 								<Input
-									placeholder="Last Name"
-									{...field}
+									placeholder={authenticatedUser?.user?.lastName || ""}
+									{...{
+										...field,
+										value: field.value ?? "",
+									}}
 								/>
 							</FormControl>
 							<FormDescription className="text-xs">Please enter your last name</FormDescription>
@@ -109,7 +126,10 @@ function ProfileForm() {
 								<Input
 									type="password"
 									placeholder="Password"
-									{...field}
+									{...{
+										...field,
+										value: field.value ?? "",
+									}}
 								/>
 							</FormControl>
 							<FormDescription className="text-xs">here you can set a new password</FormDescription>
@@ -127,7 +147,10 @@ function ProfileForm() {
 								<Input
 									type="password"
 									placeholder="Password confirmation"
-									{...field}
+									{...{
+										...field,
+										value: field.value ?? "",
+									}}
 								/>
 							</FormControl>
 							<FormDescription className="text-xs">confirm your new password</FormDescription>
@@ -135,8 +158,8 @@ function ProfileForm() {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit">Update profile</Button>
 				<Button variant="outline">Cancel</Button>
+				<Button type="submit">Update profile</Button>
 			</form>
 		</Form>
 	);
