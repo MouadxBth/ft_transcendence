@@ -1,4 +1,12 @@
-import { Controller, Get, HttpException, HttpStatus, Query, UseGuards } from "@nestjs/common";
+import {
+	Controller,
+	Get,
+	HttpException,
+	HttpStatus,
+	Param,
+	Query,
+	UseGuards,
+} from "@nestjs/common";
 import { LevelService } from "./level.service";
 import { AuthenticatedGuard } from "src/auth/guards/authenticated.guard";
 import {
@@ -71,5 +79,13 @@ export class LevelController {
 			throw new HttpException("Invalid experience query value!", HttpStatus.BAD_REQUEST);
 
 		return this.levelService.calculateRequiredExperience(parsedExperience, parsedLevel);
+	}
+
+	@Get("/required/:target")
+	@ApiOperation({
+		summary: "Calculate required experience for a given level and current experience.",
+	})
+	getRequiredExperience(@Param("target") target: string) {
+		return this.levelService.getRequiredExperience(target);
 	}
 }
