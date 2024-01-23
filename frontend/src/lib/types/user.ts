@@ -7,11 +7,13 @@ export const userSchema = z.object({
 
 	firstTime: z.boolean(),
 
-	firstName: z.string().nullable(),
+	firstName: z.string(),
 
-	lastName: z.string().nullable(),
+	lastName: z.string(),
 
-	avatar: z.string().nullable(),
+	avatar: z.string(),
+
+	banner: z.string().nullable(),
 
 	twoFactorAuthenticationFirstTime: z.boolean(),
 
