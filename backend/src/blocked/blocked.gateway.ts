@@ -46,7 +46,6 @@ export class BlockedGateway {
 
 	@SubscribeMessage("unblock_user")
 	async handleUnblock(@ConnectedSocket() client: Socket, @MessageBody() payload: string) {
-		console.log("CALLED UNBLOCK!");
 		const authenticatedUser = (client.request as Request).user! as AuthenticatedUser;
 		const result = await this.blockedService.unblock(authenticatedUser.user.username, payload);
 		this.server.to(result.senderId).emit("user_unblocked", result);
