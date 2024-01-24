@@ -2,8 +2,8 @@
 	"ts-node": {
 		"compilerOptions": {
 			"module": "es2015",
-			"moduleResolution": "node"
-		}
+			"moduleResolution": "node",
+		},
 	},
 	"compilerOptions": {
 		"target": "es5",
@@ -21,13 +21,13 @@
 		"incremental": true,
 		"plugins": [
 			{
-				"name": "next"
-			}
+				"name": "next",
+			},
 		],
 		"paths": {
-			"@/*": ["./src/*"]
-		}
+			"@/*": ["./src/*"],
+		},
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-	"exclude": ["node_modules"]
+	"exclude": ["node_modules"],
 }

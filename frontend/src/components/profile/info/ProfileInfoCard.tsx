@@ -6,6 +6,7 @@ import { User } from "@/lib/types/user";
 import { backgroundStyles, cn } from "@/lib/utils";
 import ProfileInfoLevel from "./level/ProfileLevel";
 import ProfileInfo from "./ProfileInfo";
+import ProfileBlock from "./block/ProfileBlock";
 
 export interface ProfileInfoCardProps {
 	user?: User;
@@ -22,6 +23,12 @@ const ProfileInfoCard = ({ user }: ProfileInfoCardProps) => {
 			className="flex flex-col justify-center items-center py-2 w-full border-x-0 relative"
 			style={backgroundStyles(banner)}
 		>
+			<ProfileBlock
+				target={currentUser.username}
+				className={cn("absolute top-2 right-2 rounded-2xl", {
+					hidden: currentUser.username === authenticatedUser?.user.username,
+				})}
+			/>
 			<ProfileInfo
 				username={username}
 				nickname={nickname!}
