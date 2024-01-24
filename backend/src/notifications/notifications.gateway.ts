@@ -11,22 +11,29 @@ import { WsAuthenticatedGuard } from "src/auth/guards/ws-authenticated.guard";
 import { WsExceptionFilter } from "src/socket-io/ws-exception.filter";
 import { WsValidationPipe } from "src/socket-io/ws-validation.pipe";
 import { type Request } from "express";
+import { OnlineStatusService } from "src/online-status/online-status.service";
 
-@WebSocketGateway({ namespace: "online-status" })
+@WebSocketGateway({ namespace: "notifications" })
 @UsePipes(WsValidationPipe)
 @UseFilters(WsExceptionFilter)
 @UseGuards(WsAuthenticatedGuard)
-export class OnlineStatusGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class NotificationsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer()
 	private readonly server: Server;
 
+	constructor(private readonly onlineStatusService: OnlineStatusService) {}
+
 	handleConnection(client: Socket, ..._args: any[]) {
 		const authenticatedUser = (client.request as Request).user! as AuthenticatedUser;
-		this.server.emit("connected", authenticatedUser.user.username);
+		this.onlineStatusService.updateOnlineStatus(authenticatedUser.user.username, true);
+		client.join(authenticatedUser.user.username);
+		this.server.emit("connected", authenticatedUser.user);
 	}
 
 	handleDisconnect(client: Socket) {
 		const authenticatedUser = (client.request as Request).user! as AuthenticatedUser;
-		this.server.emit("disconnected", authenticatedUser.user.username);
+		this.onlineStatusService.updateOnlineStatus(authenticatedUser.user.username, false);
+		client.leave(authenticatedUser.user.username);
+		this.server.emit("disconnected", authenticatedUser.user);
 	}
 }

@@ -11,15 +11,15 @@ export const parseAuthenticatedUser = (data: unknown) => {
 	return result.data;
 };
 
+const fetchData = async () => {
+	return await axiosClient.get("/auth/profile").then(({ data }) => parseAuthenticatedUser(data));
+};
+
 const useAuthenticatedUser = () => {
 	const { data, isLoading, isSuccess, isError, error } = useQuery({
 		retry: false,
 		queryKey: ["authenticated-user"],
-		queryFn: async () => {
-			return await axiosClient
-				.get("/auth/profile")
-				.then(({ data }) => parseAuthenticatedUser(data));
-		},
+		queryFn: fetchData,
 	});
 
 	return { data, isLoading, isSuccess, isError, error };

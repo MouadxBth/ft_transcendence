@@ -8,6 +8,9 @@ import { useSearch } from "@/hooks/search/useSearch";
 
 const UserSearchListItem = ({ username, nickname, firstName, lastName, avatar }: User) => {
 	const { setOpen } = useSearch();
+	const avatarSource = avatar.startsWith("http")
+		? avatar
+		: `${process.env.NEXT_PUBLIC_BACKEND_URL}/upload/avatar/${avatar}`;
 	return (
 		<>
 			<Link
@@ -19,15 +22,9 @@ const UserSearchListItem = ({ username, nickname, firstName, lastName, avatar }:
 					<Avatar className="h-12 w-12">
 						<AvatarImage
 							className="object-cover"
-							src={
-								avatar
-									? avatar.startsWith("http")
-										? avatar
-										: `${process.env.NEXT_PUBLIC_BACKEND_URL}/avatar/${avatar}`
-									: ""
-							}
+							src={avatarSource}
 						/>
-						<AvatarFallback>CN</AvatarFallback>
+						<AvatarFallback>{nickname?.slice(0, 2)}</AvatarFallback>
 					</Avatar>
 					<div className="flex flex-col items-start">
 						<div className="text-md">{nickname}</div>

@@ -1,6 +1,6 @@
 "use client";
 
-import useDebounce from "@/hooks/useDebounce";
+import useDebounce from "@/hooks/utils/useDebounce";
 import { ScrollArea } from "../ui/scroll-area";
 import UserSearchList from "./UserSearchList";
 import useUserSearch from "@/hooks/user/useUserSearch";

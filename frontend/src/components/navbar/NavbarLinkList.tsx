@@ -18,7 +18,7 @@ const NavbarLinkList = ({ links }: NavbarLinkListProps) => {
 	const pathname = usePathname();
 
 	return (
-		<ul className="flex w-1/2 justify-between">
+		<ul className="flex w-1/2 justify-between px-3">
 			{links.map(({ id, link, Icon }) => (
 				<NavbarItem
 					key={id}

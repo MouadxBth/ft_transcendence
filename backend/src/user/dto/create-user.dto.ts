@@ -29,7 +29,7 @@ export class CreateUserDto {
 
 	@IsString()
 	@Length(3, 30, { message: "First name must be between 3 and 30 characters" })
-	@Matches(/^[^\s]+$/, { message: "First name cannot contain whitespaces" })
+	@Matches(/^[\s\w]+$/, { message: "First name cannot contain whitespaces" })
 	@IsOptional()
 	@ApiProperty({
 		description: "Represents the first name of a user",
@@ -40,7 +40,7 @@ export class CreateUserDto {
 
 	@IsString()
 	@Length(3, 30, { message: "Last name must be between 3 and 30 characters" })
-	@Matches(/^[^\s]+$/, { message: "Last name cannot contain whitespaces" })
+	@Matches(/^[\s\w]+$/, { message: "Last name cannot contain whitespaces" })
 	@IsOptional()
 	@ApiProperty({
 		description: "Represents the last name of a user",
