@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Dispatch, SetStateAction } from "react";
-import { Control, FieldValues, Path, PathValue } from "react-hook-form";
+import { Control, FieldValues, Path } from "react-hook-form";
 import { getImageData } from "@/lib/utils";
 
 interface GenericImageFieldProps<T extends FieldValues> {
@@ -18,6 +18,7 @@ interface GenericImageFieldProps<T extends FieldValues> {
 	setPreview?: Dispatch<SetStateAction<string>>; // Make setPreview optional
 	name: Path<T>; // Corrected type for name
 	type?: "file"; // Only allow file input types
+	className?: string;
 }
 
 const GenericImageField = <T extends FieldValues>({
@@ -27,6 +28,7 @@ const GenericImageField = <T extends FieldValues>({
 	name,
 	type,
 	setPreview,
+	className,
 }: GenericImageFieldProps<T>) => {
 	// Enforce that the component is used only for file input types
 	if (type !== "file") {
@@ -39,7 +41,7 @@ const GenericImageField = <T extends FieldValues>({
 			name={name}
 			render={({ field: { onChange, value, ...rest } }) => (
 				<>
-					<FormItem>
+					<FormItem className={className}>
 						<FormLabel>
 							{label} <span className="text-xs">(Optional)</span>
 						</FormLabel>
