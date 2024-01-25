@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { Control } from "react-hook-form";
 import { NicknameFormType } from "@/lib/types/nickname-form";
-import GenericImageField from "@/components/image/GenericImageField";
+import GenericImageField from "@/components/generic/GenericImageField";
 
 export interface BannerImageFieldProps {
 	control: Control<NicknameFormType, any>;
