@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import { Control } from "react-hook-form";
 import GenericImageField from "@/components/image/GenericImageField";
 import { ProfileFormType } from "@/lib/types/profile-form";
+import { cn } from "@/lib/utils";
 
 export interface BannerImageFieldProps {
 	control: Control<ProfileFormType, any>;
@@ -18,7 +19,7 @@ const BannerFormField = ({ control, setPreview, className }: BannerImageFieldPro
 			name="banner"
 			type="file"
 			setPreview={setPreview}
-			className={className}
+			className={cn(className)}
 		/>
 	);
 };

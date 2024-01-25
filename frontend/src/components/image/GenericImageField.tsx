@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Dispatch, SetStateAction } from "react";
 import { Control, FieldValues, Path } from "react-hook-form";
-import { getImageData } from "@/lib/utils";
+import { cn, getImageData } from "@/lib/utils";
 
 interface GenericImageFieldProps<T extends FieldValues> {
 	label: string;
@@ -41,7 +41,7 @@ const GenericImageField = <T extends FieldValues>({
 			name={name}
 			render={({ field: { onChange, value, ...rest } }) => (
 				<>
-					<FormItem className={className}>
+					<FormItem className={cn("h-full border-l", className)}>
 						<FormLabel>
 							{label} <span className="text-xs">(Optional)</span>
 						</FormLabel>

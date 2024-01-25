@@ -8,16 +8,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ProfileFormType } from "@/lib/types/profile-form";
+import { cn } from "@/lib/utils";
 import { Control, FieldValues, Path } from "react-hook-form";
 
-interface GenericFormFieldProps<ProfileFormType extends FieldValues> {
+export interface GenericFormFieldProps<ProfileFormType extends FieldValues> {
 	label: string;
 	description?: string;
 	control: Control<ProfileFormType>;
 	name: Path<ProfileFormType>;
 	type: string;
 	placeholder?: string;
-	classname?: string;
+	className?: string;
 }
 
 const GenericFormField = ({
@@ -27,7 +28,7 @@ const GenericFormField = ({
 	name,
 	type,
 	placeholder,
-	classname,
+	className,
 }: GenericFormFieldProps<ProfileFormType>) => {
 	return (
 		<FormField
@@ -35,7 +36,7 @@ const GenericFormField = ({
 			name={name}
 			render={({ field }) => (
 				<>
-					<FormItem className={classname}>
+					<FormItem className={cn(className)}>
 						<FormLabel>
 							{label} <span className="text-xs"></span>
 						</FormLabel>

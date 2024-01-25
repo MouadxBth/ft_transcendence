@@ -2,11 +2,12 @@ import React, { Dispatch, SetStateAction } from "react";
 import { Control } from "react-hook-form";
 import GenericImageField from "@/components/image/GenericImageField";
 import { ProfileFormType } from "@/lib/types/profile-form";
+import { cn } from "@/lib/utils";
 
 export interface AvatarImageFieldProps {
 	control: Control<ProfileFormType, any>;
 	setPreview?: Dispatch<SetStateAction<string>>;
-	className: string;
+	className?: string;
 }
 
 const AvatarFormField = ({ control, setPreview, className }: AvatarImageFieldProps) => {
@@ -18,7 +19,7 @@ const AvatarFormField = ({ control, setPreview, className }: AvatarImageFieldPro
 			name="avatar"
 			type="file"
 			setPreview={setPreview}
-			className={className}
+			className={cn(className)}
 		/>
 	);
 };
