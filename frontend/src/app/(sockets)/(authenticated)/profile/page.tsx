@@ -2,7 +2,7 @@ import ProfileInfoCard from "@/components/profile/info/ProfileInfoCard";
 
 const ProfilePage = () => {
 	return (
-		<article className="h-full flex justify-center flex-col">
+		<article className="h-full flex flex-col">
 			<ProfileInfoCard />
 		</article>
 	);
