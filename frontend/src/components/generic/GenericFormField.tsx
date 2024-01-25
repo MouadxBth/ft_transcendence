@@ -35,24 +35,22 @@ const GenericFormField = ({
 			control={control}
 			name={name}
 			render={({ field }) => (
-				<>
-					<FormItem className={cn(className)}>
-						<FormLabel>
-							{label} <span className="text-xs"></span>
-						</FormLabel>
-						{description && <FormDescription className="text-xs">{description}</FormDescription>}
-						<FormControl>
-							<Input
-								className="bg-secondary"
-								type={type}
-								{...field}
-								value={field.value?.toString() || ""}
-								placeholder={placeholder}
-							/>
-						</FormControl>
-						<FormMessage className="text-xs" />
-					</FormItem>
-				</>
+				<FormItem className={cn(className)}>
+					<FormLabel>
+						{label} <span className="text-xs"></span>
+					</FormLabel>
+					{description && <FormDescription className="text-xs">{description}</FormDescription>}
+					<FormControl>
+						<Input
+							className="bg-secondary"
+							type={type}
+							{...field}
+							value={field.value?.toString() || ""}
+							placeholder={placeholder}
+						/>
+					</FormControl>
+					<FormMessage className="text-xs" />
+				</FormItem>
 			)}
 		/>
 	);
