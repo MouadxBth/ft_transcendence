@@ -12,7 +12,7 @@ const TwoFaContent = ({ className }: { className?: string }) => {
 
 	return (
 		<div className={cn(className)}>
-			<div className="w-full h-full flex justify-center items-center">
+			<div className="w-full h-full flex justify-center items-center p-12 border-2 rounded-xl">
 				{twoFaEnabled ? <Disable /> : <Enable />}
 			</div>
 		</div>

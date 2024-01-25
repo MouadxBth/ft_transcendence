@@ -10,8 +10,14 @@ export interface IdkProps {
 const FilesField = ({ form }: IdkProps) => {
 	return (
 		<div className="flex flex-col w-full col-span-2 h-full space-y-4">
-			<AvatarFormField control={form.control} />
-			<BannerFormField control={form.control} />
+			<AvatarFormField
+				className="border-hidden"
+				control={form.control}
+			/>
+			<BannerFormField
+				className="border-hidden"
+				control={form.control}
+			/>
 		</div>
 	);
 };

@@ -34,7 +34,7 @@ const SettingsForm = ({ className }: { className?: string }) => {
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className={cn(className)}
+				className={cn("grid grid-cols-2 gap-2 p-2 space-y-12 ", className)}
 			>
 				<FilesField form={form} />
 				<Fields form={form} />
