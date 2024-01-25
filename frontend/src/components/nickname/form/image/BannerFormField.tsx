@@ -1,24 +1,27 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { Control } from "react-hook-form";
-import { NicknameFormType } from "@/lib/types/nickname-form";
 import GenericImageField from "@/components/generic/GenericImageField";
+import { ProfileFormType } from "@/lib/types/profile-form";
+import { cn } from "@/lib/utils";
 
 export interface BannerImageFieldProps {
-	control: Control<NicknameFormType, any>;
+	control: Control<ProfileFormType, any>;
 	setPreview?: Dispatch<SetStateAction<string>>;
+	className?: string;
 }
 
-const BannerImageField = ({ control, setPreview }: BannerImageFieldProps) => {
+const BannerFormField = ({ control, setPreview, className }: BannerImageFieldProps) => {
 	return (
 		<GenericImageField
 			label="Banner"
-			description="You can choose to upload a banner too!"
+			description="your new banner"
 			control={control}
 			name="banner"
 			type="file"
 			setPreview={setPreview}
+			className={cn(className)}
 		/>
 	);
 };
 
-export default BannerImageField;
+export default BannerFormField;
