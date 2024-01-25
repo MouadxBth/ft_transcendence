@@ -9,7 +9,7 @@ import ChannelContextProvider from "@/providers/ChannelDataContextProvider";
 
 const ChannelPage = ({ params }: { params: { id: string } }) => {
 	return (
-		<article className="w-3/4 flex flex-col h-screen">
+		<article className="w-3/4 flex flex-col h-full">
 				<ChannelHeader name={params.id} />
 				<ChannelMessageList name={params.id} />
 				<ChannelInput name={params.id} />

@@ -13,7 +13,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
 	console.log("RENDERED!!!");
 
 	return (
-		<main className="h-screen flex">
+		<main className="h-full flex">
 			<ChannelContextProvider>
 				<ConversationContextProvider>
 

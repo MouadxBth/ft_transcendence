@@ -7,6 +7,7 @@ import {
 	HttpStatus,
 	Param,
 	Patch,
+	Post,
 	Put,
 	Query,
 	Req,
@@ -26,6 +27,7 @@ import {
 	ApiTags,
 } from "@nestjs/swagger";
 import { UpdateDirectMessageDto } from "../dto/update-direct-message.dto";
+import { DirectMessageDto } from "../dto/direct-message.dto";
 
 @ApiTags("Conversation | Direct Messages")
 @Controller("conversation")
@@ -54,6 +56,30 @@ export class DirectMessageController {
 		if (!result)
 			throw new HttpException(
 				"Unable to update the direct message!",
+				HttpStatus.INTERNAL_SERVER_ERROR
+			);
+		return result;
+	}
+
+	@Post(":target/send")
+	@ApiNotFoundResponse({ description: "Direct Message does not exist!" })
+	@ApiInternalServerErrorResponse({ description: "Unable to update the direct message!" })
+	@ApiCreatedResponse({ description: "direct message successfully sent." })
+	async create(
+		@Req() req: Request,
+		@Body() newMessage: DirectMessageDto
+	) { 
+		console.log("run some code");
+		const authenticatedUser = req.user! as AuthenticatedUser;
+
+		const result = await this.directMessageService.create(
+			authenticatedUser.user.username,
+			newMessage
+		);
+
+		if (!result)
+			throw new HttpException(
+				"Unable to create the direct message!",
 				HttpStatus.INTERNAL_SERVER_ERROR
 			);
 		return result;

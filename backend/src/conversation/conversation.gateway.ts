@@ -31,12 +31,14 @@ export class ConversationGateway implements OnGatewayConnection {
 	async handleConnection(@ConnectedSocket() client: Socket) {
 		const authenticatedUser = (client.request as Request).user! as AuthenticatedUser;
 		client.join(authenticatedUser.user.username);
+		console.log("user connected", authenticatedUser.user.username)
 	}
 
 	@SubscribeMessage("send_message")
 	async handleMessage(@ConnectedSocket() client: Socket, @MessageBody() payload: DirectMessageDto) {
 		const authenticatedUser = (client.request as Request).user! as AuthenticatedUser;
 
+		console.log("received msg", payload, "from:", authenticatedUser.user.username)
 		await this.directMessageService.create(authenticatedUser.user.username, payload);
 
 		this.server.to(payload.target).emit("receive_message", payload);

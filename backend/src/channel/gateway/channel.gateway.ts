@@ -51,6 +51,8 @@ export class ChannelGateway implements OnGatewayConnection, OnGatewayDisconnect 
 	async sendMessage(@ConnectedSocket() client: Socket, @MessageBody() messageBody: MessageDto) {
 		const authenticatedUser = (client.request as Request).user as AuthenticatedUser;
 		await this.channelMessageService.verifyMessage(authenticatedUser, messageBody);
+
+		console.log("received a message", messageBody)
 		const message = await this.channelMessageService.createMessage(authenticatedUser, messageBody);
 		this.server.to(messageBody.channelName).emit("recieve_message", message);
 	}

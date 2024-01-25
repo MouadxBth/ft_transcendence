@@ -1,5 +1,6 @@
 import { Textarea } from "@/components/ui/textarea";
 import { useAuthentication } from "@/contexts/AuthenticationContext";
+import useSockets from "@/hooks/socket/useSockets";
 import { useChannelContext } from "@/hooks/useChannelContext";
 import React from "react";
 
@@ -7,10 +8,12 @@ const ChannelInput = ({ name } : {name: string}) => {
 	
 	const {channelData, setChannelData} = useChannelContext();
 	const { authenticatedUser } = useAuthentication();
+	const { channels } = useSockets();
 
 	console.log(authenticatedUser);
 	function handleSubmit(value: string) {
 		console.log("msg", value);
+		channels?.emit("send_message", {message: "hey", channelName: "random"});
 		const channelMessages = channelData.find((ele) => ele.name === name)?.messages
 		channelMessages!.push({
 			id: 90,

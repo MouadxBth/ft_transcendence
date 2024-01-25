@@ -24,7 +24,7 @@ const ChannelTab = () => {
 
 	return (
 		<TabsContent value="channels">
-			<div className="flex flex-col w-full p-0 m-0 h-[calc(100vh-40px)]">
+			<div className="flex flex-col w-full p-0 m-0 h-full]">
 				<div className="p-2 flex space-x-1">
 					<ChannelTabSearch
 						all={all}
