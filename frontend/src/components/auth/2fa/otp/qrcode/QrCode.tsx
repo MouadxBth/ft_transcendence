@@ -2,10 +2,9 @@
 
 import Loading from "@/components/ui/loading";
 import useQrCode from "@/hooks/authentication/useQrCode";
-import Image from "next/image";
 import QrCodeError from "./QrCodeError";
 import { useAuthentication } from "@/hooks/authentication/useAuthentication";
-import ImageReverser from "../../../../../../ImageReverser";
+import ImageReverser from "./ImageReverser";
 
 const QrCode = () => {
 	const { authenticatedUser } = useAuthentication();
