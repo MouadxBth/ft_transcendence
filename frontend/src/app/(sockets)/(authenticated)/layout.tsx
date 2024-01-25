@@ -2,17 +2,15 @@
 
 import privatePage from "@/components/auth/protection/PrivatePage";
 import Navbar from "@/components/navbar/Navbar";
-import React from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
-		<main className="h-screen flex flex-col">
-			<ScrollArea className="h-full">
+		<div className="flex flex-col h-screen max-h-screen">
+			<header>
 				<Navbar />
-				{children}
-			</ScrollArea>
-		</main>
+			</header>
+			<main className="h-[calc(100vh-80px)]">{children}</main>
+		</div>
 	);
 };
 
