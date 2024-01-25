@@ -1,13 +1,13 @@
 import useDisable2FA from "@/hooks/authentication/useDisable2FA";
-import QrCode from "../auth/2fa/otp/qrcode/QrCode";
-import { Button } from "../ui/button";
+import QrCode from "../../auth/2fa/otp/qrcode/QrCode";
+import { Button } from "../../ui/button";
 
-const Disable = () => {
+const Disable2FA = () => {
 	const twoFaMutation = useDisable2FA();
 
 	return (
 		<div className="flex flex-col space-y-2 justify-center items-center h-fit">
-			<p className="text-center text-sm text-muted-foreground">
+			<p className="text-center text-xs text-muted-foreground">
 				The QR code below is a crucial component for regenerating your Two-Factor Authentication
 				(2FA) code in the event of loss or device change. Scan the QR code to link your
 				authenticator app and generate a new 2FA code securely.
@@ -28,4 +28,4 @@ const Disable = () => {
 		</div>
 	);
 };
-export default Disable;
+export default Disable2FA;

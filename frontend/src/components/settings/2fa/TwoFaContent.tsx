@@ -2,8 +2,8 @@
 
 import { useAuthentication } from "@/hooks/authentication/useAuthentication";
 import { cn } from "@/lib/utils";
-import Disable from "./Disable2FAComponent";
-import Enable from "./Enable2FAComponent";
+import Enable2FA from "./Enable2FA";
+import Disable2FA from "./Disable2FA";
 
 const TwoFaContent = ({ className }: { className?: string }) => {
 	const { authenticatedUser } = useAuthentication();
@@ -11,10 +11,8 @@ const TwoFaContent = ({ className }: { className?: string }) => {
 	const twoFaEnabled = authenticatedUser?.user.twoFactorAuthenticationEnabled;
 
 	return (
-		<div className={cn(className)}>
-			<div className="w-full h-full flex justify-center items-center p-12 border-2 rounded-xl">
-				{twoFaEnabled ? <Disable /> : <Enable />}
-			</div>
+		<div className={cn("w-full h-full flex justify-center items-center p-12", className)}>
+			{twoFaEnabled ? <Disable2FA /> : <Enable2FA />}
 		</div>
 	);
 };
