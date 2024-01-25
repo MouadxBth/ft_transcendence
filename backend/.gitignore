@@ -4,6 +4,8 @@ prisma/migrations
 package-lock.json
 pnpm-lock.yaml
 
+/uploads
+
 # compiled output
 /dist
 /node_modules

@@ -4,11 +4,12 @@ import { BlockedController } from "./blocked.controller";
 import { BlockedCache } from "./blocked.cache";
 import { UserModule } from "src/user/user.module";
 import { TwoFactorMiddleware } from "src/auth/two-factor/middleware/two-factor.middleware";
+import { BlockedGateway } from "./blocked.gateway";
 
 @Module({
 	imports: [UserModule],
 	controllers: [BlockedController],
-	providers: [BlockedService, BlockedCache],
+	providers: [BlockedService, BlockedCache, BlockedGateway],
 	exports: [BlockedService],
 })
 export class BlockedModule implements NestModule {

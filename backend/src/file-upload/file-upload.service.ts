@@ -1,6 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import type { Request } from "express";
-import * as fs from "fs";
+import { Injectable, StreamableFile } from "@nestjs/common";
+import type { Request, Response } from "express";
+import { createReadStream } from "fs";
+import { join } from "path";
 import { AuthenticatedUser } from "src/auth/entities/authenticated-user.entity";
 import { UserService } from "src/user/user.service";
 
@@ -10,39 +11,37 @@ export class FileUploadService {
 
 	async addAvatar(req: Request, file: Express.Multer.File) {
 		const authenticatedUser = (req.user as AuthenticatedUser).user;
-		if (
-			authenticatedUser.avatar &&
-			!(authenticatedUser.avatar.includes("http") || authenticatedUser.avatar.includes("https"))
-		) {
-			try {
-				fs.accessSync(authenticatedUser.avatar, fs.constants.F_OK);
-				fs.unlinkSync(authenticatedUser.avatar);
-			} catch (err) {
-				console.log(err);
-			}
-		}
 
 		return await this.userService.update(req, authenticatedUser.username, {
-			avatar: `${file.destination}/${file.filename}`,
+			avatar: `${file.filename}`,
 		});
 	}
 
-	async getAvatar(username: string) {
-		const user = await this.userService.findOne(username);
+	async addBanner(req: Request, file: Express.Multer.File) {
+		const authenticatedUser = (req.user as AuthenticatedUser).user;
 
-		let base64Image;
-		if (!user.avatar || user.avatar.includes("http") || user.avatar.includes("https"))
-			throw new HttpException("No profile picture was uploaded!", HttpStatus.BAD_REQUEST);
+		return await this.userService.update(req, authenticatedUser.username, {
+			banner: `${file.filename}`,
+		});
+	}
 
-		try {
-			const image = fs.readFileSync(user.avatar);
-			base64Image =
-				`data:image/${user.avatar.substring(user.avatar.search("(jpeg|png|gif)"))};base64,` +
-				image.toString("base64");
-		} catch (error: unknown) {
-			console.log(error);
-		}
+	async getAvatar(path: string, response: Response) {
+		const stream = createReadStream(join(process.cwd(), `/uploads/avatars/${path}`));
 
-		return base64Image;
+		response.set({
+			"Content-Disposition": `inline; filename="${path}"`,
+			"Content-Type": `image/${path.substring(path.search("(jpeg|jpg|webp|gif|png)"))}`,
+		});
+		return new StreamableFile(stream);
+	}
+
+	async getBanner(path: string, response: Response) {
+		const stream = createReadStream(join(process.cwd(), `/uploads/banners/${path}`));
+
+		response.set({
+			"Content-Disposition": `inline; filename="${path}"`,
+			"Content-Type": `image/${path.substring(path.search("(jpeg|jpg|webp|gif|png)"))}`,
+		});
+		return new StreamableFile(stream);
 	}
 }
