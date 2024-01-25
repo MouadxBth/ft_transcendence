@@ -17,6 +17,9 @@ export class EloRankingService {
 				{
 					eloRating: "desc",
 				},
+				{
+					createdAt: "asc",
+				},
 			],
 			take: 10,
 			select: {
@@ -27,14 +30,29 @@ export class EloRankingService {
 		});
 	}
 
-	async getEloRating(username: string) {
-		const user = await this.userService.findOne(username);
+	async getEloRanking(target: string) {
+		const { username, nickname, avatar, createdAt, eloRating } =
+			await this.userService.findOne(target);
 
 		const rank = await this.prismaService.user.count({
-			where: { eloRating: { gt: user.eloRating } },
+			where: {
+				OR: [
+					{
+						eloRating: {
+							gt: eloRating,
+						},
+					},
+					{
+						eloRating: eloRating,
+						createdAt: {
+							lt: createdAt,
+						},
+					},
+				],
+			},
 		});
 
-		return { user, rank: rank + 1 };
+		return { username, nickname, avatar, eloRating, rank: rank + 1 };
 	}
 
 	async updateElo(matchId: number) {
