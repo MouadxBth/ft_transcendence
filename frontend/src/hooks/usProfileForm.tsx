@@ -12,7 +12,7 @@ const useProfileFrom = () => {
 	const { authenticatedUser, setAuthenticatedUser } = useAuthentication();
 
 	return useMutation({
-		mutationKey: ["nickname", "firstname", "lastname", "password"],
+		mutationKey: ["profile-form"],
 		mutationFn: async (data: ProfileFormType) => {
 			if (data.avatar) {
 				const formData = new FormData();
@@ -54,7 +54,7 @@ const useProfileFrom = () => {
 							? data.lastname
 							: undefined,
 					firstTime: false,
-					password: data.password,
+					password: data.password !== "" ? data.password : undefined,
 				},
 				{
 					withCredentials: true,
