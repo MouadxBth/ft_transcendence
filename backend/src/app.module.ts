@@ -16,8 +16,7 @@ import { AchievementModule } from "./achievement/achievement.module";
 import { FileUploadModule } from "./file-upload/file-upload.module";
 import { ChannelModule } from "./channel/channel.module";
 import { MatchHistoryModule } from "./match-history/match-history.module";
-import { EloRankingModule } from './elo-ranking/elo-ranking.module';
-import { EloRankingModule } from './elo-ranking/elo-ranking.module';
+import { EloRankingModule } from "./elo-ranking/elo-ranking.module";
 
 @Module({
 	imports: [
