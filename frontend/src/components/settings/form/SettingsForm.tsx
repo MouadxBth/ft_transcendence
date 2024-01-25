@@ -5,10 +5,10 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { ProfileFormType, profileFormSchema } from "@/lib/types/profile-form";
 import useProfileFrom from "@/hooks/usProfileForm";
-import FilesField from "./FilesField";
-import Fields from "./TextFields";
-import FormButtons from "./FromButtons";
 import { cn } from "@/lib/utils";
+import SettingsFormImageFields from "./SettingsFormImageFields";
+import SettingsFormFields from "./SettingsFormFields";
+import SettingsFormButtons from "./SettingsFormButtons";
 
 const SettingsForm = ({ className }: { className?: string }) => {
 	const nickname = useProfileFrom();
@@ -34,12 +34,12 @@ const SettingsForm = ({ className }: { className?: string }) => {
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className={cn("grid grid-cols-2 gap-2 p-2 space-y-12 ", className)}
+				className={cn("grid grid-cols-2 gap-2 p-4 space-y-6 ", className)}
 			>
-				<FilesField form={form} />
-				<Fields form={form} />
+				<SettingsFormImageFields form={form} />
+				<SettingsFormFields form={form} />
 
-				<FormButtons form={form} />
+				<SettingsFormButtons form={form} />
 			</form>
 		</Form>
 	);

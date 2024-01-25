@@ -1,11 +1,11 @@
 import { ProfileFormType } from "@/lib/types/profile-form";
-import { GenericFormFieldProps } from "./GenericFormField";
+import { GenericFormFieldProps } from "../../generic/GenericFormField";
 import { AuthenticatedUser } from "@/lib/types/authenticated-user";
 
-const fields = (authenticatedUser: AuthenticatedUser) => {
+const settingsFormFieldsContent = (authenticatedUser: AuthenticatedUser) => {
 	return [
 		{
-			classname: "col-span-2",
+			className: "col-span-2",
 			label: "Nickname",
 			description: "your new nickname",
 			name: "nickname",
@@ -38,9 +38,9 @@ const fields = (authenticatedUser: AuthenticatedUser) => {
 			description: "confirm your new password",
 			name: "confirmpassword",
 			type: "password",
-			placeholder: "confirmpassword",
+			placeholder: "confirm password",
 		},
 	] as GenericFormFieldProps<ProfileFormType>[];
 };
 
-export default fields;
+export default settingsFormFieldsContent;

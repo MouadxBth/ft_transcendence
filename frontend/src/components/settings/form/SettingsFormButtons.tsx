@@ -1,8 +1,12 @@
 import { UseFormReturn } from "react-hook-form";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { ProfileFormType } from "@/lib/types/profile-form";
 
-const FormButtons = ({ form }: { form: UseFormReturn<ProfileFormType, any, undefined> }) => {
+export interface SettingsFormButtonsProps {
+	form: UseFormReturn<ProfileFormType, any, undefined>;
+}
+
+const SettingsFormButtons = ({ form }: SettingsFormButtonsProps) => {
 	const handleResetForm = () => {
 		form.reset();
 	};
@@ -24,4 +28,4 @@ const FormButtons = ({ form }: { form: UseFormReturn<ProfileFormType, any, undef
 	);
 };
 
-export default FormButtons;
+export default SettingsFormButtons;

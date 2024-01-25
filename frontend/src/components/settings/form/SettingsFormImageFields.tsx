@@ -1,13 +1,13 @@
 import { ProfileFormType } from "@/lib/types/profile-form";
-import AvatarFormField from "../nickname/form/image/AvatarFormField";
-import BannerFormField from "../nickname/form/image/BannerFormField";
+import AvatarFormField from "../../nickname/form/image/AvatarFormField";
+import BannerFormField from "../../nickname/form/image/BannerFormField";
 import { UseFormReturn } from "react-hook-form";
 
-export interface IdkProps {
+export interface SettingsFormImageFieldsProps {
 	form: UseFormReturn<ProfileFormType, any, undefined>;
 }
 
-const FilesField = ({ form }: IdkProps) => {
+const SettingsFormImageFields = ({ form }: SettingsFormImageFieldsProps) => {
 	return (
 		<div className="flex flex-col w-full col-span-2 h-full space-y-4">
 			<AvatarFormField
@@ -21,4 +21,4 @@ const FilesField = ({ form }: IdkProps) => {
 		</div>
 	);
 };
-export default FilesField;
+export default SettingsFormImageFields;
