@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { Control } from "react-hook-form";
-import GenericImageField from "@/components/image/GenericImageField";
+import GenericImageField from "@/components/generic/GenericImageField";
 import { ProfileFormType } from "@/lib/types/profile-form";
 import { cn } from "@/lib/utils";
 
