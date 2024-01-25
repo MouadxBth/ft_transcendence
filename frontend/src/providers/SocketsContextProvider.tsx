@@ -14,20 +14,33 @@ const initializer = (user: AuthenticatedUser | null) => {
 		autoConnect: user !== null,
 	} satisfies Partial<ManagerOptions & SocketOptions>;
 
-	return io(uri + "/notifications", options);
+	const result = {
+		notificationsSocket: io(uri + "/notifications", options),
+		conversationSocket: io(uri + "/conversation", options),
+		channelSocket: io(uri + "/channel", options),
+	};
+
+	return result;
 };
 
 const SocketsContextProvider = ({ children }: { children: React.ReactNode }) => {
 	const { authenticatedUser } = useAuthentication();
 	const [notifications, setNotifications] = useState<Socket | undefined>(undefined);
+	const [conversations, setConversations] = useState<Socket | undefined>(undefined);
+	const [channels, setChannels] = useState<Socket | undefined>(undefined);
 
 	useEffect(() => {
-		const socket = initializer(authenticatedUser);
+		const { notificationsSocket, conversationSocket, channelSocket } =
+			initializer(authenticatedUser);
 
-		setNotifications(socket);
+		setNotifications(notificationsSocket);
+		setConversations(conversationSocket);
+		setChannels(channelSocket);
 
 		return () => {
-			socket.disconnect();
+			notificationsSocket.disconnect();
+			conversationSocket.disconnect();
+			channelSocket.disconnect();
 		};
 	}, [authenticatedUser]);
 
@@ -35,6 +48,8 @@ const SocketsContextProvider = ({ children }: { children: React.ReactNode }) => 
 		<SocketsContext.Provider
 			value={{
 				notifications,
+				conversations,
+				channels,
 			}}
 		>
 			{children}
