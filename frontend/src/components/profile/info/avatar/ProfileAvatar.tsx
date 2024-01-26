@@ -23,7 +23,10 @@ const ProfileAvatar = ({ username, avatar, nickname }: ProfileAvatarProps) => {
 					/>
 					<AvatarFallback>{nickname?.slice(0, 2)}</AvatarFallback>
 				</Avatar>
-				<ProfileOnlineStatus username={username} />
+				<ProfileOnlineStatus
+					username={username}
+					className="absolute -bottom-4 left-1/2 transform -translate-x-1/2"
+				/>
 			</div>
 		</CardContent>
 	);
