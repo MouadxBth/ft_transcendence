@@ -41,6 +41,6 @@ export class ConversationGateway implements OnGatewayConnection {
 		console.log("received msg", payload, "from:", authenticatedUser.user.username)
 		await this.directMessageService.create(authenticatedUser.user.username, payload);
 
-		this.server.to(payload.target).emit("receive_message", payload);
+		this.server.to(payload.target).emit("receive_message", {...payload, target: authenticatedUser.user.username});
 	}
 }
