@@ -11,7 +11,7 @@ export interface ProfileLevelProps {
 const ProfileLevel = ({ username, nickname, level, experience }: ProfileLevelProps) => {
 	return (
 		<div className="w-full flex flex-col items-center justify-center space-y-2 p-1">
-			<Badge variant="outline">Level {level}</Badge>
+			<Badge variant="secondary">Level {level}</Badge>
 			<ProfileExperience
 				username={username}
 				nickname={nickname}
