@@ -8,7 +8,7 @@ import { AuthenticatedGuard } from "src/auth/guards/authenticated.guard";
 import type { Request } from "express";
 import { AuthenticatedUser } from "src/auth/entities/authenticated-user.entity";
 
-@ApiTags("channel")
+@ApiTags("Channel")
 @Controller("channel")
 @UseGuards(AuthenticatedGuard)
 export class ChannelController {
