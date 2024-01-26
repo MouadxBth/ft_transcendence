@@ -22,7 +22,7 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
 	}, [isLoading, data]);
 
 	return (
-		<article className="h-full flex flex-col justify-center">
+		<article className="h-full flex flex-col">
 			{loading ? <ProfileInfoCardSkeleton /> : <ProfileInfoCard user={user!} />}
 		</article>
 	);
