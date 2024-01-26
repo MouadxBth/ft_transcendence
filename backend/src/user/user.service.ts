@@ -34,6 +34,7 @@ export class UserService {
 			where: {
 				nickname: {
 					contains: nickname,
+					mode: "insensitive",
 				},
 			},
 		});
