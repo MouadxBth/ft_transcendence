@@ -23,6 +23,12 @@ export class FriendController {
 		return this.friendService.friends((request.user! as AuthenticatedUser).user.username);
 	}
 
+	@Get("/:target")
+	@ApiOkResponse({ description: "Friends of target retrieved successfully." })
+	async friendsOf(@Param("target") target: string) {
+		return this.friendService.friends(target);
+	}
+
 	@Get("sent")
 	@ApiOkResponse({ description: "Sent friend requests retrieved successfully." })
 	async sentFriendRequests(@Req() request: Request) {
