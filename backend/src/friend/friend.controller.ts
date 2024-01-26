@@ -8,8 +8,10 @@ import {
 	ApiBadRequestResponse,
 	ApiInternalServerErrorResponse,
 	ApiCreatedResponse,
+	ApiTags,
 } from "@nestjs/swagger";
 
+@ApiTags("Friend")
 @Controller("friend")
 @UseGuards(AuthenticatedGuard)
 export class FriendController {
