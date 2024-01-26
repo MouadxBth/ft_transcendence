@@ -6,7 +6,7 @@ import { AdminOperationsDto } from "../dto/admin-operations.dto";
 import { AuthenticatedUser } from "src/auth/entities/authenticated-user.entity";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
-@ApiTags("channel")
+@ApiTags("Channel | Owner")
 @Controller("channel")
 @UseGuards(AuthenticatedGuard)
 export class ChannelOwnerController {

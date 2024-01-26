@@ -6,7 +6,7 @@ import { ChannelAdminService } from "./channel-admin.service";
 import { AuthenticatedUser } from "src/auth/entities/authenticated-user.entity";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
-@ApiTags("channel")
+@ApiTags("Channel | Admin")
 @Controller("channel")
 @UseGuards(AuthenticatedGuard)
 export class ChannelAdminController {

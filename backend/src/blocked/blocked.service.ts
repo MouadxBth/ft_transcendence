@@ -3,6 +3,8 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { Blocked } from "./types/blocked.type";
 import { BlockedCache } from "./blocked.cache";
 import { UserService } from "src/user/user.service";
+import { BlockStatus } from "./types/block-status.type";
+import { User } from "src/user/entities/user.entity";
 
 @Injectable()
 export class BlockedService {
@@ -20,6 +22,7 @@ export class BlockedService {
 				where: { username },
 				select: {
 					username: true,
+					nickname: true,
 					blocked: { select: { username: true } },
 					blockedBy: { select: { username: true } },
 				},
@@ -29,6 +32,7 @@ export class BlockedService {
 
 			result = {
 				username: user.username,
+				nickname: user.nickname!,
 				blocked: user.blocked.map((victim) => victim.username),
 				blockedBy: user.blockedBy.map((aggressor) => aggressor.username),
 			};
@@ -58,10 +62,23 @@ export class BlockedService {
 		return result.find((value) => value === target);
 	}
 
+	async blockStatus(user: User, target: string) {
+		const result = await this.getBlockedAndBlockedBy(target);
+
+		return {
+			senderId: user.username,
+			senderNickname: user.nickname,
+			targetId: target,
+			targetNickname: result.nickname,
+			blocking: result.blockedBy.find((value) => value === user.username) !== undefined,
+			blockedBy: result.blocked.find((value) => value === user.username) !== undefined,
+		} as BlockStatus;
+	}
+
 	async block(username: string, target: string) {
 		if (username === target)
 			throw new HttpException("Cannot block yourself!", HttpStatus.BAD_REQUEST);
-		await this.userService.findOne(target);
+		const targetUser = await this.userService.findOne(target);
 
 		const blockedCheck = await this.isBlocking(username, target);
 
@@ -75,6 +92,7 @@ export class BlockedService {
 				},
 				select: {
 					username: true,
+					nickname: true,
 					blocked: { select: { username: true } },
 					blockedBy: { select: { username: true } },
 				},
@@ -89,6 +107,7 @@ export class BlockedService {
 
 			const userResult = {
 				username: updateResult.username,
+				nickname: updateResult.nickname,
 				blocked: updateResult.blocked.map((victim) => victim.username),
 				blockedBy: updateResult.blockedBy.map((aggressor) => aggressor.username),
 			} as Blocked;
@@ -97,7 +116,15 @@ export class BlockedService {
 				this.blockedCache.set(username, userResult),
 				this.blockedCache.set(target, targetResult),
 			]);
-			return userResult;
+
+			return {
+				senderId: username,
+				senderNickname: updateResult.nickname,
+				targetId: target,
+				targetNickname: targetUser.nickname,
+				blocking: userResult.blocked.find((value) => value === target) !== undefined,
+				blockedBy: userResult.blockedBy.find((value) => value === username) !== undefined,
+			} as BlockStatus;
 		});
 	}
 
@@ -105,7 +132,7 @@ export class BlockedService {
 		if (username === target)
 			throw new HttpException("Cannot unblock yourself!", HttpStatus.BAD_REQUEST);
 
-		await this.userService.findOne(target);
+		const targetUser = await this.userService.findOne(target);
 
 		const blockedCheck = await this.isBlocking(username, target);
 
@@ -119,6 +146,7 @@ export class BlockedService {
 				},
 				select: {
 					username: true,
+					nickname: true,
 					blocked: { select: { username: true } },
 					blockedBy: { select: { username: true } },
 				},
@@ -133,6 +161,7 @@ export class BlockedService {
 
 			const userResult = {
 				username: updateResult.username,
+				nickname: updateResult.nickname,
 				blocked: updateResult.blocked.map((victim) => victim.username),
 				blockedBy: updateResult.blockedBy.map((aggressor) => aggressor.username),
 			} as Blocked;
@@ -141,7 +170,15 @@ export class BlockedService {
 				this.blockedCache.set(username, userResult),
 				this.blockedCache.set(target, targetResult),
 			]);
-			return userResult;
+
+			return {
+				senderId: username,
+				senderNickname: updateResult.nickname,
+				targetId: target,
+				targetNickname: targetUser.nickname,
+				blocking: userResult.blocked.find((value) => value === target) !== undefined,
+				blockedBy: userResult.blockedBy.find((value) => value === username) !== undefined,
+			} as BlockStatus;
 		});
 	}
 }

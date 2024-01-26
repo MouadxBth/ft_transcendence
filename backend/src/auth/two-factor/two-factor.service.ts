@@ -33,7 +33,8 @@ export class TwoFactorService {
 
 		await this.userService.update(req, user.username, {
 			twoFactorAuthenticationEnabled: false,
-			twoFactorAuthenticationSecret: undefined,
+			twoFactorAuthenticationFirstTime: true,
+			twoFactorAuthenticationSecret: null,
 		});
 
 		return req.user;

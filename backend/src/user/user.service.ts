@@ -34,6 +34,7 @@ export class UserService {
 			where: {
 				nickname: {
 					contains: nickname,
+					mode: "insensitive",
 				},
 			},
 		});
@@ -154,8 +155,16 @@ export class UserService {
 
 			const { password, twoFactorAuthenticationSecret, ...result } = updatedUser;
 
+			let twoFaValidation = authenticatedUser.valid2Fa;
+
+			if (
+				authenticatedUser.user.twoFactorAuthenticationEnabled &&
+				!updatedUser.twoFactorAuthenticationEnabled
+			)
+				twoFaValidation = false;
+
 			req.logIn(
-				{ user: result, valid2Fa: authenticatedUser.valid2Fa } as AuthenticatedUser,
+				{ user: result, valid2Fa: twoFaValidation } as AuthenticatedUser,
 				{ session: true },
 				(error: unknown) => {
 					if (error && error instanceof Error)

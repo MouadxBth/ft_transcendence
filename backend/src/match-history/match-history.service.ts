@@ -35,6 +35,23 @@ export class MatchHistoryService {
 		return matchHistory;
 	}
 
+	async findOneInclusive(id: number) {
+		const matchHistory = await this.prismaService.matchHistory.findUnique({
+			where: { id: id },
+			include: {
+				members: {
+					include: {
+						user: true,
+					},
+				},
+			},
+		});
+
+		if (!matchHistory)
+			throw new HttpException("No such Match History was found !", HttpStatus.BAD_REQUEST);
+		return matchHistory;
+	}
+
 	async findAll(username: string) {
 		return this.prismaService.matchHistory.findMany({
 			where: {
