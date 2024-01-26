@@ -41,7 +41,7 @@ const GenericImageField = <T extends FieldValues>({
 			name={name}
 			render={({ field: { onChange, value, ...rest } }) => (
 				<>
-					<FormItem className={cn("h-full border-l", className)}>
+					<FormItem className={cn("h-full", className)}>
 						<FormLabel>
 							{label} <span className="text-xs">(Optional)</span>
 						</FormLabel>
