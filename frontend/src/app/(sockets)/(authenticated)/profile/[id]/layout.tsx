@@ -2,7 +2,6 @@
 
 import ProfileBlockedBy from "@/components/profile/info/block/ProfileBlockedBy";
 import ProfileBlocking from "@/components/profile/info/block/ProfileBlocking";
-import ProfileLoading from "@/components/profile/info/block/ProfileLoading";
 import { useAuthentication } from "@/hooks/authentication/useAuthentication";
 import useBlockStatus from "@/hooks/user/useBlockStatus";
 import useBlockUpdate from "@/hooks/user/useBlockUpdate";
@@ -31,8 +30,6 @@ const ProfileLayout = ({ children, params }: ProfileLayoutProps) => {
 		if (data) setStatus(data);
 		setLoading(false);
 	}, [isLoading, data]);
-
-	if (loading) return <ProfileLoading />;
 
 	if (!condition) return <>{children}</>;
 
