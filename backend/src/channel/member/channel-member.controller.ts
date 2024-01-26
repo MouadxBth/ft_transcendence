@@ -6,7 +6,7 @@ import type { Request } from "express";
 import { AuthenticatedUser } from "src/auth/entities/authenticated-user.entity";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 
-@ApiTags("channel")
+@ApiTags("Channel | Member")
 @Controller("channel")
 @UseGuards(AuthenticatedGuard)
 export class ChannelMemberController {
