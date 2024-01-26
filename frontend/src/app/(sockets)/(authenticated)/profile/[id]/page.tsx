@@ -1,5 +1,6 @@
 "use client";
 
+import ProfileFriendsCard from "@/components/profile/friends/ProfileFriendsCard";
 import ProfileInfoCard from "@/components/profile/info/ProfileInfoCard";
 import ProfileInfoCardSkeleton from "@/components/profile/info/skeleton/ProfileInfoCardSkeleton";
 import useProfile from "@/hooks/user/useProfile";
@@ -24,6 +25,7 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
 	return (
 		<article className="h-full flex flex-col">
 			{loading ? <ProfileInfoCardSkeleton /> : <ProfileInfoCard user={user!} />}
+			{!loading && <ProfileFriendsCard user={user!} />}
 		</article>
 	);
 };
