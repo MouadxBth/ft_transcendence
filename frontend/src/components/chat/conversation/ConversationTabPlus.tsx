@@ -8,10 +8,19 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { createConversation } from "@/lib/chat/chat-service-endpoints";
 import { Plus } from "lucide-react";
 import React from "react";
 
 const ConversationTabPlus = () => {
+
+	function handleSubmit(value: string) {
+		const data = createConversation(value);
+		console.log("created:", data);
+	}
+
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -23,7 +32,10 @@ const ConversationTabPlus = () => {
 				<DialogHeader>
 					<DialogTitle>Start a conversation</DialogTitle>
 					<DialogDescription>
-						<UserSearch />
+						{/* <UserSearch /> */}
+						<Textarea 
+							callback={handleSubmit}
+						/>
 					</DialogDescription>
 				</DialogHeader>
 			</DialogContent>

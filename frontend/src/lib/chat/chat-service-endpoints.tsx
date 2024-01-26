@@ -30,6 +30,13 @@ export async function fetchAllConversations() : Promise<ConversationApiResponse>
 	return parsedRes.data;
 }
 
+export const createConversation = async (username: string) => {
+	const res = await conversationEndpoint.post("/" + username);
+	if (res.status != HttpStatusCode.Created)
+		throw Error(res.data)
+	return (res.data)
+}
+
 export async function fetchAllDirectMessages(target: string) : Promise<DirectMessageApiResponse> {
 	const res = conversationEndpoint.get(`/${target}/dms`);
 	return res.then((res) => {

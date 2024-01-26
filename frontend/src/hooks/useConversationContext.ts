@@ -1,18 +1,7 @@
 import { createContext, useContext } from "react"
-import { ChannelMessageProps } from "@/components/chat/channel/message/ChannelMessage";
 import { DirectMessageApiResponse } from "@/lib/types/direct-message-api-response";
 import { ConversationApiResponse } from "@/lib/types/conversation-api-response";
 
-const random = Array.from({ length: 20 }).map((_, i, a) => {
-	return {
-		id: i,
-		sender: `nickname-${a.length - i}`,
-		avatar: `https://robohash.org/${encodeURI(`nickname-${a.length - i}`)}`,
-		message:
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eleifend sem et interdum euismod.",
-		date: new Date(),
-	} as ChannelMessageProps;
-});
 
 export interface ConversationItem {
 	id: number,
@@ -45,5 +34,6 @@ export function useConversationContext() {
 	
 	if (!conversationData || !setConversationData)
 		throw new Error("Conversation context cannot be called without initialization");
-	return {conversationData, setConversationData};
+	
+		return {conversationData, setConversationData};
 }

@@ -1,21 +1,30 @@
-import { ScrollArea } from "@radix-ui/react-scroll-area"
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEffect, useRef } from "react";
 import { ConversationMessage } from "./message/ConversationMessage";
 import useAuthenticatedUser from "@/hooks/authentication/useAuthenticatedUser";
 import { useConversationContext } from "@/hooks/useConversationContext";
+import useSockets from "@/hooks/socket/useSockets";
 
 export const ConversationMessageArea = ({ username }: {username: string}) => {
 	
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
-	const {conversationData, setConversationData} = useConversationContext();
+	const {conversationData} = useConversationContext();
 
 	function getUserMessages() {
-		return conversationData.find((ele) => ele.username === username);
+
+		console.log("retrieving messages...", conversationData)
+
+		const res =  conversationData.find((ele) => ele.username === username);
+		
+		if (!res) {
+			throw Error("cannot find elemnt in conversation data: " + username)
+		}
+		return res;
 	}
 
 	const { messages } = getUserMessages()!;
-	
+
 	const scrollToBottom = () => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	};
@@ -23,9 +32,11 @@ export const ConversationMessageArea = ({ username }: {username: string}) => {
 	useEffect(() => {
 		scrollToBottom();
 	});
+
+	console.log("finished rendering conversation list...", messages);
 	
 	return (
-		<ScrollArea className="h-full scroll">
+		<ScrollArea className="h-full">
 			{!messages || !messages.length ? (
 				<div className="p-5 bg-black">You don&apos;t any conversations yet!</div>
 			) : (
