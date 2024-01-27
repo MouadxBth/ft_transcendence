@@ -22,6 +22,7 @@ export interface FriendsListProps {
 const FriendList = ({ user, friends }: FriendsListProps) => {
 	const [value, setValue] = useState("");
 	const avatar = friends?.find((friend) => friend.nickname === value)?.avatar;
+	console.log(`selected === ${value}`);
 	return (
 		<>
 			<PopoverTrigger asChild>
