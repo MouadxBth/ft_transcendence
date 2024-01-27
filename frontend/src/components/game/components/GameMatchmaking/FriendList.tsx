@@ -74,7 +74,7 @@ const FriendList = ({ user, friends }: FriendsListProps) => {
 									<AvatarImage
 										src={
 											friend.avatar.startsWith("http")
-												? user.avatar
+												? friend.avatar
 												: `${process.env.NEXT_PUBLIC_BACKEND_URL}/upload/avatar/${friend.avatar}`
 										}
 										className="h-10 w-10 rounded-full object-cover"
