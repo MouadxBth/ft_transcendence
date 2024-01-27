@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { ConversationList, conversationContext } from "@/hooks/useConversationContext";
 import useSockets from "@/hooks/socket/useSockets";
+import { toast } from "@/components/ui/use-toast";
 
 export default function ConversationContextProvider({ children, data }: {children: any, data: ConversationList}) {
 	
@@ -25,6 +26,11 @@ export default function ConversationContextProvider({ children, data }: {childre
 	const onNewMessage = (value: {content: string, target: string}) => {
 		console.log("received d:", value);
 		const messages = getUserMessages(value.target);
+		toast({
+			variant: "destructive",
+			title: `${value.target} :`,
+			description: value.content,
+		})
 		messages?.messages.push({
 			id: 2,
 			createdAt: Date(),
