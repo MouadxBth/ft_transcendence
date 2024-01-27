@@ -40,7 +40,12 @@ const FriendList = ({ user, friends }: FriendsListProps) => {
 									}
 									className="h-8 w-8 rounded-full object-cover"
 								/>
-								<AvatarFallback>hi</AvatarFallback>
+								<AvatarFallback>
+									{friends!
+										.find((friend) => friend.nickname === value)
+										?.nickname.toUpperCase()
+										.slice(0, 2)}
+								</AvatarFallback>
 							</Avatar>
 							<div>{friends!.find((friend) => friend.nickname === value)?.nickname}</div>
 						</div>
