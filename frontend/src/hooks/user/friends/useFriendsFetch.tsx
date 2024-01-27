@@ -19,7 +19,7 @@ const fetchData = async (username: string | null) => {
 		.then(({ data }) => parseFriends(data));
 };
 
-const useFriends = (username: string | null) => {
+const useFriendsFetch = (username: string | null) => {
 	const { data, isLoading, isSuccess, isError, error } = useQuery({
 		retry: false,
 		queryKey: ["friends", username],
@@ -29,4 +29,4 @@ const useFriends = (username: string | null) => {
 	return { data, isLoading, isSuccess, isError, error };
 };
 
-export default useFriends;
+export default useFriendsFetch;
