@@ -1,7 +1,7 @@
 import { FriendStatusType } from "@/lib/types/friend-status";
 import { useEffect } from "react";
-import { useAuthentication } from "../authentication/useAuthentication";
-import useSockets from "../socket/useSockets";
+import { useAuthentication } from "../../authentication/useAuthentication";
+import useSockets from "../../socket/useSockets";
 import { User } from "@/lib/types/user";
 import { FriendRequestType } from "@/lib/types/friend-request";
 
