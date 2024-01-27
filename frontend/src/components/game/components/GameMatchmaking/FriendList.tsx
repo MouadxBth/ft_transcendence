@@ -21,6 +21,7 @@ export interface FriendsListProps {
 
 const FriendList = ({ user, friends }: FriendsListProps) => {
 	const [value, setValue] = useState("");
+	const avatar = friends?.find((friend) => friend.nickname === value)?.avatar;
 	return (
 		<>
 			<PopoverTrigger asChild>
@@ -34,9 +35,11 @@ const FriendList = ({ user, friends }: FriendsListProps) => {
 							<Avatar className="items-center">
 								<AvatarImage
 									src={
-										friends!.find((friend) => friend.nickname === value)?.avatar.startsWith("http")
-											? user!.avatar
-											: `${process.env.NEXT_PUBLIC_BACKEND_URL}/upload/avatar/${friends!.find((friend) => friend.nickname === value)?.avatar}`
+										avatar
+											? avatar.startsWith("http")
+												? avatar
+												: `${process.env.NEXT_PUBLIC_BACKEND_URL}/upload/avatar/${avatar}`
+											: ""
 									}
 									className="h-8 w-8 rounded-full object-cover"
 								/>
@@ -78,9 +81,11 @@ const FriendList = ({ user, friends }: FriendsListProps) => {
 								<Avatar>
 									<AvatarImage
 										src={
-											friend.avatar.startsWith("http")
-												? friend.avatar
-												: `${process.env.NEXT_PUBLIC_BACKEND_URL}/upload/avatar/${friend.avatar}`
+											friend.avatar
+												? friend.avatar.startsWith("http")
+													? friend.avatar
+													: `${process.env.NEXT_PUBLIC_BACKEND_URL}/upload/avatar/${friend.avatar}`
+												: ""
 										}
 										className="h-10 w-10 rounded-full object-cover"
 									/>
