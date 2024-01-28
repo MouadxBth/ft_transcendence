@@ -28,8 +28,9 @@ function configureExpressSession(app: INestApplication<any>) {
 	sessionMiddleware = session({
 		name: configService.get<string>("SESSION_NAME"),
 		secret: configService.get<string>("SESSION_SECRET")!,
-		resave: true,
+		resave: false,
 		saveUninitialized: false,
+		rolling: true,
 		store: new RedisStore({
 			client: redis,
 		}),
