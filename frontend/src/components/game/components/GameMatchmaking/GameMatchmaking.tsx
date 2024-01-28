@@ -1,18 +1,14 @@
 "use client";
 import useFriends from "@/hooks/user/useFriends";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import React from "react";
 import { useEffect, useState } from "react";
 import { type CarouselApi } from "@/components/ui/carousel";
 import { useAuthentication } from "@/hooks/authentication/useAuthentication";
-import { TabsContent } from "@/components/ui/tabs";
 import SelectMode from "./SelectMode";
 import SelectModeColor from "./SelectModeColor";
 import GameMatchmakingButtons from "./GameMatchmakingButtons";
-import GameModeTabsTitle from "./MatchmakingTitle";
 import GameSelectFriend from "./GameSelectFriend";
-import { CardHeader, CardTitle } from "@/components/ui/card";
-import { Gamepad, Gamepad2 } from "lucide-react";
 import MatchmakingTitle from "./MatchmakingTitle";
 
 const GameMatchmaking = () => {

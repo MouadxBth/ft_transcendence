@@ -2,7 +2,6 @@ import { CardContent } from "@/components/ui/card";
 import { Popover } from "@/components/ui/popover";
 import { useAuthentication } from "@/hooks/authentication/useAuthentication";
 import useFriends from "@/hooks/user/useFriends";
-import { SetStateAction, useState } from "react";
 import FriendList from "./FriendList";
 
 const GameSelectFriend = () => {
