@@ -2,7 +2,7 @@
 
 import { AuthenticationContext } from "@/contexts/AuthenticationContext";
 import useAuthenticatedUser from "@/hooks/authentication/useAuthenticatedUser";
-import { AuthenticatedUser } from "@/lib/types/authenticated-user";
+import { AuthenticatedUser } from "@/lib/types/user/authenticated-user";
 import { useEffect, useState } from "react";
 
 const AuthenticationContextProvider = ({ children }: { children: React.ReactNode }) => {
