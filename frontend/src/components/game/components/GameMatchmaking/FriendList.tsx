@@ -22,10 +22,15 @@ export interface FriendsListProps {
 const FriendList = ({ user, friends }: FriendsListProps) => {
 	const [value, setValue] = useState("");
 	const userfriend = friends?.find((friend) => friend.nickname === value);
-	console.log(friends?.length);
-	console.log(`selected === ${value}`);
 	return (
 		<>
+			{value ? (
+				<p className="text-xs text-muted-foreground">
+					Invite <span className="underline-offset-1">{value}</span> to a match
+				</p>
+			) : (
+				<p className="text-xs text-muted-foreground">Leave empty for auto matchmaking</p>
+			)}
 			<PopoverTrigger asChild>
 				<Button
 					variant="outline"

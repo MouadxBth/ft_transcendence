@@ -22,7 +22,6 @@ const GameSelectFriend = () => {
 	return (
 		<div>
 			<CardContent className="flex flex-col items-center justify-center space-y-3">
-				<p className="text-xs text-muted-foreground">Leave empty for auto matchmaking</p>
 				<Popover>
 					<FriendList
 						user={authenticatedUser!.user}
