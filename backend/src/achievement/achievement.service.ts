@@ -9,16 +9,26 @@ export class AchievementService {
 	constructor(
 		private prismaService: PrismaService,
 		private userService: UserService
-	) {}
+	) {
+		const seed: CreateAchievementDto[] = [
+			{
+				name: "Transcend",
+				brief: "Join the adventure, transcendence!",
+				description: "You have made it! you have transcended! Welcome",
+			},
+		];
+
+		Promise.all(seed.map((achievement) => this.create(achievement)));
+	}
 
 	async create(dto: CreateAchievementDto) {
-		const check = await this.prismaService.achievement.findUnique({
+		const result = await this.prismaService.achievement.findUnique({
 			where: {
 				name: dto.name,
 			},
 		});
 
-		if (check) throw new HttpException("Achievement already exists!", HttpStatus.BAD_REQUEST);
+		if (result) return result;
 
 		return await this.prismaService.achievement.create({
 			data: dto,
@@ -63,17 +73,21 @@ export class AchievementService {
 	}
 
 	async findOf(target: string) {
-		return await this.prismaService.userAchievement.findMany({
-			where: {
-				userId: target,
-			},
-			select: {
-				unlockedAt: true,
-				achievement: true,
-				userId: false,
-				achievementId: false,
-			},
-		});
+		return await this.prismaService.userAchievement
+			.findMany({
+				where: {
+					userId: target,
+				},
+				select: {
+					unlockedAt: true,
+					achievement: true,
+					userId: false,
+					achievementId: false,
+				},
+			})
+			.then((collection) =>
+				collection.map(({ achievement, unlockedAt }) => ({ ...achievement, unlockedAt }))
+			);
 	}
 
 	async awardAchievement(name: string, username: string) {
@@ -96,15 +110,46 @@ export class AchievementService {
 		});
 
 		if (userAchievement) {
-			throw new Error(`User already has the achievement ${name}.`);
+			throw new HttpException(`User already has the achievement ${name}.`, HttpStatus.BAD_REQUEST);
 		}
 
-		return await this.prismaService.userAchievement.create({
+		const createResult = await this.prismaService.userAchievement.create({
 			data: {
 				userId: user.username,
 				achievementId: achievement.name,
 				unlockedAt: new Date(),
 			},
+			select: {
+				unlockedAt: true,
+				user: {
+					select: {
+						username: true,
+						nickname: true,
+						avatar: true,
+						achievements: {
+							select: {
+								achievement: true,
+								unlockedAt: true,
+							},
+						},
+					},
+				},
+			},
 		});
+
+		const result = {
+			username: createResult.user.username,
+			nickname: createResult.user.nickname,
+			avatar: createResult.user.avatar,
+			latest: {
+				...achievement,
+				unlockedAt: createResult.unlockedAt,
+			},
+			achievements: createResult.user.achievements.map(({ unlockedAt, achievement }) => ({
+				unlockedAt,
+				...achievement,
+			})),
+		};
+		return result;
 	}
 }
