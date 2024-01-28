@@ -21,7 +21,8 @@ export interface FriendsListProps {
 
 const FriendList = ({ user, friends }: FriendsListProps) => {
 	const [value, setValue] = useState("");
-	const avatar = friends?.find((friend) => friend.nickname === value)?.avatar;
+	const userfriend = friends?.find((friend) => friend.nickname === value);
+	console.log(friends?.length);
 	console.log(`selected === ${value}`);
 	return (
 		<>
@@ -36,22 +37,17 @@ const FriendList = ({ user, friends }: FriendsListProps) => {
 							<Avatar className="items-center">
 								<AvatarImage
 									src={
-										avatar
-											? avatar.startsWith("http")
-												? avatar
-												: `${process.env.NEXT_PUBLIC_BACKEND_URL}/upload/avatar/${avatar}`
+										userfriend?.avatar
+											? userfriend?.avatar.startsWith("http")
+												? userfriend?.avatar
+												: `${process.env.NEXT_PUBLIC_BACKEND_URL}/upload/avatar/${userfriend?.avatar}`
 											: ""
 									}
 									className="h-8 w-8 rounded-full object-cover"
 								/>
-								<AvatarFallback>
-									{friends!
-										.find((friend) => friend.nickname === value)
-										?.nickname.toUpperCase()
-										.slice(0, 2)}
-								</AvatarFallback>
+								<AvatarFallback>{userfriend?.nickname.toUpperCase().slice(0, 2)}</AvatarFallback>
 							</Avatar>
-							<div>{friends!.find((friend) => friend.nickname === value)?.nickname}</div>
+							<div>{userfriend?.nickname}</div>
 						</div>
 					) : (
 						<p>Invite a friend...</p>
@@ -62,45 +58,48 @@ const FriendList = ({ user, friends }: FriendsListProps) => {
 			<PopoverContent className="w-[300px] p-0">
 				<Command>
 					<CommandInput placeholder="Search friend..." />
-					<CommandEmpty>No Friend found. try automatchmaking</CommandEmpty>
-					<CommandGroup>
-						{friends!.map((friend) => (
-							<CommandItem
-								className="flex space-x-2"
-								key={friend.nickname}
-								value={friend.nickname}
-								onSelect={(currentValue: SetStateAction<string>) => {
-									setValue(currentValue === value ? "" : currentValue);
-								}}
-							>
-								<Check
-									className={cn(
-										"mr-2 h-4 w-4",
-										value === friend.nickname ? "opacity-100" : "opacity-0"
-									)}
-								/>
-								<Avatar>
-									<AvatarImage
-										src={
-											friend.avatar
-												? friend.avatar.startsWith("http")
-													? friend.avatar
-													: `${process.env.NEXT_PUBLIC_BACKEND_URL}/upload/avatar/${friend.avatar}`
-												: ""
-										}
-										className="h-10 w-10 rounded-full object-cover"
+					<CommandEmpty>No Friend with that nickname</CommandEmpty>
+					{friends?.length !== 0 ? (
+						friends?.map((friend) => (
+							<CommandGroup key={friend.username}>
+								<CommandItem
+									className="flex space-x-2"
+									value={friend.nickname}
+									onSelect={(currentValue: SetStateAction<string>) => {
+										setValue(currentValue === value ? "" : currentValue);
+									}}
+								>
+									<Check
+										className={cn(
+											"mr-2 h-4 w-4",
+											value === friend.nickname ? "opacity-100" : "opacity-0"
+										)}
 									/>
-									<AvatarFallback>{friend.nickname.toUpperCase().slice(0, 2)}</AvatarFallback>
-								</Avatar>
-								<div className="text-md">
-									{friend.nickname}
-									<div className="text-muted-foreground text-xs">
-										{friend.firstName} {friend.lastName}
+									<Avatar>
+										<AvatarImage
+											src={
+												friend.avatar
+													? friend.avatar.startsWith("http")
+														? friend.avatar
+														: `${process.env.NEXT_PUBLIC_BACKEND_URL}/upload/avatar/${friend.avatar}`
+													: ""
+											}
+											className="h-10 w-10 rounded-full object-cover"
+										/>
+										<AvatarFallback>{friend.nickname.toUpperCase().slice(0, 2)}</AvatarFallback>
+									</Avatar>
+									<div className="text-md">
+										{friend.nickname}
+										<div className="text-muted-foreground text-xs">
+											{friend.firstName} {friend.lastName}
+										</div>
 									</div>
-								</div>
-							</CommandItem>
-						))}
-					</CommandGroup>
+								</CommandItem>
+							</CommandGroup>
+						))
+					) : (
+						<p className="py-6 text-center text-sm">No Friend found. try automatchmaking</p>
+					)}
 				</Command>
 			</PopoverContent>
 		</>
