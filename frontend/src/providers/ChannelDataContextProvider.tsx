@@ -48,7 +48,7 @@ export default function ChannelContextProvider({ children }: any) {
 				avatar: "n/a",
 				date: new Date(channels[i].createdAt),
 				messages: messages,
-				lastMessage: messages[messages.length - 1].content
+				lastMessage: messages.length ? messages[messages.length - 1].content : "N/A"
 			})
 		}
 

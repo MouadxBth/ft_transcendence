@@ -27,7 +27,6 @@ export default function ConversationContextProvider({ children, data }: {childre
 		console.log("received d:", value);
 		const messages = getUserMessages(value.target);
 		toast({
-			variant: "destructive",
 			title: `${value.target} :`,
 			description: value.content,
 		})

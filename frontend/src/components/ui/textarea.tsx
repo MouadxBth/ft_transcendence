@@ -6,7 +6,7 @@ import useAutosizeTextArea from "@/hooks/utils/useAutosizeTextArea";
 import React from "react";
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-	callback: (value: string) => void;
+	callback?: (value: string) => void;
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
