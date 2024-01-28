@@ -3,14 +3,15 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export interface SelectModeProps {
-	handleState: () => void;
+	handleClassic: () => void;
+	handleCustom: () => void;
 }
 
-const SelectMode = ({ handleState }: SelectModeProps) => {
+const SelectMode = ({ handleClassic, handleCustom }: SelectModeProps) => {
 	return (
 		<div className="flex flex-col items-center space-y-3">
 			<p className="text-xs text-muted-foreground">Choose you game mode</p>
-			<CardContent>
+			<div>
 				<RadioGroup
 					defaultValue="classic"
 					className="flex items-center justify-around"
@@ -19,7 +20,7 @@ const SelectMode = ({ handleState }: SelectModeProps) => {
 						<RadioGroupItem
 							value="classic"
 							id="classic"
-							onClick={handleState}
+							onClick={handleClassic}
 						/>
 						<Label htmlFor="classic">Classic</Label>
 					</div>
@@ -27,12 +28,12 @@ const SelectMode = ({ handleState }: SelectModeProps) => {
 						<RadioGroupItem
 							value="custom"
 							id="custom"
-							onClick={handleState}
+							onClick={handleCustom}
 						/>
 						<Label htmlFor="custom">Custom</Label>
 					</div>
 				</RadioGroup>
-			</CardContent>
+			</div>
 		</div>
 	);
 };

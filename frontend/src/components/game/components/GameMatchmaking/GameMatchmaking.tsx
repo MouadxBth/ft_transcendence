@@ -10,11 +10,16 @@ import SelectModeColor from "./SelectModeColor";
 import GameMatchmakingButtons from "./GameMatchmakingButtons";
 import GameSelectFriend from "./GameSelectFriend";
 import MatchmakingTitle from "./MatchmakingTitle";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const GameMatchmaking = () => {
 	const [isCustom, setIscCustom] = useState(false);
-	const handleState = () => {
-		setIscCustom(!isCustom);
+	const handleClassic = () => {
+		setIscCustom(false);
+	};
+	const handleCustom = () => {
+		setIscCustom(true);
 	};
 	const [api, setApi] = useState<CarouselApi>();
 	const [current, setCurrent] = useState(0);
@@ -46,10 +51,16 @@ const GameMatchmaking = () => {
 	return (
 		<div className="w-full h-full flex items-center justify-center">
 			<ResizablePanelGroup direction="horizontal">
-				<ResizablePanel className=" flex items-center justify-center">
-					<div className="h-full w-full flex flex-col items-center justify-center space-y-3">
+				<ResizablePanel>
+					<div className="h-full w-full flex flex-col items-center justify-center space-y-5">
 						<MatchmakingTitle />
-						<SelectMode handleState={handleState} />
+						<SelectMode
+							handleClassic={handleClassic}
+							handleCustom={handleCustom}
+						/>
+						<div className="flex items-center space-x-3">
+							<Checkbox /> <span className="text-md">Ranked</span>
+						</div>
 						{isCustom && <SelectModeColor />}
 						<GameSelectFriend />
 						<GameMatchmakingButtons />
