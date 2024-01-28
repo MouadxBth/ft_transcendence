@@ -1,5 +1,5 @@
-import { AuthenticatedUser } from "@/lib/types/authenticated-user";
-import { Dispatch, SetStateAction, createContext, useContext } from "react";
+import { AuthenticatedUser } from "@/lib/types/user/authenticated-user";
+import { Dispatch, SetStateAction, createContext } from "react";
 
 interface AuthenticationContextType {
 	authenticatedUser: AuthenticatedUser | null;
