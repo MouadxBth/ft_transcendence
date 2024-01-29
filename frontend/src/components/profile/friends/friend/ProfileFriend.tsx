@@ -5,11 +5,11 @@ import ProfileFriendRemove from "./actions/ProfileFriendRemove";
 import ProfileFriendAdd from "./actions/ProfileFriendAdd";
 import ProfileFriendRequestCancel from "./actions/ProfileFriendRequestCancel";
 import ProfileFriendRequestAnswer from "./actions/answer/ProfileFriendRequestAnswer";
-import { User } from "@/lib/types/user";
-import useFriendStatus from "@/hooks/user/useFriendStatus";
-import { FriendStatusType } from "@/lib/types/friend-status";
 import ProfileFriendLoading from "./ProfileFriendLoading";
-import useFriendStatusUpdate from "@/hooks/user/useFriendStatusUpdate";
+import { User } from "@/lib/types/user/user";
+import useFriendStatus from "@/hooks/user/friends/useFriendStatus";
+import { FriendStatusType } from "@/lib/types/friend/friend-status";
+import useFriendStatusUpdate from "@/hooks/user/friends/useFriendStatusUpdate";
 
 export interface ProfileFriendProps {
 	user: User;

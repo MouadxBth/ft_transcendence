@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import useSockets from "@/hooks/socket/useSockets";
 import { cn } from "@/lib/utils";
-import { UserRoundCheck, UserRoundX } from "lucide-react";
+import { UserRoundCheck } from "lucide-react";
 
 export interface ProfileFriendRequestAcceptProps {
 	className?: string;

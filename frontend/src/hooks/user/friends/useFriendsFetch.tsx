@@ -1,5 +1,5 @@
 import axiosClient from "@/lib/axios";
-import { friendSchema } from "@/lib/types/friend";
+import { friendSchema } from "@/lib/types/friend/friend";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 

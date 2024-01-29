@@ -1,12 +1,12 @@
 import { useToast } from "@/components/ui/use-toast";
 import axiosClient from "@/lib/axios";
-import { LoginFormType } from "@/lib/types/login-form";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { parseAuthenticatedUser } from "./useAuthenticatedUser";
 import { joinLines } from "@/lib/utils";
 import { AxiosError } from "axios";
 import { useAuthentication } from "./useAuthentication";
+import { LoginFormType } from "@/lib/types/form/login-form";
 
 const loginRequest = async (data: LoginFormType) => {
 	return await axiosClient.post("/auth/local/login", data, {

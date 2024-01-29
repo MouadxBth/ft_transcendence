@@ -1,5 +1,5 @@
 import axiosClient from "@/lib/axios";
-import { friendStatusSchema } from "@/lib/types/friend-status";
+import { friendStatusSchema } from "@/lib/types/friend/friend-status";
 import { useQuery } from "@tanstack/react-query";
 
 const parseFriendStatus = (data: unknown) => {

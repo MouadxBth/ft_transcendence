@@ -1,6 +1,6 @@
-import { ProfileFormType } from "@/lib/types/profile-form";
+import { ProfileFormType } from "@/lib/types/form/profile-form";
+import { AuthenticatedUser } from "@/lib/types/user/authenticated-user";
 import { GenericFormFieldProps } from "../../generic/GenericFormField";
-import { AuthenticatedUser } from "@/lib/types/authenticated-user";
 
 const settingsFormFieldsContent = (authenticatedUser: AuthenticatedUser) => {
 	return [

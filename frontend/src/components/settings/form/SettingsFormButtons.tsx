@@ -1,6 +1,6 @@
 import { UseFormReturn } from "react-hook-form";
 import { Button } from "../../ui/button";
-import { ProfileFormType } from "@/lib/types/profile-form";
+import { ProfileFormType } from "@/lib/types/form/profile-form";
 
 export interface SettingsFormButtonsProps {
 	form: UseFormReturn<ProfileFormType, any, undefined>;

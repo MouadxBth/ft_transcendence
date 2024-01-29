@@ -7,7 +7,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ProfileFormType } from "@/lib/types/profile-form";
+import { ProfileFormType } from "@/lib/types/form/profile-form";
 import { cn } from "@/lib/utils";
 import { Control, FieldValues, Path } from "react-hook-form";
 

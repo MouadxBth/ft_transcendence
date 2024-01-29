@@ -1,4 +1,4 @@
-import { User } from "@/lib/types/user";
+import { User } from "@/lib/types/user/user";
 import UserSearchListItem from "./UserSearchListItem";
 
 export interface UserSearchListProps {
@@ -15,7 +15,7 @@ const UserSearchList = ({ data }: UserSearchListProps) => {
 							key={user.nickname}
 							{...user}
 						/>
-				  ))}
+					))}
 		</div>
 	);
 };

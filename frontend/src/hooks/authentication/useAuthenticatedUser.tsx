@@ -1,5 +1,5 @@
 import axiosClient from "@/lib/axios";
-import { authenticatedUserSchema } from "@/lib/types/authenticated-user";
+import { authenticatedUserSchema } from "@/lib/types/user/authenticated-user";
 import { useQuery } from "@tanstack/react-query";
 
 export const parseAuthenticatedUser = (data: unknown) => {

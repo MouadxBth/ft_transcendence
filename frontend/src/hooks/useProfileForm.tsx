@@ -5,8 +5,8 @@ import axiosClient from "@/lib/axios";
 import { parseAuthenticatedUser } from "./authentication/useAuthenticatedUser";
 import { AxiosError } from "axios";
 import { joinLines } from "@/lib/utils";
-import { ProfileFormType } from "@/lib/types/profile-form";
-import { AuthenticatedUser } from "@/lib/types/authenticated-user";
+import { ProfileFormType } from "@/lib/types/form/profile-form";
+import { AuthenticatedUser } from "@/lib/types/user/authenticated-user";
 
 const sendRequest = async (data: ProfileFormType, authenticatedUser: AuthenticatedUser) => {
 	if (data.avatar) {

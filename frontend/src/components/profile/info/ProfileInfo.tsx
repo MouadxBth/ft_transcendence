@@ -1,4 +1,3 @@
-import React from "react";
 import ProfileTitle, { ProfileTitleProps } from "./title/ProfileTitle";
 import ProfileAvatar, { ProfileAvatarProps } from "./avatar/ProfileAvatar";
 
