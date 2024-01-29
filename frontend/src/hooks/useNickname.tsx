@@ -1,15 +1,17 @@
 import { useToast } from "@/components/ui/use-toast";
 import { useAuthentication } from "./authentication/useAuthentication";
 import { useMutation } from "@tanstack/react-query";
-import { NicknameFormType } from "@/lib/types/nickname-form";
 import axiosClient from "@/lib/axios";
 import { parseAuthenticatedUser } from "./authentication/useAuthenticatedUser";
 import { AxiosError } from "axios";
 import { joinLines } from "@/lib/utils";
+import useSockets from "./socket/useSockets";
+import { NicknameFormType } from "@/lib/types/form/nickname-form";
 
 const useNickname = () => {
 	const { toast } = useToast();
 	const { authenticatedUser, setAuthenticatedUser } = useAuthentication();
+	const { notifications } = useSockets();
 
 	return useMutation({
 		mutationKey: ["nickname"],
@@ -51,6 +53,7 @@ const useNickname = () => {
 		},
 		onSuccess: ({ data }) => {
 			setAuthenticatedUser(parseAuthenticatedUser(data));
+			notifications?.emit("award_achievement", "Transcend");
 		},
 		onError: (error: Error) => {
 			const message =
