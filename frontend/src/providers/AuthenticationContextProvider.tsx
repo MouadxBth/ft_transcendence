@@ -11,10 +11,7 @@ const AuthenticationContextProvider = ({ children }: { children: React.ReactNode
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		if (isLoading) {
-			setLoading(true);
-			return;
-		}
+		if (isLoading) return;
 
 		setLoading(false);
 
