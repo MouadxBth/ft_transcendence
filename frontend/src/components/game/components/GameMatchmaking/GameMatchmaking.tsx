@@ -54,14 +54,10 @@ const GameMatchmaking = () => {
 				<ResizablePanel>
 					<div className="h-full w-full flex flex-col items-center justify-center space-y-5">
 						<MatchmakingTitle />
-						<SelectMode
-							handleClassic={handleClassic}
-							handleCustom={handleCustom}
-						/>
+						<SelectMode />
 						<div className="flex items-center space-x-3">
 							<Checkbox /> <span className="text-md">Ranked</span>
 						</div>
-						{isCustom && <SelectModeColor />}
 						<GameSelectFriend />
 						<GameMatchmakingButtons />
 					</div>
