@@ -35,12 +35,7 @@ const useAchievementNotification = () => {
 
 	useEffect(() => {
 		notifications?.on("achievement_awarded", (args: AchievementsUpdateType) => {
-			console.log("HERE");
 			if (myUsername !== args.username) return;
-
-			console.log("AGAIN HERE");
-
-			sonner.success("first");
 
 			sonner.success("Achievements", {
 				duration: 7 * 1e3,
