@@ -38,8 +38,6 @@ const useAchievementNotification = () => {
 			if (myUsername !== args.username) return;
 
 			sonner.success("Achievements", {
-				duration: 7 * 1e3,
-				dismissible: false,
 				important: true,
 				description: (
 					<AchievementData
