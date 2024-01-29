@@ -1,6 +1,6 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import ProfileFriendsTitle from "./ProfileFriendsTitle";
 import ProfileFriendsList from "./list/ProfileFriendsList";
 import ProfileFriend from "./friend/ProfileFriend";
@@ -50,14 +50,16 @@ const ProfileFriendsCard = ({ user }: ProfileFriendsCardProps) => {
 					friends={friends}
 				/>
 
-				{loading ? (
-					<ProfileFriendsListSkeleton />
-				) : (
-					<ProfileFriendsList
-						user={user}
-						friends={friends}
-					/>
-				)}
+				<CardContent>
+					{loading ? (
+						<ProfileFriendsListSkeleton />
+					) : (
+						<ProfileFriendsList
+							user={user}
+							friends={friends}
+						/>
+					)}
+				</CardContent>
 			</div>
 		</Card>
 	);

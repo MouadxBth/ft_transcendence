@@ -21,7 +21,7 @@ const ProfileFriendsList = ({ user, friends }: ProfileFriendsListProps) => {
 		: `${nickname} doesn't have any friends yet, be the first and send him a request!`;
 	return (
 		<ScrollArea className="w-full border">
-			<div className="max-h-32 w-full">
+			<div className="h-32 text-center w-full">
 				{!friends || !friends.length
 					? emptyMessage
 					: friends.map((friend) => (
