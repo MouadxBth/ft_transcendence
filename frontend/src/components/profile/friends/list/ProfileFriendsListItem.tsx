@@ -1,8 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { FriendType } from "@/lib/types/friend";
-import { User } from "@/lib/types/user";
 import Link from "next/link";
+import ProfileOnlineStatus from "../../info/avatar/ProfileOnlineStatus";
+import { FriendType } from "@/lib/types/friend/friend";
 
 const ProfileFriendsListItem = ({
 	username,
@@ -19,9 +19,13 @@ const ProfileFriendsListItem = ({
 		<>
 			<Link
 				href={`/profile/${username}`}
-				className="flex space-x-2  w-full bg-black p-2 rounded-2xl"
+				className="flex items-center justify-center space-x-2  w-full bg-black p-2 relative"
 			>
-				<Avatar className="h-14 w-14">
+				<ProfileOnlineStatus
+					username={username}
+					className="absolute top-2 left-2"
+				/>
+				<Avatar className="h-16 w-16">
 					<AvatarImage
 						className="object-cover"
 						src={avatarSource}
