@@ -1,19 +1,24 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
 import useSockets from "../../socket/useSockets";
-import { FriendType } from "@/lib/types/friend";
-import { User } from "@/lib/types/user";
-import { FriendsUpdateType } from "@/lib/types/friends-update";
-import { useFriends } from "./useFriends";
+import { FriendsUpdateType } from "@/lib/types/friend/friends-update";
+import { useAuthentication } from "@/hooks/authentication/useAuthentication";
+import { FriendType } from "@/lib/types/friend/friend";
 
-const useFriendsUpdate = (user: User) => {
+const useFriendsUpdate = (
+	setFriends: Dispatch<SetStateAction<FriendType[]>>,
+	username?: string
+) => {
+	const { authenticatedUser } = useAuthentication();
 	const { notifications } = useSockets();
-	const { setFriends } = useFriends();
+	const target = username ?? authenticatedUser?.user.username!;
 
 	useEffect(() => {
 		notifications?.on("friends_updated", (args: FriendsUpdateType) => {
-			if (user.username === args.username) setFriends(args.friends);
+			if (target === args.username) {
+				setFriends(args.friends);
+			}
 		});
-	}, [notifications, setFriends, user]);
+	}, [notifications, target, authenticatedUser, setFriends]);
 };
 
 export default useFriendsUpdate;
