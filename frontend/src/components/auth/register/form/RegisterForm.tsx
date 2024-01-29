@@ -8,8 +8,8 @@ import AuthProviders from "../../AuthProviders";
 import HorizontalSeparator from "@/components/ui/horizontal-separator";
 import FormButton from "../../FormButton";
 import useRegister from "@/hooks/authentication/useRegister";
-import registerFormFields from "./RegisterFromFields";
 import { RegisterFormType, registerFormSchema } from "@/lib/types/form/register-form";
+import registerFormFields from "./RegisterFormFields";
 
 export const RegistrationForm = () => {
 	const form = useForm<RegisterFormType>({
