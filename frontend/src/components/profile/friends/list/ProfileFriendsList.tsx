@@ -1,18 +1,24 @@
-import { User } from "@/lib/types/user";
+"use client";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ProfileFriendsListItem from "./ProfileFriendsListItem";
-import { FriendType } from "@/lib/types/friend";
+import { FriendType } from "@/lib/types/friend/friend";
+import { User } from "@/lib/types/user/user";
+import { useAuthentication } from "@/hooks/authentication/useAuthentication";
 
 export interface ProfileFriendsListProps {
-	user: User;
+	user?: User;
 	friends?: FriendType[];
-	myProfile: boolean;
 }
 
-const ProfileFriendsList = ({ user, friends, myProfile }: ProfileFriendsListProps) => {
+const ProfileFriendsList = ({ user, friends }: ProfileFriendsListProps) => {
+	const { authenticatedUser } = useAuthentication();
+	const { username, nickname } = user ?? authenticatedUser?.user!;
+	const myProfile = username === authenticatedUser?.user.username;
+
 	const emptyMessage = myProfile
 		? "You don't have any friends yet!"
-		: `${user.nickname} doesn't have any friends yet, be the first and send him a request!`;
+		: `${nickname} doesn't have any friends yet, be the first and send him a request!`;
 	return (
 		<ScrollArea className="w-full border">
 			<div className="max-h-32 w-full">
