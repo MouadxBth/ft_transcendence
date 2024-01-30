@@ -101,7 +101,7 @@ this.physics.world.on('worldbounds', function (body : any) {
   if (body.gameObject === this.ball) {
     // Handle the collision with world bounds (e.g., change direction)
       console.log('Ball collided with world bounds');
-      socket.emit("ball-cord", {x : this.ball.x, y : this.ball.y});
+      socket.emit("ball-cord", this.ball.setVelocity(this.ball.body.velocity));
   }
 }, this);
 
@@ -126,8 +126,17 @@ this.physics.world.on('worldbounds', function (body : any) {
       }
     } else {
       // this.ballSync();
+      this.newBallSync();
       this.updateGame();
     }
+  }
+
+  newBallSync()
+  {
+    socket.on("send-ball", (ballobj : any) => {
+      this.ball.setVelocityX = ballobj.x;
+      this.ball.setVelocityY = ballobj.y;
+    })
   }
   
   // ballSync() {
