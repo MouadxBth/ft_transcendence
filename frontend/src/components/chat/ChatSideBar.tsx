@@ -17,8 +17,8 @@ const random = Array.from({ length: 50 }).map((_, i, a) => {
 
 const ChatSideBar = () => {
 	return (
-		<Tabs
-			className="w-1/4 h-full flex flex-col"
+		<Tabs 
+			className="w-1/4 flex flex-col h-full"
 			defaultValue="channels"
 		>
 			<TabsList className="flex w-full rounded-lg">

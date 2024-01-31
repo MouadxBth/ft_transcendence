@@ -19,6 +19,7 @@ import { toast } from "@/components/ui/use-toast"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { joinChannel } from "@/lib/chat/channel-service-endpoints"
 import { AxiosError } from "axios"
+import { toastError } from "@/lib/error-handling/toast-error"
 
 const JoinChannelFormSchema = z.object({
 	channel: z
@@ -49,21 +50,8 @@ const JoinChannelForm = () => {
 			})		
 		}
 		catch (e) {
-			if (e instanceof AxiosError)
-			{
-				toast({
-					variant: "destructive",
-					title: e.name,
-					description: JSON.stringify(e.response?.data, null, 2)
-				})
-			}
-			else {
-				toast({
-					variant: "destructive",
-					description: "An Error happened"
-				})
-			}
-			}
+			toastError(e);
+		}
 	}
 
 	return (

@@ -1,5 +1,3 @@
-import { ConversationApiResponse, ConversationApiResponseSchema } from "@/lib/types/conversation-api-response";
-import { DirectMessageApiResponse, DirectMessageApiResponseSchema } from "@/lib/types/direct-message-api-response";
 import axios from "axios"
 import { User, userSchema } from "../types/user";
 

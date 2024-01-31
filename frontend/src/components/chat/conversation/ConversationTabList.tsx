@@ -1,15 +1,11 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { ScrollArea } from "../../ui/scroll-area";
+import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
 import ConversationTabListItem, { ConversationTabListItemProps } from "./ConversationTabListItem";
 import { useConversationContext } from "@/hooks/useConversationContext";
 
-export interface ConversationTabListProps {
-	data: ConversationTabListItemProps[] | undefined;
-}
-
-const ConversationTabList = ({ data }: ConversationTabListProps) => {
+const ConversationTabList = () => {
 	
 	const { conversationData } = useConversationContext();
 	const pathname = usePathname();
@@ -31,6 +27,7 @@ const ConversationTabList = ({ data }: ConversationTabListProps) => {
 					/>
 				))
 			)}
+			<ScrollBar orientation="vertical"/>
 		</ScrollArea>
 	);
 };

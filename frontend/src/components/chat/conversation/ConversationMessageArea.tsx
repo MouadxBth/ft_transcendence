@@ -4,6 +4,7 @@ import { ConversationMessage } from "./message/ConversationMessage";
 import useAuthenticatedUser from "@/hooks/authentication/useAuthenticatedUser";
 import { useConversationContext } from "@/hooks/useConversationContext";
 import useSockets from "@/hooks/socket/useSockets";
+import fetchUser from "@/lib/chat/user-service-endpoints";
 
 export const ConversationMessageArea = ({ username }: {username: string}) => {
 	
@@ -11,7 +12,7 @@ export const ConversationMessageArea = ({ username }: {username: string}) => {
 
 	const {conversationData} = useConversationContext();
 
-	function getUserMessages() {
+	function getUserConversation() {
 
 		console.log("retrieving messages...", conversationData)
 
@@ -23,14 +24,13 @@ export const ConversationMessageArea = ({ username }: {username: string}) => {
 		return res;
 	}
 
-	const { messages } = getUserMessages()!;
+	const { messages, avatar } = getUserConversation()!;
 
 	const scrollToBottom = () => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	};
 	
 	useEffect(() => {
-		scrollToBottom();
 	});
 
 	console.log("finished rendering conversation list...", messages);
@@ -45,7 +45,7 @@ export const ConversationMessageArea = ({ username }: {username: string}) => {
 						key={item.id}
 						id={item.id}
 						sender={item.senderId}
-						avatar={"none"}
+						avatar={avatar}
 						message={item.content}
 						date={new Date(item.updatedAt)}
 					/>

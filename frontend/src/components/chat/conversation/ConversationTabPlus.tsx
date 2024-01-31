@@ -8,17 +8,23 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createConversation } from "@/lib/chat/chat-service-endpoints";
+import { toastError } from "@/lib/error-handling/toast-error";
 import { Plus } from "lucide-react";
 import React from "react";
 
 const ConversationTabPlus = () => {
 
-	function handleSubmit(value: string) {
-		const data = createConversation(value);
-		console.log("created:", data);
+	async function handleSubmit(value: string) {
+		try {
+			if (value.length == 0)
+				return;
+			const data = await createConversation(value);
+			console.log("created:", data);
+		} catch (e) {
+			toastError(e);
+		}
 	}
 
 	return (

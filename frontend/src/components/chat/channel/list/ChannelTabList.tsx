@@ -5,6 +5,7 @@ import ChannelTabListItem, { ChannelTabListItemProps } from "./ChannelTabListIte
 import ChannelTabListItemSkeleton from "./ChannelTabListItemSkeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChannelList } from "@/hooks/useChannelContext";
+import { Scrollbar } from "@radix-ui/react-scroll-area";
 
 export interface ChannelTabListProps {
 	data: ChannelTabListItemProps[] | undefined;
@@ -30,6 +31,7 @@ const ChannelTabList = ({ data } : {data: ChannelList}) => {
 					/>
 				))
 			)}
+			<Scrollbar orientation="vertical"/>
 		</ScrollArea>
 	);
 };

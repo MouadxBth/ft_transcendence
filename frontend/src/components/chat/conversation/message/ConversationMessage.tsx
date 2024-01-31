@@ -7,10 +7,12 @@ export const ConversationMessage = ({ id, sender, avatar, message, date }: Conve
 		<div className="flex flex-col border">
 			<div className="flex items-center space-x-2">
 				<div className="py-2 px-4 flex items-center space-x-2">
-					<Avatar>
-						<AvatarImage
+					<Avatar className="h-full">
+						<AvatarImage className="rounded-full"
 							src={avatar}
 							alt={sender}
+							height={"40px"}
+							width={"40px"}
 						/>
 						<AvatarFallback>{sender.substring(0,2)}</AvatarFallback>
 					</Avatar>

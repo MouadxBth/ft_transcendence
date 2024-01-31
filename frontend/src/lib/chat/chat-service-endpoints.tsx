@@ -32,8 +32,6 @@ export async function fetchAllConversations() : Promise<ConversationApiResponse>
 
 export const createConversation = async (username: string) => {
 	const res = await conversationEndpoint.post("/" + username);
-	if (res.status != HttpStatusCode.Created)
-		throw Error(res.data)
 	return (res.data)
 }
 
