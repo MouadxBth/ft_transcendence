@@ -4,13 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import FormButton from "@/components/auth/FormButton";
-import { NicknameFormType, nicknameFormSchema } from "@/lib/types/nickname-form";
 import { useState } from "react";
 import NicknameField from "./NicknameField";
 import ImagePreview from "./image/ImagePreview";
 import useNickname from "@/hooks/useNickname";
 import AvatarImageField from "./image/AvatarImageField";
 import BannerImageField from "./image/BannerImageField";
+import { NicknameFormType, nicknameFormSchema } from "@/lib/types/form/nickname-form";
 
 export const NicknameForm = () => {
 	const form = useForm<NicknameFormType>({

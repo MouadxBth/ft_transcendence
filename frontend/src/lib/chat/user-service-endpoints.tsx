@@ -1,5 +1,5 @@
 import axios from "axios"
-import { User, userSchema } from "../types/user";
+import { User, userSchema } from "../types/user/user";
 
 export const userEndpoint = axios.create({
 	baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/user`,

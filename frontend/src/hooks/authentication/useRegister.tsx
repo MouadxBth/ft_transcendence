@@ -1,6 +1,6 @@
 import { useToast } from "@/components/ui/use-toast";
 import axiosClient from "@/lib/axios";
-import { RegisterFormType } from "@/lib/types/register-form";
+import { RegisterFormType } from "@/lib/types/form/register-form";
 import { joinLines } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";

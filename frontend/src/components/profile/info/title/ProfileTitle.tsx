@@ -1,4 +1,4 @@
-import { CardTitle, CardDescription } from "../../../ui/card";
+import { CardDescription, CardTitle } from "@/components/ui/card";
 
 export interface ProfileTitleProps {
 	nickname: string;

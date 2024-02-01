@@ -4,11 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { LoginFormField } from "./LoginFormField";
 import { Form } from "@/components/ui/form";
-import { LoginFormType, loginFormSchema } from "@/lib/types/login-form";
 import HorizontalSeparator from "@/components/ui/horizontal-separator";
 import AuthProviders from "../../AuthProviders";
 import FormButton from "../../FormButton";
 import useLogin from "@/hooks/authentication/useLogin";
+import { LoginFormType, loginFormSchema } from "@/lib/types/form/login-form";
 
 export const LoginForm = () => {
 	const login = useLogin();

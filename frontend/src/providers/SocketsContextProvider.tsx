@@ -2,12 +2,13 @@
 
 import { SocketsContext } from "@/contexts/SocketsContext";
 import { useAuthentication } from "@/hooks/authentication/useAuthentication";
-import { AuthenticatedUser } from "@/lib/types/authenticated-user";
+import { AuthenticatedUser } from "@/lib/types/user/authenticated-user";
 import { useEffect, useState } from "react";
 import { ManagerOptions, Socket, SocketOptions, io } from "socket.io-client";
 
 const initializer = (user: AuthenticatedUser | null) => {
 	const uri = process.env.NEXT_PUBLIC_BACKEND_ORIGIN;
+
 	const options = {
 		withCredentials: true,
 		transports: ["websocket"],
@@ -38,9 +39,13 @@ const SocketsContextProvider = ({ children }: { children: React.ReactNode }) => 
 		setChannels(channelSocket);
 
 		return () => {
-			notificationsSocket.disconnect();
-			conversationSocket.disconnect();
-			channelSocket.disconnect();
+			notificationsSocket.offAny();
+			conversationSocket.offAny();
+			channelSocket.offAny();
+
+			if (notificationsSocket.connected) notificationsSocket.disconnect();
+			if (conversationSocket.connected) conversationSocket.disconnect();
+			if (channelSocket.connected) channelSocket.disconnect();
 		};
 	}, [authenticatedUser]);
 

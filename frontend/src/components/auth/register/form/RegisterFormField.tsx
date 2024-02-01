@@ -1,7 +1,7 @@
 import { Control } from "react-hook-form";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RegisterFormType } from "@/lib/types/register-form";
+import { RegisterFormType } from "@/lib/types/form/register-form";
 
 type RegisterFormFieldProps = {
 	control: Control<RegisterFormType, any>;

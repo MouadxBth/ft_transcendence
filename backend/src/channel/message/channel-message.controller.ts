@@ -17,7 +17,7 @@ import { ChannelMessageService } from "./channel-message.service";
 import { AuthenticatedUser } from "src/auth/entities/authenticated-user.entity";
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 
-@ApiTags("channel")
+@ApiTags("Channel | Messages")
 @Controller("channel")
 @UseGuards(AuthenticatedGuard)
 export class ChannelMessageController {

@@ -1,14 +1,15 @@
 import { Badge } from "@/components/ui/badge";
 import useSockets from "@/hooks/socket/useSockets";
 import useOnlineStatus from "@/hooks/user/useOnlineStatus";
-import { User } from "@/lib/types/user";
+import { User } from "@/lib/types/user/user";
 import React, { useEffect, useState } from "react";
 
 export interface ProfileOnlineStatusProps {
 	username: string;
+	className?: string;
 }
 
-const ProfileOnlineStatus = ({ username }: ProfileOnlineStatusProps) => {
+const ProfileOnlineStatus = ({ username, className }: ProfileOnlineStatusProps) => {
 	const [online, setOnline] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const { notifications } = useSockets();
@@ -31,7 +32,7 @@ const ProfileOnlineStatus = ({ username }: ProfileOnlineStatusProps) => {
 
 	return (
 		<Badge
-			className="absolute -bottom-4 left-1/2 transform -translate-x-1/2"
+			className={className}
 			variant={loading ? "secondary" : online ? "default" : "destructive"}
 		>
 			{loading ? "Loading" : online ? "Online" : "Offline"}

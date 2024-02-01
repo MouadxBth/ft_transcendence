@@ -1,9 +1,11 @@
 "use client";
 
+import ProfileAchievementsCard from "@/components/profile/achievements/ProfileAchievementsCard";
+import ProfileFriendsCard from "@/components/profile/friends/ProfileFriendsCard";
 import ProfileInfoCard from "@/components/profile/info/ProfileInfoCard";
 import ProfileInfoCardSkeleton from "@/components/profile/info/skeleton/ProfileInfoCardSkeleton";
 import useProfile from "@/hooks/user/useProfile";
-import { User } from "@/lib/types/user";
+import { User } from "@/lib/types/user/user";
 import { notFound } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -22,8 +24,12 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
 	}, [isLoading, data]);
 
 	return (
-		<article className="h-full flex flex-col justify-center">
+		<article className="h-full flex flex-col space-y-2">
 			{loading ? <ProfileInfoCardSkeleton /> : <ProfileInfoCard user={user!} />}
+			<div className="grid grid-cols-2 gap-2">
+				{!loading && <ProfileAchievementsCard user={user!} />}
+				{!loading && <ProfileFriendsCard user={user!} />}
+			</div>
 		</article>
 	);
 };
