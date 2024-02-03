@@ -20,7 +20,7 @@ const ChannelMessageList = ({name}: {name: string}) => {
 	}
 	
 	const scrollToBottom = () => {
-		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+		messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
 	};
 	
 	const channelMessages = getChannelMessages()?.messages;
@@ -33,7 +33,11 @@ const ChannelMessageList = ({name}: {name: string}) => {
 	return (
 		<ScrollArea className="h-full">
 			{!channelMessages || !channelMessages.length ? (
-				<div className="p-5 bg-black">You don&apos;t any conversations yet!</div>
+				<div className="p-5 text-center flex flex-col justify-center h-full">
+					<div>
+						You don&apos;t any conversations yet!
+					</div>
+				</div>
 			) : (
 				channelMessages.map(({ id, senderId, content, createdAt, updatedAt}) => (
 					// <ChannelMessageSkeleton key={sender} />
@@ -47,7 +51,7 @@ const ChannelMessageList = ({name}: {name: string}) => {
 					/>
 				))
 			)}
-			<div ref={messagesEndRef} />
+			<div ref={messagesEndRef}/>
 		</ScrollArea>
 	);
 };

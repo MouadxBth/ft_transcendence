@@ -41,7 +41,7 @@ const ChannelHeaderMenu = ({name}: {name: string}) => {
 				memberListOpen && <ChannelMemberList name={name} setMemberListOpen={setMemberListOpen} />
 			}
 			<div className="justify-self-end">
-				<Menubar className="border-0">
+				<Menubar className="rounded-xl">
 					<MenubarMenu>
 						<MenubarTrigger >
 							<MoreVertical />

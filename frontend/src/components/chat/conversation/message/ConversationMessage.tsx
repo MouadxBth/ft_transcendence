@@ -4,7 +4,9 @@ import { ConversationMessageProps } from "@/app/(sockets)/(authenticated)/chat/c
 
 export const ConversationMessage = ({ id, sender, avatar, message, date }: ConversationMessageProps) => {
 	return (
-		<div className="flex flex-col border">
+		<div className="flex flex-row justify-center bg-blac rounded-xl bg-black">
+
+		<div className="flex flex-col border rounded-xl mx-4 my-1 w-full">
 			<div className="flex items-center space-x-2">
 				<div className="py-2 px-4 flex items-center space-x-2">
 					<Avatar className="h-full">
@@ -22,5 +24,7 @@ export const ConversationMessage = ({ id, sender, avatar, message, date }: Conve
 			</div>
 			<div className="break-all whitespace-pre-wrap p-4">{message}</div>
 		</div>
+		</div>
+
 	);
 };

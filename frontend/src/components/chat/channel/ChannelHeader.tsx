@@ -12,8 +12,8 @@ const ChannelHeader = ({ name }: ChannelHeader) => {
 	console.log("channel status: ", status, name);
 
 	return (
-		<>
-		<div className="flex w-full flex-row justify-center p-2">
+		<div className="w-full p-4">
+		<div className="flex w-full flex-row justify-center rounded-xl bg-muted">
 			<div className="flex flex-row justify-center w-full">
 				<div className="flex flex-col justify-center">
 					{name}
@@ -21,7 +21,7 @@ const ChannelHeader = ({ name }: ChannelHeader) => {
 			</div>
 			<ChannelHeaderMenu name={name}/>
 		</div>
-		</>
+		</div>
 	)
 };
 

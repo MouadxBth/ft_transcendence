@@ -27,7 +27,7 @@ export const ConversationMessageArea = ({ username }: {username: string}) => {
 	const { messages, avatar } = getUserConversation()!;
 
 	const scrollToBottom = () => {
-		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+		messagesEndRef.current?.scrollIntoView({block: "start"});
 	};
 	
 	useEffect(() => {
@@ -52,7 +52,7 @@ export const ConversationMessageArea = ({ username }: {username: string}) => {
 					/>
 				))
 			)}
-			<div ref={messagesEndRef} />
+			<div ref={messagesEndRef} id="tyy" />
 		</ScrollArea>
 	)
 }

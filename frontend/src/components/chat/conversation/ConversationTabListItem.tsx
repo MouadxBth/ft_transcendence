@@ -44,7 +44,9 @@ const ConversationTabListItem = ({
 					<div className="text-xs text-muted-foreground ">{lastMessage}</div>
 				</div>
 			</Link>
-			<Separator className="border" />
+			<div className="h-full flex justify-center">
+				<Separator className="border w-[90%]" />
+			</div>
 		</>
 	);
 };

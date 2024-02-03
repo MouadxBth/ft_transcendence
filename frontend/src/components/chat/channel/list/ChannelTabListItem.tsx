@@ -20,7 +20,7 @@ const ChannelTabListItem = ({
 		<>
 			<Link
 				href={`/chat/channel/${name}`}
-				className={cn("p-4 bg-black flex space-x-2", {
+				className={cn("p-4 flex space-x-2", {
 					"bg-secondary": active,
 				})}
 			>
@@ -39,7 +39,9 @@ const ChannelTabListItem = ({
 					<div className="text-xs text-muted-foreground ">{lastMessage}</div>
 				</div>
 			</Link>
-			<Separator className="border" />
+			<div className="h-full flex justify-center">
+				<Separator className="border w-[90%]" />
+			</div>
 		</>
 	);
 };

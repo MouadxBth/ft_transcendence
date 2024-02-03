@@ -26,10 +26,10 @@ const ChannelInput = ({ name } : {name: string}) => {
 	}
 
 	return (
-		<div className="flex flex-col justify-center">
+		<div className="flex flex-col justify-center px-3 my-2">
 			<Textarea
 				callback={handleSubmit}
-				className=""
+				className="border-0 bg-muted rounded-xl resize-none"
 				placeholder="Type a message..."
 			/>
 		</div>

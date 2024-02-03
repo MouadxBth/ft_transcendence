@@ -48,10 +48,13 @@ export const ConversationInput = ({username} : {username: string}) => {
 	}
 
 	return (
-		<Textarea
-		callback={handleSubmit}
-		className="max-h-80 resize-none"
-		placeholder="Type a message..."
-	/>
+		<div className="flex flex-col justify-center px-3 my-2">
+
+			<Textarea
+				callback={handleSubmit}
+				className="border-0 bg-muted rounded-xl resize-none"
+				placeholder="Type a message..."
+			/>
+		</div>
 	)
 }
