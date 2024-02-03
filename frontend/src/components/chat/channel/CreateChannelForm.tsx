@@ -17,12 +17,12 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { createChannel, fetchChannelDirectMessages } from "@/lib/chat/channel-service-endpoints"
+import { createChannel, fetchChannelDirectMessages } from "@/lib/chat/channel/channel-service-endpoints"
 import { AxiosError } from "axios"
 import { toastError } from "@/lib/error-handling/toast-error"
 import { useContext } from "react"
 import { useChannelContext } from "@/hooks/useChannelContext"
-import { getChannelItem } from "@/lib/chat/utils"
+import { createChannelItem } from "@/lib/chat/utils"
 
 const FormSchema = z.object({
 	name: z
@@ -54,8 +54,7 @@ const JoinChannelForm = () => {
 		try {
 			
 			const res = await createChannel(data);
-			const chan = await getChannelItem(data.name);
-			console.log(chan);
+			const chan = await createChannelItem(data.name);
 			channelData.push(chan);
 			setChannelData({...channelData});
 			

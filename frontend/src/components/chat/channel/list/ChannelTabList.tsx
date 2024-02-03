@@ -19,15 +19,12 @@ const ChannelTabList = ({ data } : {data: ChannelList}) => {
 			{!data || !data.length ? (
 				<div className="p-5 ">You don&apos;t any conversations yet!</div>
 			) : (
-				data.map(({ name, avatar, lastMessage, date }) => (
+				data.map((item) => (
 					// <ChannelTabListItemSkeleton key={nickname} />
 					<ChannelTabListItem
-						key={name}
+						{...item}
+						key={item.name}
 						active={pathname === `/chat/channel/${name}`}
-						nickname={name}
-						avatar={avatar}
-						lastMessage={lastMessage}
-						date={date}
 					/>
 				))
 			)}

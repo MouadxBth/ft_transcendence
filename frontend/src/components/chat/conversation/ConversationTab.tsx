@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { TabsContent } from "../../ui/tabs";
-import ConversationTabList from "./ConversationTabList";
+import ConversationTabList from "../channel/ConversationTabList";
 import { ConversationTabListItemProps } from "./ConversationTabListItem";
 import ConversationTabPlus from "./ConversationTabPlus";
 import ConversationTabSearch from "./ConversationTabSearch";

@@ -3,42 +3,38 @@ import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { ChannelItem } from "@/hooks/useChannelContext";
 
-export interface ChannelTabListItemProps {
-	nickname: string;
-	avatar: string;
+export interface ChannelTabListItemProps extends ChannelItem {
 	active: boolean;
 	lastMessage: string;
-	date: Date;
 }
 
 const ChannelTabListItem = ({
-	nickname,
 	active,
-	avatar,
 	lastMessage,
-	date,
+	createdAt,
+	name
 }: ChannelTabListItemProps) => {
 	return (
 		<>
 			<Link
-				href={`/chat/channel/${nickname}`}
+				href={`/chat/channel/${name}`}
 				className={cn("p-4 bg-black flex space-x-2", {
 					"bg-secondary": active,
 				})}
 			>
 				<Avatar>
 					<AvatarImage
-						src={avatar}
-						alt={nickname}
+						alt={name}
 					/>
-					<AvatarFallback>{nickname.substring(0,2)}</AvatarFallback>
+					<AvatarFallback>{name.substring(0, 2)}</AvatarFallback>
 				</Avatar>
 
 				<div className="flex flex-col w-full">
 					<div className=" w-full flex justify-between">
-						<div className=" w-1/2">{nickname}</div>
-						<div className="text-xs text-muted-foreground  text-end">{date.toDateString()}</div>
+						<div className=" w-1/2">{name}</div>
+						<div className="text-xs text-muted-foreground  text-end">{new Date(createdAt).toDateString()}</div>
 					</div>
 					<div className="text-xs text-muted-foreground ">{lastMessage}</div>
 				</div>

@@ -2,34 +2,15 @@
 
 import React, { useState } from "react";
 import { ChannelList, channelContext } from "@/hooks/useChannelContext";
-import { fetchAllChannels, fetchChannelDirectMessages } from "@/lib/chat/channel-service-endpoints";
+import { fetchAllChannels, fetchChannelDirectMessages, fetchChannelUsers } from "@/lib/chat/channel/channel-service-endpoints";
 import { useQuery } from "@tanstack/react-query";
 import { ChannelDmItem } from "@/lib/types/channel-api-response";
 
-const random = Array.from({ length: 20 }).map((_, i, a) => {
-	return {
-		id: i,
-		senderId: `nickname-${a.length - i}`,
-		content:
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eleifend sem et interdum euismod.",
-		createdAt: Date(),
-		updatedAt: Date(),
-	} as ChannelDmItem;
-}); 
-
-const channelList: ChannelList = [
-	{
-		name: "random",
-		messages: random.slice(),
-		avatar: "",
-		date: new Date(),
-		lastMessage: "hey.."
-	}
-]
+const channelList: ChannelList = []
 
 export default function ChannelContextProvider({ children }: any) {
 
-	const [channelData, setChannelData] = useState(channelList);
+	const [,setChannelData] = useState(channelList);
 	
 	async function fetchChannelData() {
 		
@@ -40,13 +21,11 @@ export default function ChannelContextProvider({ children }: any) {
 		for (var i = 0; i < channels.length; i++) {
 			
 			const { messages } = await fetchChannelDirectMessages(channels[i].name);
-			
-			console.log("got user messages:", messages);
+			const members = await fetchChannelUsers(channels[i].name);			
 			
 			data.push({
-				name: channels[i].name,
-				avatar: "n/a",
-				date: new Date(channels[i].createdAt),
+				...channels[i],
+				members: members,
 				messages: messages,
 				lastMessage: messages.length ? messages[messages.length - 1].content : "N/A"
 			})

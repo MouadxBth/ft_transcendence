@@ -2,14 +2,16 @@
 
 import { usePathname } from "next/navigation";
 import { ScrollArea, ScrollBar } from "../../ui/scroll-area";
-import ConversationTabListItem, { ConversationTabListItemProps } from "./ConversationTabListItem";
 import { useConversationContext } from "@/hooks/useConversationContext";
+import ConversationTabListItem from "../conversation/ConversationTabListItem";
 
 const ConversationTabList = () => {
 	
 	const { conversationData } = useConversationContext();
 	const pathname = usePathname();
 
+	console.log("rendered conversation list");
+	
 	return (
 		<ScrollArea className="h-full">
 			{!conversationData || !conversationData.length ? (
@@ -20,7 +22,7 @@ const ConversationTabList = () => {
 						key={nickname}
 						username={username}
 						active={pathname === `/chat/conversation/${username}`}
-						nickname={nickname}
+						nickname={nickname!}
 						avatar={avatar}
 						lastMessage={lastMessage}
 						date={date}

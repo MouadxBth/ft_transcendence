@@ -1,38 +1,27 @@
 import React from "react";
-import {
-	Menubar,
-	MenubarContent,
-	MenubarItem,
-	MenubarMenu,
-	MenubarSeparator,
-	MenubarShortcut,
-	MenubarTrigger,
-  } from "@/components/ui/menubar"
+import ChannelHeaderMenu from "./ChannelHeaderMenu";
+
 
 export interface ChannelHeader {
 	name: string;
 }
 
-async function handleLeave() {
-	const res = leaveChannel
-}
 
 const ChannelHeader = ({ name }: ChannelHeader) => {
+	
+	console.log("channel status: ", status, name);
+
 	return (
-		<Menubar>
-			<MenubarMenu>
-					<div className="w-full flex items-center justify-center p-2">
-				<MenubarTrigger>
-						{name}
-				</MenubarTrigger>
-					</div>
-				<MenubarContent>
-					<MenubarItem onClick={() => console.log("clicked")}>
-						leave channel
-					</MenubarItem>
-				</MenubarContent>
-			</MenubarMenu>
-		</Menubar>
+		<>
+		<div className="flex w-full flex-row justify-center p-2">
+			<div className="flex flex-row justify-center w-full">
+				<div className="flex flex-col justify-center">
+					{name}
+				</div>
+			</div>
+			<ChannelHeaderMenu name={name}/>
+		</div>
+		</>
 	)
 };
 

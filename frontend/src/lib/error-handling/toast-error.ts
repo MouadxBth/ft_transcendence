@@ -9,10 +9,17 @@ export const toastError = (e?: unknown) => {
 			description: JSON.stringify(e.response?.data)
 		})
 	}
+	else if (e instanceof Error) {
+		toast({
+			variant: "destructive",
+			title: e.name,
+			description: e.message
+		})
+	}
 	else {
 		toast({
 			variant: "destructive",
-			title: "Error occured",
+			title: "Unknown error occured",
 		})
 	}
 }

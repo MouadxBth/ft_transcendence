@@ -13,18 +13,6 @@ import ConversationContextProvider from "@/providers/ConversationDataContextProv
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 
-const conversationList: ConversationList = [{
-	id: 2,
-	nickname: "troy",
-	username: "troy",
-	createdAt: new Date(),
-	updatedAt: new Date(),
-	lastMessage: "...",
-	avatar: "troy",
-	messages: [] as DirectMessageApiResponse
-}]
-
-
 const ChatLayout = ({ children }: { children: React.ReactNode }) => {
 	
 	console.log("Rendered chat page <layout>");

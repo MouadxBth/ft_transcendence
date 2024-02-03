@@ -17,9 +17,11 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { joinChannel } from "@/lib/chat/channel-service-endpoints"
+import { joinChannel } from "@/lib/chat/channel/channel-service-endpoints"
 import { AxiosError } from "axios"
 import { toastError } from "@/lib/error-handling/toast-error"
+import { useChannelContext } from "@/hooks/useChannelContext"
+import { createChannelItem } from "@/lib/chat/utils"
 
 const JoinChannelFormSchema = z.object({
 	channel: z
@@ -32,6 +34,8 @@ export type JoinChannelFormType = z.infer<typeof JoinChannelFormSchema>;
 
 const JoinChannelForm = () => {
 	
+	const {channelData, setChannelData} = useChannelContext();
+
 	const form = useForm<JoinChannelFormType>({
 		resolver: zodResolver(JoinChannelFormSchema),
 	})
@@ -39,7 +43,13 @@ const JoinChannelForm = () => {
 	async function onSubmit(data: JoinChannelFormType) {
 		console.log("submitted data");
 		try {
+
 			const res = await joinChannel(data);
+			
+			const chan = await createChannelItem(data.channel);
+			channelData.push(chan);
+			setChannelData({...channelData});
+
 			toast({
 				title: "Created channel with following attributes",
 				description: (

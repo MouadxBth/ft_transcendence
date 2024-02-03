@@ -31,6 +31,7 @@ export const ConversationMessageArea = ({ username }: {username: string}) => {
 	};
 	
 	useEffect(() => {
+		scrollToBottom();
 	});
 
 	console.log("finished rendering conversation list...", messages);

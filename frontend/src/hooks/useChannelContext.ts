@@ -1,11 +1,9 @@
-import { ChannelDmItem } from "@/lib/types/channel-api-response";
+import { ChannelApiResponse, ChannelDmItem, ChannelUserListApiResponse } from "@/lib/types/channel-api-response";
 import { createContext, useContext } from "react"
 
-export interface ChannelItem {
-	name: string,
-	avatar: string,
-	date: Date,
+export interface ChannelItem extends ChannelApiResponse {
 	lastMessage: string,
+	members: ChannelUserListApiResponse,
 	messages: ChannelDmItem[],
 }
 

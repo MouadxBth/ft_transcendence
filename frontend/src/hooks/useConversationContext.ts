@@ -5,7 +5,7 @@ import { ConversationApiResponse } from "@/lib/types/conversation-api-response";
 
 export interface ConversationItem {
 	id: number,
-	nickname: string,
+	nickname: string | null,
 	username: string,
 	avatar: string,
 	createdAt: Date,
