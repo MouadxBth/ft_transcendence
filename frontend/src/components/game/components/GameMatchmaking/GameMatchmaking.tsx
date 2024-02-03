@@ -1,69 +1,70 @@
 "use client";
-import useFriends from "@/hooks/user/useFriends";
-import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import React from "react";
-import { useEffect, useState } from "react";
-import { type CarouselApi } from "@/components/ui/carousel";
-import { useAuthentication } from "@/hooks/authentication/useAuthentication";
-import SelectMode from "./SelectMode";
-import SelectModeColor from "./SelectModeColor";
-import GameMatchmakingButtons from "./GameMatchmakingButtons";
-import GameSelectFriend from "./GameSelectFriend";
 import MatchmakingTitle from "./MatchmakingTitle";
-import { Checkbox } from "@/components/ui/checkbox";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ControllerRenderProps, FieldValue, UseFormReturn, useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "@/components/ui/button";
+import { Form, FormField } from "@/components/ui/form";
+import { toast } from "@/components/ui/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import SelectModeField from "./SelectModeField";
+import SelectRankedField from "./SelectRankedField";
+import InviteField from "./InviteField";
+
+const FormSchema = z.object({
+	mode: z.string().default("classic").optional(),
+	ranked: z.boolean().default(false).optional(),
+	invite: z
+		.string({
+			required_error: "Please select a language.",
+		})
+		.optional()
+		.default(""),
+});
+export interface Matchmakingprops {
+	form: UseFormReturn<FieldValue<any>>;
+}
 
 const GameMatchmaking = () => {
-	const [isCustom, setIscCustom] = useState(false);
-	const handleClassic = () => {
-		setIscCustom(false);
-	};
-	const handleCustom = () => {
-		setIscCustom(true);
-	};
-	const [api, setApi] = useState<CarouselApi>();
-	const [current, setCurrent] = useState(0);
+	const form = useForm<z.infer<typeof FormSchema>>({
+		resolver: zodResolver(FormSchema),
+		defaultValues: {
+			mode: "classicmode",
+			ranked: false,
+		},
+	});
 
-	useEffect(() => {
-		if (!api) {
-			return;
-		}
-		setCurrent(api.selectedScrollSnap());
-
-		api.on("select", () => {
-			setCurrent(api.selectedScrollSnap());
+	function onSubmit(data: z.infer<typeof FormSchema>) {
+		toast({
+			title: "You submitted the following values:",
+			description: (
+				<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+					<code className="text-white">{JSON.stringify(data, null, 2)}</code>
+				</pre>
+			),
 		});
-	}, [api]);
-	const { authenticatedUser } = useAuthentication();
-	const username = authenticatedUser!.user.username;
-	const { data, isLoading, isSuccess, isError, error } = useFriends(username);
-	if (isLoading) {
-		return <p>Loading...</p>;
-	}
-
-	if (isError) {
-		return <p>Error: {error?.message}</p>;
-	}
-
-	if (isSuccess) {
-		console.log("Friends:", data);
 	}
 	return (
-		<div className="w-full h-full flex items-center justify-center">
-			<ResizablePanelGroup direction="horizontal">
-				<ResizablePanel>
-					<div className="h-full w-full flex flex-col items-center justify-center space-y-5">
-						<MatchmakingTitle />
-						<SelectMode />
-						<div className="flex items-center space-x-3">
-							<Checkbox /> <span className="text-md">Ranked</span>
-						</div>
-						<GameSelectFriend />
-						<GameMatchmakingButtons />
-					</div>
-				</ResizablePanel>
-			</ResizablePanelGroup>
-		</div>
+		<ScrollArea className="w-full h-full flex items-center justify-center">
+			<MatchmakingTitle />
+			<Form {...form}>
+				<form
+					onSubmit={form.handleSubmit(onSubmit)}
+					className="space-y-6 flex flex-col items-center justify-center"
+				>
+					<SelectModeField form={form} />
+					<SelectRankedField form={form} />
+					<InviteField form={form} />
+					<Button
+						type="submit"
+						className="w-1/4"
+					>
+						Go !
+					</Button>
+				</form>
+			</Form>
+		</ScrollArea>
 	);
 };
 
