@@ -1,5 +1,5 @@
 import axiosClient from "@/lib/axios";
-import { blockStatusSchema } from "@/lib/types/block-status";
+import { blockStatusSchema } from "@/lib/types/block/block-status";
 import { useQuery } from "@tanstack/react-query";
 
 export const parseBlockStatus = (data: unknown) => {

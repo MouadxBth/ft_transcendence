@@ -3,12 +3,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
-import { ProfileFormType, profileFormSchema } from "@/lib/types/profile-form";
 import useProfileFrom from "@/hooks/useProfileForm";
 import { cn } from "@/lib/utils";
 import SettingsFormImageFields from "./SettingsFormImageFields";
 import SettingsFormFields from "./SettingsFormFields";
 import SettingsFormButtons from "./SettingsFormButtons";
+import { ProfileFormType, profileFormSchema } from "@/lib/types/form/profile-form";
 
 const SettingsForm = ({ className }: { className?: string }) => {
 	const nickname = useProfileFrom();

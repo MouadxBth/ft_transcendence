@@ -1,5 +1,5 @@
 import axiosClient from "@/lib/axios";
-import { userSchema } from "@/lib/types/user";
+import { userSchema } from "@/lib/types/user/user";
 import { useQuery } from "@tanstack/react-query";
 
 export const parseUserProfile = async (data: unknown) => {

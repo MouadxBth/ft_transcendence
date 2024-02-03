@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import useSockets from "@/hooks/socket/useSockets";
 import useOnlineStatus from "@/hooks/user/useOnlineStatus";
-import { User } from "@/lib/types/user";
+import { User } from "@/lib/types/user/user";
 import React, { useEffect, useState } from "react";
 
 export interface ProfileOnlineStatusProps {

@@ -1,4 +1,4 @@
-import { ProfileFormType } from "@/lib/types/profile-form";
+import { ProfileFormType } from "@/lib/types/form/profile-form";
 import AvatarFormField from "../../nickname/form/image/AvatarFormField";
 import BannerFormField from "../../nickname/form/image/BannerFormField";
 import { UseFormReturn } from "react-hook-form";

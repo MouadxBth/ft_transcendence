@@ -14,6 +14,9 @@ const ProfileBlock = ({ target, className }: ProfileBlockProps) => {
 	const { notifications } = useSockets();
 
 	const block = () => {
+		notifications?.emit("safe_cancel_friend_request", target);
+		notifications?.emit("safe_deny_friend_request", target);
+		notifications?.emit("safe_unfriend_request", target);
 		notifications?.emit("block_user", target);
 	};
 	return (

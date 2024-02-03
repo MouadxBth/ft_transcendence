@@ -1,7 +1,7 @@
 import axiosClient from "@/lib/axios";
+import { userSchema } from "@/lib/types/user/user";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { userSchema } from "@/lib/types/user";
 
 export const parseUserProfiles = (data: unknown) => {
 	const result = z.array(userSchema).safeParse(data);

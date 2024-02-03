@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import useSockets from "@/hooks/socket/useSockets";
-import React from "react";
 
 export interface ProfileUnblockProps {
 	username: string;

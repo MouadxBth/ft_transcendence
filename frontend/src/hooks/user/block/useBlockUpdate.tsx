@@ -1,8 +1,8 @@
 import { useToast } from "@/components/ui/use-toast";
-import { BlockStatusType } from "@/lib/types/block-status";
 import { useEffect } from "react";
-import { useAuthentication } from "../authentication/useAuthentication";
-import useSockets from "../socket/useSockets";
+import { useAuthentication } from "../../authentication/useAuthentication";
+import useSockets from "../../socket/useSockets";
+import { BlockStatusType } from "@/lib/types/block/block-status";
 
 const useBlockUpdate = (
 	target: string,

@@ -1,11 +1,11 @@
 import { useToast } from "@/components/ui/use-toast";
 import axiosClient from "@/lib/axios";
-import { OtpFormType } from "@/lib/types/otp-form";
 import { joinLines } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { parseAuthenticatedUser } from "./useAuthenticatedUser";
 import { useAuthentication } from "./useAuthentication";
+import { OtpFormType } from "@/lib/types/form/otp-form";
 
 const useOtp = () => {
 	const { toast } = useToast();

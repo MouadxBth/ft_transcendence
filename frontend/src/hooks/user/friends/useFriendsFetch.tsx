@@ -1,5 +1,5 @@
 import axiosClient from "@/lib/axios";
-import { friendSchema } from "@/lib/types/friend";
+import { friendSchema } from "@/lib/types/friend/friend";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
@@ -19,7 +19,7 @@ const fetchData = async (username: string | null) => {
 		.then(({ data }) => parseFriends(data));
 };
 
-const useFriends = (username: string | null) => {
+const useFriendsFetch = (username: string | null) => {
 	const { data, isLoading, isSuccess, isError, error } = useQuery({
 		retry: false,
 		queryKey: ["friends", username],
@@ -29,4 +29,4 @@ const useFriends = (username: string | null) => {
 	return { data, isLoading, isSuccess, isError, error };
 };
 
-export default useFriends;
+export default useFriendsFetch;

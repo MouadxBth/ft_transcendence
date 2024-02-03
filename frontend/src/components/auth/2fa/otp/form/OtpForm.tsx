@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import FormButton from "@/components/auth/FormButton";
 import { OtpFormField } from "./OtpFormField";
-import { OtpFormType, otpFormSchema } from "@/lib/types/otp-form";
 import useOtp from "@/hooks/authentication/useOtp";
+import { OtpFormType, otpFormSchema } from "@/lib/types/form/otp-form";
 
 export const OtpForm = () => {
 	const form = useForm<OtpFormType>({

@@ -1,10 +1,10 @@
 "use client";
 
 import { Separator } from "../ui/separator";
-import { User } from "@/lib/types/user";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
 import { useSearch } from "@/hooks/search/useSearch";
+import { User } from "@/lib/types/user/user";
 
 const UserSearchListItem = ({ username, nickname, firstName, lastName, avatar }: User) => {
 	const { setOpen } = useSearch();

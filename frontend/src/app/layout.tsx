@@ -4,8 +4,9 @@ import AuthenticationContextProvider from "@/providers/AuthenticationContextProv
 import { AUTHORS } from "@/lib/authors";
 import { Audiowide } from "next/font/google";
 import { ReactQueryClientProvider } from "@/providers/ReactQueryClientProvider";
-import { Toaster } from "@/components/ui/toaster";
+import { Sonner } from "@/components/ui/sonner";
 import SocketsContextProvider from "@/providers/SocketsContextProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const audiowide = Audiowide({ subsets: ["latin"], weight: "400" });
 
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 						<SocketsContextProvider>{children}</SocketsContextProvider>
 					</AuthenticationContextProvider>
 				</ReactQueryClientProvider>
+				<Sonner />
 				<Toaster />
 			</body>
 		</html>

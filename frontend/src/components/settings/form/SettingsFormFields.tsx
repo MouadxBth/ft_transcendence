@@ -1,8 +1,8 @@
 import { useAuthentication } from "@/hooks/authentication/useAuthentication";
-import { ProfileFormType } from "@/lib/types/profile-form";
 import GenericFormField from "../../generic/GenericFormField";
 import { UseFormReturn } from "react-hook-form";
 import settingsFormFieldsContent from "./SettingsFormFieldsContent";
+import { ProfileFormType } from "@/lib/types/form/profile-form";
 
 export interface SettingsFormFieldsProps {
 	form: UseFormReturn<ProfileFormType, any, undefined>;

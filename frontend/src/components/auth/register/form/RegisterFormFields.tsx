@@ -1,4 +1,4 @@
-import { RegisterFormType } from "@/lib/types/register-form";
+import { RegisterFormType } from "@/lib/types/form/register-form";
 
 export type RegisterFormFieldData = {
 	name: keyof RegisterFormType;

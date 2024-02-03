@@ -57,3 +57,13 @@ export const backgroundStyles = (banner: string | null) =>
 				backgroundPosition: "center",
 			}
 		: {};
+
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+export const formattedDate = (input: string) => {
+	const inputDate = new Date(input);
+	return `${months[inputDate.getMonth()]} ${inputDate.getDate()} ${inputDate.getFullYear()} ${inputDate
+		.getHours()
+		.toString()
+		.padStart(2, "0")}:${inputDate.getMinutes().toString().padStart(2, "0")}`;
+};

@@ -1,9 +1,9 @@
-import { FriendStatusType } from "@/lib/types/friend-status";
 import { useEffect } from "react";
-import { useAuthentication } from "../authentication/useAuthentication";
-import useSockets from "../socket/useSockets";
-import { User } from "@/lib/types/user";
-import { FriendRequestType } from "@/lib/types/friend-request";
+import { useAuthentication } from "../../authentication/useAuthentication";
+import useSockets from "../../socket/useSockets";
+import { User } from "@/lib/types/user/user";
+import { FriendRequestType } from "@/lib/types/friend/friend-request";
+import { FriendStatusType } from "@/lib/types/friend/friend-status";
 
 const useFriendStatusUpdate = (
 	user: User,

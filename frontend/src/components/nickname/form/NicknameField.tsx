@@ -7,7 +7,7 @@ import {
 	FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { NicknameFormType } from "@/lib/types/nickname-form";
+import { NicknameFormType } from "@/lib/types/form/nickname-form";
 import { Control } from "react-hook-form";
 
 export interface NicknameFieldProps {

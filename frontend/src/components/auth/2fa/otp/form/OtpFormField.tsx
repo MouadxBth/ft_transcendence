@@ -1,7 +1,7 @@
 import { Control } from "react-hook-form";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { OtpFormType } from "@/lib/types/otp-form";
+import { OtpFormType } from "@/lib/types/form/otp-form";
 
 type OtpFormFieldProps = {
 	control: Control<OtpFormType, any>;
