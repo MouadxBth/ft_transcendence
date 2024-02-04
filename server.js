@@ -35,7 +35,6 @@ io.on("connect", (socket) => {
 // }
   socket.on("press", (direction) => {
     players[socket.id].y += direction === "up" ? -10 : 10;
-    console.log("player moved");
     io.emit("updatePlayers", players);
   });
 
