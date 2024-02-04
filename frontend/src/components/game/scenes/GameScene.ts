@@ -24,8 +24,17 @@ export class GameScene extends GameConfigScene {
 	processPlayerInput() {
 		if (!this.gameComponents.cursors) return;
 
-		if (this.gameComponents.cursors.up.isDown) this.gameComponents.paddleLeft.y -= 10;
-		else if (this.gameComponents.cursors.down.isDown) this.gameComponents.paddleLeft.y += 10;
+		if (this.gameComponents.cursors.up.isDown) {
+			this.gameComponents.socket.emit("playerMoved", "up");
+			this.gameComponents.socket.on("playerMoved", (playerData : any) => {
+				
+			})
+			// this.gameComponents.paddleLeft.y -= 10;
+		} else if (this.gameComponents.cursors.down.isDown)
+		{
+			this.gameComponents.socket.emit("playedMoved", "down");
+			// this.gameComponents.paddleLeft.y += 10;	
+		} 
 	}
 
 	checkScore() {
