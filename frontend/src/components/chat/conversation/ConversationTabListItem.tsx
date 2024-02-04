@@ -24,7 +24,7 @@ const ConversationTabListItem = ({
 		<>
 			<Link
 				href={`/chat/conversation/${username}`}
-				className={cn("p-4 bg-black flex space-x-2", {
+				className={cn("p-4 m-3 bg-black flex space-x-2", {
 					" bg-secondary": active,
 				})}
 			>

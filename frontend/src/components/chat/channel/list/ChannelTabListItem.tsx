@@ -20,7 +20,7 @@ const ChannelTabListItem = ({
 		<>
 			<Link
 				href={`/chat/channel/${name}`}
-				className={cn("p-4 flex space-x-2", {
+				className={cn("p-4 m-3 flex space-x-2", {
 					"bg-secondary": active,
 				})}
 			>

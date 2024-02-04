@@ -24,7 +24,7 @@ const ChannelTabList = ({ data } : {data: ChannelList}) => {
 					<ChannelTabListItem
 						{...item}
 						key={item.name}
-						active={pathname === `/chat/channel/${name}`}
+						active={pathname === `/chat/channel/${item.name}`}
 					/>
 				))
 			)}

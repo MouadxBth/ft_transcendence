@@ -21,8 +21,7 @@ const ChannelHeaderMenu = ({name}: {name: string}) => {
 	const {channelData} = useChannelContext()
 	
 	const [memberListOpen, setMemberListOpen] = useState(false);
-	
-	const { status } = channelData!.find((item) => item.name == name)!;
+	const { status } = channelData!.find((item) => item.name == decodeURIComponent(name))!;
 
 	async function handleLeave() {
 		try {
