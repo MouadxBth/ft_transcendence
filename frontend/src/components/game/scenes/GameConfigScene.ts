@@ -5,7 +5,7 @@ import { GameComponents } from "@/lib/game/GameComponents";
 import { GameState } from "@/lib/game/GameState";
 import io from "socket.io-client";
 
-// const socket: any = io("http://localhost:3001");
+// const sock: any = io("http://localhost:3001");
 
 export class GameConfigScene extends Phaser.Scene {
 	gameComponents!: GameComponents;
@@ -20,7 +20,7 @@ export class GameConfigScene extends Phaser.Scene {
 			powerUp: true,
 			gameState: GameState.IDLE,
 			player: { pid: 0, y: 0 }, //added player object
-			socket : io("http://localhost:3001"),
+			socket: io("http://localhost:3001"),
 		} as GameComponents;
 	}
 
@@ -30,7 +30,7 @@ export class GameConfigScene extends Phaser.Scene {
 	}
 	create() {
 		//*************THE CODE FOR MULTIPLAYER************* */
-		socket.on("rcv_pid", (playerData : any) => {
+		this.gameComponents.socket.on("rcv_pid", (playerData: any) => {
 			this.gameComponents.player = playerData.player;
 			console.log("played pid: " + this.gameComponents.player.pid);
 		});
