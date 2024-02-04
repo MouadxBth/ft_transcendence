@@ -32,7 +32,6 @@ const GameMatchmaking = () => {
 			ranked: false,
 		},
 	});
-
 	function onSubmit(data: z.infer<typeof FormSchema>) {
 		toast({
 			title: "You submitted the following values:",
@@ -44,24 +43,22 @@ const GameMatchmaking = () => {
 		});
 	}
 	return (
-		<>
-			<Form {...form}>
-				<form
-					onSubmit={form.handleSubmit(onSubmit)}
-					className="space-y-4 flex flex-col items-center justify-center w-full h-full"
+		<Form {...form}>
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="space-y-4 flex flex-col items-center justify-center w-full h-full"
+			>
+				<SelectModeField form={form} />
+				<SelectRankedField form={form} />
+				<InviteField form={form} />
+				<Button
+					type="submit"
+					className="w-40"
 				>
-					<SelectModeField form={form} />
-					<SelectRankedField form={form} />
-					<InviteField form={form} />
-					<Button
-						type="submit"
-						className="w-40"
-					>
-						Go !
-					</Button>
-				</form>
-			</Form>
-		</>
+					Go !
+				</Button>
+			</form>
+		</Form>
 	);
 };
 

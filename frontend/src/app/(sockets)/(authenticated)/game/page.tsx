@@ -13,20 +13,18 @@ import MatchmakingTitle from "@/components/game/components/GameMatchmaking/Match
 
 const Game = () => {
 	return (
-		<main className="flex justify-center items-center w-full h-full">
-			<Card className="max-w-3/4 max-h-3/4 flex flex-col items-center justify-center">
+		<article className="flex justify-center items-center w-full h-full container flex-col space-y-3">
+			<Card className="w-1/2 h-1/2 flex flex-col items-center justify-center">
 				<CardHeader>
 					<CardTitle>
 						<MatchmakingTitle />
 					</CardTitle>
 				</CardHeader>
-				<CardContent className="">
-					<p>
-						<GameMatchmaking />
-					</p>
+				<CardContent>
+					<GameMatchmaking />
 				</CardContent>
 			</Card>
-		</main>
+		</article>
 	);
 };
 
