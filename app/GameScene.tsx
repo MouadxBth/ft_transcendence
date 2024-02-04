@@ -144,6 +144,38 @@ export default class copy_GameScene extends Phaser.Scene {
 		});
 	}
 
+	
+	isPlayer1Point() {
+		//p1 scored
+		return this.ball.body.x < this.p2.body.x;
+	}
+	isPlayer2Point() {
+		//p2 scored
+		return this.ball.body.x > this.p1.body.x;
+	}
+	GameBackground() {
+		this.add.line(400, 300, 0, 0, 0, 800, 0xffffff, 1).setLineWidth(2.5, 2.5);
+		
+		this.add.circle(400, 300, 50).setStrokeStyle(5, 0xffffff, 1);
+	}
+	
+	handlePaddleBallCollision() {
+		const body = this.ball.body;
+		const vel = body.velocity;
+		vel.x *= 1.05;
+		vel.y *= 1.05;
+		
+		body.setVelocity(vel.x, vel.y);
+	}
+	resetBall() {
+		this.ball.setPosition(400, 300);
+		
+		const angle = Phaser.Math.Between(0, 360);
+		const vec = this.physics.velocityFromAngle(angle, 300);
+		
+		this.ball.body.setVelocity(vec.x, vec.y);
+	}
+
 	powerUpActivation() {
 		//need to check if power ups are enabled
 		if (this.p1Score === 2) {
@@ -159,37 +191,7 @@ export default class copy_GameScene extends Phaser.Scene {
 		if (this.p1Score !== 0) this.p1.displayHeight = this.paddleHeight;
 		if (this.p2Score !== 0) this.p2.displayHeight = this.paddleHeight;
 	}
-
-	isPlayer1Point() {
-		//p1 scored
-		return this.ball.body.x < this.p2.body.x;
-	}
-	isPlayer2Point() {
-		//p2 scored
-		return this.ball.body.x > this.p1.body.x;
-	}
-	GameBackground() {
-		this.add.line(400, 300, 0, 0, 0, 800, 0xffffff, 1).setLineWidth(2.5, 2.5);
-
-		this.add.circle(400, 300, 50).setStrokeStyle(5, 0xffffff, 1);
-	}
-
-	handlePaddleBallCollision() {
-		const body = this.ball.body;
-		const vel = body.velocity;
-		vel.x *= 1.05;
-		vel.y *= 1.05;
-
-		body.setVelocity(vel.x, vel.y);
-	}
-	resetBall() {
-		this.ball.setPosition(400, 300);
-
-		const angle = Phaser.Math.Between(0, 360);
-		const vec = this.physics.velocityFromAngle(angle, 300);
-
-		this.ball.body.setVelocity(vec.x, vec.y);
-	}
+	
 	CheckScore() {
 		if (this.isPlayer1Point()) {
 			//p1 left scored
