@@ -23,12 +23,14 @@ import { toastError } from "@/lib/error-handling/toast-error"
 import { useContext } from "react"
 import { useChannelContext } from "@/hooks/useChannelContext"
 import { createChannelItem } from "@/lib/chat/utils"
+import useAuthenticatedUser from "@/hooks/authentication/useAuthenticatedUser"
 
 const FormSchema = z.object({
 	name: z
 		.string(),
 	topic: z
-		.string(),
+		.string()
+		.optional(),
 	status: z
 		.enum(["PRIVATE", "PUBLIC", "PROTECTED"], {
 			required_error: "PLEASE SELECT A VALUE!!"
@@ -42,9 +44,13 @@ export type CreateChannelDto = z.infer<typeof FormSchema>;
 const JoinChannelForm = () => {
 	
 	const { channelData, setChannelData } = useChannelContext();
+	const {data: userData} = useAuthenticatedUser();
 
 	const form = useForm<CreateChannelDto>({
 		resolver: zodResolver(FormSchema),
+		defaultValues: {
+			status: "PUBLIC"
+		}
 	})
 
 	async function onSubmit(data: CreateChannelDto) {
@@ -54,9 +60,9 @@ const JoinChannelForm = () => {
 		try {
 			
 			const res = await createChannel(data);
-			const chan = await createChannelItem(data.name);
+			const chan = await createChannelItem(data.name, userData?.user.username!);
 			channelData.push(chan);
-			setChannelData({...channelData});
+			setChannelData([...channelData]);
 			
 			toast({
 				title: "Created channel with following attributes",

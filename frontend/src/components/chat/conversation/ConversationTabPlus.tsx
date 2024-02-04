@@ -51,6 +51,7 @@ const ConversationTabPlus = () => {
 					<DialogDescription>
 						{/* <UserSearch /> */}
 						<Textarea
+							className="resize-none"
 							callback={handleSubmit}
 						/>
 					</DialogDescription>

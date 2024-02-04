@@ -7,16 +7,15 @@ import { CreateChannelDto } from "@/components/chat/channel/CreateChannelForm";
 import useAuthenticatedUser from "@/hooks/authentication/useAuthenticatedUser";
 import { ChannelList } from "@/hooks/useChannelContext";
 
-export async function createChannelItem(name: string) : Promise<ChannelItem> {
+export async function createChannelItem(name: string, username: string) : Promise<ChannelItem> {
 	
 	const { messages } = await fetchChannelDirectMessages(name);
-	const {data} = useAuthenticatedUser();
 	const channel = await fetchChannel(name);
-	const ownerId = await fetchChannelMember(name, data!.user.username);
+	// const ownerId = await fetchChannelMember(name, username);
 	
 	return {
 		...channel,
-		members: [ownerId],
+		members: [],
 		messages: messages || [],
 		lastMessage: messages.length ? messages[messages.length - 1].content : "n/a"
 	}		

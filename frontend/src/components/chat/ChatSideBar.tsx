@@ -3,17 +3,7 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import ConversationTab from "./conversation/ConversationTab";
-import { ConversationTabListItemProps } from "./conversation/ConversationTabListItem";
 import ChannelTab from "./channel/ChannelTab";
-
-const random = Array.from({ length: 50 }).map((_, i, a) => {
-	return {
-		nickname: `nickname-${a.length - i}`,
-		avatar: "https://github.com/shadcn.png",
-		lastMessage: "Hello, World",
-		date: new Date(),
-	} as ConversationTabListItemProps;
-});
 
 const ChatSideBar = () => {
 	return (
