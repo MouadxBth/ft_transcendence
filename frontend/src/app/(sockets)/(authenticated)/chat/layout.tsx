@@ -5,6 +5,7 @@ import ChatSideBar from "@/components/chat/ChatSideBar";
 import Navbar from "@/components/navbar/Navbar";
 import { ChannelList, channelContext } from "@/hooks/useChannelContext";
 import { ConversationList } from "@/hooks/useConversationContext";
+import { fetchAllChannels, fetchChannelDirectMessages, fetchChannelUsers } from "@/lib/chat/channel/channel-service-endpoints";
 import { fetchAllConversations, fetchAllDirectMessages } from "@/lib/chat/chat-service-endpoints";
 import fetchUser from "@/lib/chat/user-service-endpoints";
 import { DirectMessageApiResponse } from "@/lib/types/direct-message-api-response";
@@ -45,6 +46,35 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
 		
 		return data;
 	}
+
+	async function fetchChannelData() {
+		
+		const channels = await fetchAllChannels();
+		
+		let data: ChannelList = [];
+		
+		for (var i = 0; i < channels.length; i++) {
+			
+			const { messages } = await fetchChannelDirectMessages(channels[i].name);
+			const members = await fetchChannelUsers(channels[i].name);			
+			
+			data.push({
+				...channels[i],
+				members: members,
+				messages: messages,
+				lastMessage: messages.length ? messages[messages.length - 1].content : "N/A"
+			})
+		}
+		await new Promise(r => setTimeout(r, 500));
+		return data;
+	}
+	
+	async function fetchChatData() {
+		const conversationData = await fetchConversationData();
+		const channelData = await fetchChannelData();
+		return {conversationData, channelData};
+	}
+
 	const {
 		isLoading,
 		data,
@@ -52,7 +82,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
 		error
 	} = useQuery({
 		queryKey: [],
-		queryFn: fetchConversationData
+		queryFn: fetchChatData
 	})
 
 	if (isLoading) {
@@ -75,8 +105,8 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
 
 	return (
 		<main className="h-full flex">
-			<ChannelContextProvider>
-				<ConversationContextProvider data={data!}>
+			<ChannelContextProvider data={data!.channelData}>
+				<ConversationContextProvider data={data!.conversationData}>
 
 				<ChatSideBar />
 			

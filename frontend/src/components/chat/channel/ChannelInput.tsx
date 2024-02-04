@@ -12,17 +12,20 @@ const ChannelInput = ({ name } : {name: string}) => {
 
 	console.log(authenticatedUser);
 	function handleSubmit(value: string) {
-		console.log("msg", value);
-		channels?.emit("send_message", {message: "hey", channelName: "random"});
-		const channelMessages = channelData.find((ele) => ele.name === name)?.messages
-		channelMessages!.push({
-			id: 90,
-			senderId: authenticatedUser?.user.nickname!,
-			content: value,
-			createdAt: Date(),
-			updatedAt: Date(),
- 		})
-		setChannelData(channelData.slice());
+
+		channels?.emit("send_message", {message: value, channelName: name});
+		
+		console.log("on submit, sent_message", value);
+		// const channelMessages = channelData.find((ele) => ele.name === name)?.messages
+		
+		// channelMessages!.push({
+		// 	id: 90,
+		// 	senderId: authenticatedUser?.user.nickname!,
+		// 	content: value,
+		// 	createdAt: Date(),
+		// 	updatedAt: Date(),
+ 		// })
+		// setChannelData(channelData.slice());
 	}
 
 	return (

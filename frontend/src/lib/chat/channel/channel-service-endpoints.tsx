@@ -45,7 +45,7 @@ export async function fetchChannelDirectMessages(target: string) : Promise<Chann
 	const res = ChannelEndpoint.get(`/${target}/messages`);
 
 	return res.then((res) => {
-		
+		console.log("dmsss:", res.data);
 		const parsedRes = ChannelDmApiResponseSchema.safeParse(res.data); 
 		if (!parsedRes.success) {
 			throw parsedRes.error;
