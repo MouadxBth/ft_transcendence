@@ -26,15 +26,23 @@ export class GameScene extends GameConfigScene {
 
 		if (this.gameComponents.cursors.up.isDown) {
 			this.gameComponents.socket.emit("playerMoved", "up");
-			this.gameComponents.socket.on("playerMoved", (playerData : any) => {
-				
-			})
 			// this.gameComponents.paddleLeft.y -= 10;
-		} else if (this.gameComponents.cursors.down.isDown)
-		{
+		} else if (this.gameComponents.cursors.down.isDown) {
 			this.gameComponents.socket.emit("playedMoved", "down");
-			// this.gameComponents.paddleLeft.y += 10;	
-		} 
+			// this.gameComponents.paddleLeft.y += 10;
+		}
+	}
+
+	updatePlayers() {
+		this.gameComponents.socket.on("updatePlayers", (playerData : any) => {
+			Object.values(playerData).forEach((playerValues: any) => {
+				if (playerValues.playerValuesID === 1) {
+					this.gameComponents.paddleLeft.y = this.gameComponents.player.y;
+				} else if (playerValues.playerID === 2) {
+					this.gameComponents.paddleRight.y = this.gameComponents.player.y;
+				}
+			});
+		});
 	}
 
 	checkScore() {
