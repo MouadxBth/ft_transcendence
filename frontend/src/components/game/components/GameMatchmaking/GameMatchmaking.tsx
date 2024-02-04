@@ -1,13 +1,11 @@
 "use client";
-import MatchmakingTitle from "./MatchmakingTitle";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ControllerRenderProps, FieldValue, UseFormReturn, useForm } from "react-hook-form";
+import { FieldValue, UseFormReturn, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import SelectModeField from "./SelectModeField";
 import SelectRankedField from "./SelectRankedField";
 import InviteField from "./InviteField";
@@ -46,25 +44,24 @@ const GameMatchmaking = () => {
 		});
 	}
 	return (
-		<ScrollArea className="w-full h-full flex items-center justify-center">
-			<MatchmakingTitle />
+		<>
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
-					className="space-y-6 flex flex-col items-center justify-center"
+					className="space-y-4 flex flex-col items-center justify-center w-full h-full"
 				>
 					<SelectModeField form={form} />
 					<SelectRankedField form={form} />
 					<InviteField form={form} />
 					<Button
 						type="submit"
-						className="w-1/4"
+						className="w-40"
 					>
 						Go !
 					</Button>
 				</form>
 			</Form>
-		</ScrollArea>
+		</>
 	);
 };
 
