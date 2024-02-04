@@ -25,4 +25,10 @@ export interface GameComponents {
 
 	//power up
 	powerUp: boolean;
+
+	//players object
+	player : any;
+
+	//socket var
+	socket : any;
 }
