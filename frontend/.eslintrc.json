@@ -1,8 +1,0 @@
-{
-	"extends": ["next/core-web-vitals", "plugin:prettier/recommended"],
-	"ignorePatterns": ["node_modules/", ".next/", ".eslintrc.js", "*.config.js", ".github"],
-	"rules": {
-		"linebreak-style": ["error", "unix"],
-		"semi": ["error", "always"]
-	}
-}
