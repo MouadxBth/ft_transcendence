@@ -28,7 +28,7 @@ export class GameScene extends GameConfigScene {
 			this.gameComponents.socket.emit("playerMoved", "up");
 			// this.gameComponents.paddleLeft.y -= 10;
 		} else if (this.gameComponents.cursors.down.isDown) {
-			this.gameComponents.socket.emit("playedMoved", "down");
+			this.gameComponents.socket.emit("playerMoved", "down");
 			// this.gameComponents.paddleLeft.y += 10;
 		}
 	}
