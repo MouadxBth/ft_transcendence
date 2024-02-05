@@ -3,12 +3,13 @@ import {
 	FormDescription,
 	FormField,
 	FormItem,
-	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { RadioGroup } from "@/components/ui/radio-group";
 import React from "react";
 import { Matchmakingprops } from "./GameMatchmaking";
+import SuperModeFormItem from "./SuperModeFormItem";
+import ClassicModeFormItem from "./ClassicModeFormItem";
 
 const SelectModeField = ({ form }: Matchmakingprops) => {
 	return (
@@ -25,18 +26,8 @@ const SelectModeField = ({ form }: Matchmakingprops) => {
 								defaultValue={field.value}
 								className="flex space-x-1 items-center justify-center space-y-0"
 							>
-								<FormItem className="flex items-center space-x-3 space-y-0">
-									<FormControl>
-										<RadioGroupItem value="classicmode" />
-									</FormControl>
-									<FormLabel className="font-normal">Classic Mode</FormLabel>
-								</FormItem>
-								<FormItem className="flex items-center space-x-3 space-y-0">
-									<FormControl>
-										<RadioGroupItem value="supermode" />
-									</FormControl>
-									<FormLabel className="font-normal">Super Mode</FormLabel>
-								</FormItem>
+								<ClassicModeFormItem />
+								<SuperModeFormItem />
 							</RadioGroup>
 						</FormControl>
 						<FormMessage />
