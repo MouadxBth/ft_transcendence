@@ -1,14 +1,6 @@
 "use client";
 import GameMatchmaking from "@/components/game/components/GameMatchmaking/GameMatchmaking";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import MatchmakingTitle from "@/components/game/components/GameMatchmaking/MatchmakingTitle";
 
 const Game = () => {

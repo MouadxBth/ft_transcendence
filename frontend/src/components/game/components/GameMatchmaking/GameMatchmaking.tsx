@@ -4,7 +4,7 @@ import { FieldValue, UseFormReturn, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Form, FormField } from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import SelectModeField from "./SelectModeField";
 import SelectRankedField from "./SelectRankedField";

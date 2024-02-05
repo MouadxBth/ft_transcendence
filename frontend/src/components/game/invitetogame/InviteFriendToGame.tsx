@@ -4,12 +4,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Form, FormField } from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import SelectModeField from "../components/GameMatchmaking/SelectModeField";
 import SelectRankedField from "../components/GameMatchmaking/SelectRankedField";
 import InvitedFriendItem from "./InvitedFriendItem";
-import { useState } from "react";
 
 const FormSchema = z.object({
 	mode: z.string().default("classic").optional(),

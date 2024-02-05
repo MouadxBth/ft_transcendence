@@ -1,12 +1,8 @@
 "use client";
-import ProfileFriendsCard from "@/components/profile/friends/ProfileFriendsCard";
 import { useAuthentication } from "@/hooks/authentication/useAuthentication";
 import useFriendsFetch from "@/hooks/user/friends/useFriendsFetch";
 import { FriendType } from "@/lib/types/friend/friend";
 import { useEffect, useState } from "react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import {
 	Dialog,
 	DialogContent,
@@ -16,7 +12,6 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import MatchmakingTitle from "@/components/game/components/GameMatchmaking/MatchmakingTitle";
-import GameMatchmaking from "@/components/game/components/GameMatchmaking/GameMatchmaking";
 import InviteFriendToGame from "@/components/game/invitetogame/InviteFriendToGame";
 
 const Page = () => {
