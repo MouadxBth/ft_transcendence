@@ -27,7 +27,7 @@ export interface GameComponents {
 	powerUp: boolean;
 
 	//players object
-	player : any;
+	player : {PID : number, y : number};
 
 	//socket var
 	socket : any;
