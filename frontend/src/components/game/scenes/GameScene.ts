@@ -1,7 +1,8 @@
 import { GameComponents } from "@/lib/game/GameComponents";
 import { GameState } from "@/lib/game/GameState";
 import { GameBackgroundSceneKey, GameOverSceneKey } from "../consts/SceneKeys";
-import { GameConfigScene } from "./GameConfigScene";
+import { GameConfigScene, socket } from "./GameConfigScene";
+// import { PlayersInter } from "@/lib/game/Server";
 
 export class GameScene extends GameConfigScene {
 	update() {
@@ -25,20 +26,20 @@ export class GameScene extends GameConfigScene {
 		if (!this.gameComponents.cursors) return;
 
 		if (this.gameComponents.cursors.up.isDown) {
-			this.gameComponents.socket.emit("playerMoved", "up");
+			socket.emit("playerMoved", "up");
 			// this.gameComponents.paddleLeft.y -= 10;
 		} else if (this.gameComponents.cursors.down.isDown) {
-			this.gameComponents.socket.emit("playerMoved", "down");
+			socket.emit("playerMoved", "down");
 			// this.gameComponents.paddleLeft.y += 10;
 		}
 	}
 
 	updatePlayers() {
-		this.gameComponents.socket.on("updatePlayers", (playerData : any) => {
-			Object.values(playerData).forEach((playerValues: any) => {
-				if (playerValues.playerValuesID === 1) {
+		socket.on("updatePlayers", (playersObjectList: any) => {
+			Object.values(playersObjectList).forEach((playerObject: any) => {
+				if (playerObject.PID === 1) {
 					this.gameComponents.paddleLeft.y = this.gameComponents.player.y;
-				} else if (playerValues.playerID === 2) {
+				} else if (playerObject.PID === 2) {
 					this.gameComponents.paddleRight.y = this.gameComponents.player.y;
 				}
 			});
