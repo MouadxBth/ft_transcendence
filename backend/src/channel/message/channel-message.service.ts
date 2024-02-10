@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { MessageDto } from "../dto/message.dto";
 import { WsException } from "@nestjs/websockets";
 import { PrismaService } from "src/prisma/prisma.service";
-import { AuthenticatedUser } from "src/auth/entities/authenticated-user.entity";
 import { User } from "src/user/entities/user.entity";
 
 @Injectable()
@@ -10,7 +9,7 @@ export class ChannelMessageService {
 	constructor(private readonly prisma: PrismaService) {}
 
 	async findLastSent(channel: string, cursor: number, quantity: number) {
-		if (cursor <= 0) throw new HttpException("Invalid Cursor!", HttpStatus.BAD_REQUEST);
+		// if (cursor <= 0) throw new HttpException("Invalid Cursor!", HttpStatus.BAD_REQUEST);
 
 		if (quantity <= 0) throw new HttpException("Invalid quantity!", HttpStatus.BAD_REQUEST);
 
@@ -20,14 +19,26 @@ export class ChannelMessageService {
 				select: {
 					messages: {
 						orderBy: { createdAt: "desc" },
-						cursor: { id: cursor },
+						cursor: cursor < 0 ? undefined : { id: cursor },
 						take: quantity,
 						select: {
 							id: true,
 							channel: false,
 							channelId: false,
-							sender: false,
-							senderId: true,
+							sender: {
+								select: {
+									user: {
+										select: {
+											username: true,
+											nickname: true,
+											avatar: true,
+										},
+									},
+									admin: true,
+									muted: true,
+									id: true,
+								},
+							},
 							content: true,
 							createdAt: true,
 							updatedAt: true,
@@ -67,6 +78,21 @@ export class ChannelMessageService {
 			where: {
 				id: id,
 			},
+			include: {
+				sender: {
+					select: {
+						admin: true,
+						muted: true,
+						user: {
+							select: {
+								username: true,
+								nickname: true,
+								avatar: true,
+							},
+						},
+					},
+				},
+			},
 		});
 
 		if (!message || message.length === 0)
@@ -74,7 +100,7 @@ export class ChannelMessageService {
 
 		if (!messageResult) throw new HttpException("No such message!", HttpStatus.BAD_REQUEST);
 
-		if (messageResult.senderId != user.username)
+		if (messageResult.sender.user.username != user.username)
 			throw new HttpException("You're not the sender of the message", HttpStatus.BAD_REQUEST);
 
 		if (messageResult.channelId != channel)
@@ -98,11 +124,26 @@ export class ChannelMessageService {
 			where: {
 				id: id,
 			},
+			include: {
+				sender: {
+					select: {
+						admin: true,
+						muted: true,
+						user: {
+							select: {
+								username: true,
+								nickname: true,
+								avatar: true,
+							},
+						},
+					},
+				},
+			},
 		});
 
 		if (!messageResult) throw new HttpException("No such message!", HttpStatus.BAD_REQUEST);
 
-		if (messageResult.senderId != user.username)
+		if (messageResult.sender.user.username != user.username)
 			throw new HttpException("You're not the sender of the message", HttpStatus.BAD_REQUEST);
 
 		if (messageResult.channelId != channel)
@@ -118,39 +159,46 @@ export class ChannelMessageService {
 		});
 	}
 
-	async verifyMessage(authenticatedUser: AuthenticatedUser, messageBody: MessageDto) {
+	async verifyMessage(username: string, messageBody: MessageDto) {
 		const channelResult = await this.prisma.channel.findUnique({
 			where: { name: messageBody.channelName },
-			include: {
-				members: true,
+			select: {
+				members: {
+					where: {
+						userId: username,
+					},
+				},
 				banned: {
+					where: {
+						username,
+					},
 					select: {
 						username: true,
+						nickname: true,
+						avatar: true,
 					},
 				},
 			},
 		});
 
 		if (!channelResult) throw new WsException("Channel doesn't exist!");
-		const member = channelResult.members.find(
-			(value) => value.userId === authenticatedUser.user.username
-		);
-		const banned = channelResult.banned.find(
-			(banned) => banned.username === authenticatedUser.user.username
-		);
+		const member = channelResult.members.find((value) => value.userId === username);
+		const banned = channelResult.banned.find((banned) => banned.username === username);
 
 		if (!member) throw new WsException("User is not a member!");
 		if (banned) throw new WsException("User is banned!");
 		if (member.muted) throw new WsException("User is muted!");
+
+		return channelResult;
 	}
 
-	async createMessage(authenticatedUser: AuthenticatedUser, messageBody: MessageDto) {
+	async createMessage(id: number, messageBody: MessageDto) {
 		return await this.prisma.message.create({
 			data: {
 				content: messageBody.message,
 				sender: {
 					connect: {
-						username: authenticatedUser.user.username,
+						id,
 					},
 				},
 				channel: {
@@ -158,6 +206,28 @@ export class ChannelMessageService {
 						name: messageBody.channelName,
 					},
 				},
+			},
+			select: {
+				id: true,
+				channel: false,
+				channelId: false,
+				sender: {
+					select: {
+						user: {
+							select: {
+								username: true,
+								nickname: true,
+								avatar: true,
+							},
+						},
+						admin: true,
+						muted: true,
+						id: true,
+					},
+				},
+				content: true,
+				createdAt: true,
+				updatedAt: true,
 			},
 		});
 	}

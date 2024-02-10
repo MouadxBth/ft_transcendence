@@ -38,7 +38,7 @@ export class ChannelMemberController {
 	@ApiResponse({ status: 401, description: "Bad Request - User is already a member" })
 	async join(@Req() request: Request, @Body() dto: JoinChannelDto) {
 		const authenticatedUser = request.user! as AuthenticatedUser;
-		return await this.channelMemberService.join(authenticatedUser.user, dto);
+		return await this.channelMemberService.join(authenticatedUser.user.username, dto);
 	}
 
 	@Delete(":channel/leave")
@@ -48,6 +48,6 @@ export class ChannelMemberController {
 	@ApiResponse({ status: 400, description: "Bad Request - User isn't a member!" })
 	async leave(@Req() request: Request, @Param("channel") channel: string) {
 		const authenticatedUser = request.user! as AuthenticatedUser;
-		return await this.channelMemberService.leave(authenticatedUser.user, channel);
+		return await this.channelMemberService.leave(authenticatedUser.user.username, channel);
 	}
 }

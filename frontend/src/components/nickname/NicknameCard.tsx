@@ -7,7 +7,7 @@ const NicknameCard = () => {
 			<Card className=" w-1/2 rounded-xl">
 				<CardHeader className="pb-2">
 					<CardTitle className="text-center">Welcome!</CardTitle>
-					<CardDescription className="text-center">to ft_transcendence.</CardDescription>
+					<CardDescription className="text-center">to Mawi Pong.</CardDescription>
 				</CardHeader>
 
 				<CardContent className="space-y-2 pb-2">

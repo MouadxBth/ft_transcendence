@@ -60,7 +60,6 @@ model User {
 	achievements UserAchievement[]
 
 	ownedChannels Channel[]
-	channelMessages Message[]
 
 	joinedChannels ChannelMember[]
 	bannedOnChannels Channel[] @relation("BannedUsers")
@@ -98,10 +97,10 @@ model Achievement {
 }
 
 model UserAchievement {
-	user User @relation(fields: [userId], references: [username])
+	user User @relation(fields: [userId], references: [username], onDelete: Cascade)
 	userId String
 
-	achievement Achievement @relation(fields: [achievementId], references: [name])
+	achievement Achievement @relation(fields: [achievementId], references: [name], onDelete: Cascade)
 	achievementId String
 
 	unlockedAt DateTime
@@ -139,8 +138,8 @@ model Message {
   content   String
   read      Boolean @default(false)
 
-  sender    User     @relation(fields: [senderId], references: username, onDelete: Cascade)
-  senderId  String
+	sender ChannelMember @relation(fields: [senderId], references: [id], onDelete: Cascade)
+	senderId Int
 
 	channel	Channel @relation(fields: [channelId], references: [name], onDelete: Cascade)
 	channelId	String
@@ -151,6 +150,8 @@ model ChannelMember {
 
   admin    Boolean @default(false)
   muted    Boolean @default(false)
+
+	channelMessages Message[]
 
   user     User     @relation(fields: [userId], references: username, onDelete: Cascade)
   userId   String

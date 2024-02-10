@@ -53,7 +53,7 @@ const useNickname = () => {
 		},
 		onSuccess: ({ data }) => {
 			setAuthenticatedUser(parseAuthenticatedUser(data));
-			notifications?.emit("award_achievement", "Transcend");
+			notifications?.emit("award_achievement", "Welcome");
 		},
 		onError: (error: Error) => {
 			const message =

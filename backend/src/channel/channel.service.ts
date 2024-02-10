@@ -47,15 +47,142 @@ export class ChannelService {
 					},
 				},
 			},
+			select: {
+				name: true,
+				createdAt: true,
+				updatedAt: true,
+				status: true,
+				topic: true,
+				owner: {
+					select: {
+						username: true,
+						nickname: true,
+						avatar: true,
+					},
+				},
+				members: {
+					select: {
+						admin: true,
+						muted: true,
+						user: {
+							select: {
+								username: true,
+								nickname: true,
+								avatar: true,
+							},
+						},
+					},
+				},
+			},
+		});
+	}
+
+	async search(name: string) {
+		return this.prisma.channel.findMany({
+			where: {
+				name: {
+					contains: name,
+					mode: "insensitive",
+				},
+			},
+			select: {
+				name: true,
+				createdAt: true,
+				updatedAt: true,
+				status: true,
+				topic: true,
+				owner: {
+					select: {
+						username: true,
+						nickname: true,
+						avatar: true,
+					},
+				},
+				members: {
+					select: {
+						admin: true,
+						muted: true,
+						user: {
+							select: {
+								username: true,
+								nickname: true,
+								avatar: true,
+							},
+						},
+					},
+				},
+			},
 		});
 	}
 
 	async findAll() {
-		return await this.prisma.channel.findMany();
+		return await this.prisma.channel.findMany({
+			where: {
+				NOT: {
+					status: ChannelStatus.PRIVATE,
+				},
+			},
+			select: {
+				name: true,
+				createdAt: true,
+				updatedAt: true,
+				status: true,
+				topic: true,
+				owner: {
+					select: {
+						username: true,
+						nickname: true,
+						avatar: true,
+					},
+				},
+				members: {
+					select: {
+						admin: true,
+						muted: true,
+						user: {
+							select: {
+								username: true,
+								nickname: true,
+								avatar: true,
+							},
+						},
+					},
+				},
+			},
+		});
 	}
 
 	async findOne(id: string) {
-		const channelResult = await this.prisma.channel.findUnique({ where: { name: id } });
+		const channelResult = await this.prisma.channel.findUnique({
+			where: { name: id },
+			select: {
+				name: true,
+				createdAt: true,
+				updatedAt: true,
+				status: true,
+				topic: true,
+				owner: {
+					select: {
+						username: true,
+						nickname: true,
+						avatar: true,
+					},
+				},
+				members: {
+					select: {
+						admin: true,
+						muted: true,
+						user: {
+							select: {
+								username: true,
+								nickname: true,
+								avatar: true,
+							},
+						},
+					},
+				},
+			},
+		});
 
 		if (!channelResult)
 			throw new HttpException("No such channel with that name!", HttpStatus.BAD_REQUEST);
@@ -63,17 +190,47 @@ export class ChannelService {
 		return channelResult;
 	}
 
-	async findUserChannels(user: User) {
-		return await this.prisma.channel.findMany({
+	async findUserChannels(username: string) {
+		const result = await this.prisma.channel.findMany({
+			where: {
+				members: {
+					some: {
+						user: {
+							username,
+						},
+					},
+				},
+			},
 			select: {
 				name: true,
+				createdAt: true,
+				updatedAt: true,
+				status: true,
+				topic: true,
+				owner: {
+					select: {
+						username: true,
+						nickname: true,
+						avatar: true,
+					},
+				},
 				members: {
-					where: {
-						userId: user.username,
+					select: {
+						admin: true,
+						muted: true,
+						user: {
+							select: {
+								username: true,
+								nickname: true,
+								avatar: true,
+							},
+						},
 					},
 				},
 			},
 		});
+
+		return result;
 	}
 
 	async update(id: string, updateChannelDto: UpdateChannelDto, user: User) {
@@ -127,16 +284,40 @@ export class ChannelService {
 		});
 	}
 
-	async remove(id: string, user: User) {
+	async remove(id: string, username: string) {
 		// add ownership checks
-		const channelResult = await this.prisma.channel.findUnique({ where: { name: id } });
+		const channelResult = await this.findOne(id);
+
+		console.log("HHH", channelResult);
 
 		if (!channelResult)
 			throw new HttpException("No such channel with that name!", HttpStatus.BAD_REQUEST);
 
-		if (channelResult.ownerId != user.username)
+		if (channelResult.owner.username != username)
 			throw new HttpException("You're not the owner of the channel", HttpStatus.BAD_REQUEST);
 
-		return await this.prisma.channel.delete({ where: { name: id } });
+		const result = await this.prisma.channel.delete({
+			where: {
+				name: id,
+			},
+			select: {
+				name: true,
+				createdAt: true,
+				updatedAt: true,
+				status: true,
+				topic: true,
+				owner: {
+					select: {
+						username: true,
+						nickname: true,
+						avatar: true,
+					},
+				},
+			},
+		});
+		return {
+			...result,
+			members: channelResult.members,
+		};
 	}
 }

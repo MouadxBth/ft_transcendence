@@ -21,18 +21,21 @@ export class ChannelController {
 	@ApiResponse({ status: 400, description: "Bad request" })
 	async create(@Req() request: Request, @Body() createChannelDto: CreateChannelDto) {
 		const authenticatedUser = request.user! as AuthenticatedUser;
-		const { password, ...channel } = await this.channelService.create(
-			createChannelDto,
-			authenticatedUser.user
-		);
-		return channel;
+		return await this.channelService.create(createChannelDto, authenticatedUser.user);
 	}
 
-	@Get()
+	@Get("/all")
 	@ApiOperation({ summary: "Fetch all Channels", description: "Used to fetch all Channels" })
 	@ApiResponse({ status: 200, description: "Successful retrieval", type: Array<Channel> })
 	async findAll() {
-		return (await this.channelService.findAll()).map(({ password, ...channel }) => channel);
+		return await this.channelService.findAll();
+	}
+
+	@Get("/of/:target")
+	@ApiOperation({ summary: "Fetch all Channels", description: "Used to fetch all Channels" })
+	@ApiResponse({ status: 200, description: "Successful retrieval", type: Array<Channel> })
+	async findOf(@Param("target") target: string) {
+		return await this.channelService.findUserChannels(target);
 	}
 
 	@ApiOperation({
@@ -43,8 +46,8 @@ export class ChannelController {
 	@ApiResponse({ status: 400, description: "Channel doesn't exist" })
 	@Get(":id")
 	async findOne(@Param("id") id: string) {
-		const { password, ...channel } = await this.channelService.findOne(id);
-		return channel;
+		const result = await this.channelService.findOne(id);
+		return result;
 	}
 
 	@ApiOperation({
@@ -79,7 +82,7 @@ export class ChannelController {
 	@Delete(":id")
 	async remove(@Req() request: Request, @Param("id") id: string) {
 		const authenticatedUser = request.user! as AuthenticatedUser;
-		const { password, ...channel } = await this.channelService.remove(id, authenticatedUser.user);
-		return channel;
+		const result = await this.channelService.remove(id, authenticatedUser.user.username);
+		return result;
 	}
 }

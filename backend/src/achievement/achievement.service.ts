@@ -13,8 +13,8 @@ export class AchievementService {
 		const seed: CreateAchievementDto[] = [
 			{
 				name: "Transcend",
-				brief: "Join the adventure, transcendence!",
-				description: "You have made it! you have transcended! Welcome",
+				brief: "Join the adventure, ft_transcendence!",
+				description: "You have made it! Welcome",
 			},
 		];
 

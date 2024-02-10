@@ -12,11 +12,11 @@ type IconType = {
 };
 
 const icons: IconType[] = [
-	{
-		src: "/icons/42.svg",
-		alt: "42 logo",
-		href: "42",
-	},
+	// {
+	// 	src: "/icons/42.svg",
+	// 	alt: "42 logo",
+	// 	href: "42",
+	// },
 	{
 		src: "/icons/google.svg",
 		alt: "Google logo",

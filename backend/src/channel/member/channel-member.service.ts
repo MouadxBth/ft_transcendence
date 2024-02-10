@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { User } from "src/user/entities/user.entity";
 import { PrismaService } from "src/prisma/prisma.service";
 import { JoinChannelDto } from "../dto/join-channel.dto";
 import { ChannelStatus } from "../enums/channel-status.enum";
@@ -35,7 +34,7 @@ export class ChannelMemberService {
 		});
 	}
 
-	async join(user: User, dto: JoinChannelDto) {
+	async join(username: string, dto: JoinChannelDto) {
 		const channelResult = await this.prisma.channel.findUnique({
 			where: {
 				name: dto.channel,
@@ -61,14 +60,18 @@ export class ChannelMemberService {
 
 		if (!channelResult) throw new HttpException("No such channel!", HttpStatus.BAD_REQUEST);
 
-		const banned = channelResult.banned.find((banned) => banned.username === user.username);
+		const banned = channelResult.banned.find((banned) => banned.username === username);
 		if (banned) throw new HttpException("User is banned!", HttpStatus.BAD_REQUEST);
 
-		const member = channelResult.members.find((member) => member.userId === user.username);
+		const member = channelResult.members.find((member) => member.userId === username);
 		if (member) throw new HttpException("User is a already a member!", HttpStatus.BAD_REQUEST);
 
-		const invited = channelResult.invited.find((invited) => invited.username === user.username);
-		if (!invited && channelResult.status === ChannelStatus.PRIVATE)
+		const invited = channelResult.invited.find((invited) => invited.username === username);
+		if (
+			!invited &&
+			channelResult.status === ChannelStatus.PRIVATE &&
+			channelResult.ownerId !== username
+		)
 			throw new HttpException(
 				"Channel is private and user wasn't invited!",
 				HttpStatus.BAD_REQUEST
@@ -94,7 +97,7 @@ export class ChannelMemberService {
 				data: {
 					invited: {
 						disconnect: {
-							username: user.username,
+							username: username,
 						},
 					},
 				},
@@ -104,7 +107,7 @@ export class ChannelMemberService {
 			data: {
 				user: {
 					connect: {
-						username: user.username,
+						username: username,
 					},
 				},
 				channel: {
@@ -116,14 +119,15 @@ export class ChannelMemberService {
 		});
 	}
 
-	async leave(user: User, channel: string) {
+	async leave(username: string, channel: string) {
 		const member = await this.prisma.channelMember.findFirst({
 			where: {
-				AND: [{ userId: user.username }, { channelId: channel }],
+				AND: [{ userId: username }, { channelId: channel }],
 			},
 		});
 		if (!member) throw new HttpException("User isn't a member!", HttpStatus.BAD_REQUEST);
 		// consider owner leaving
+
 		return await this.prisma.channelMember.delete({
 			where: {
 				id: member.id,

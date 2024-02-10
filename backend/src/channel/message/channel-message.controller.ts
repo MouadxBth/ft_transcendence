@@ -35,8 +35,8 @@ export class ChannelMessageController {
 		@Query("cursor") cursor: string | undefined,
 		@Query("quantity") quantity: string | undefined
 	) {
-		if (cursor && quantity) {
-			const parsedCursor = parseInt(cursor);
+		if (quantity) {
+			const parsedCursor = parseInt(cursor ?? "-1");
 
 			if (Number.isNaN(parsedCursor))
 				throw new HttpException("Invalid cursor query value!", HttpStatus.BAD_REQUEST);
