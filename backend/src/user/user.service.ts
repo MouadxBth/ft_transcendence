@@ -29,6 +29,17 @@ export class UserService {
 		return this.prisma.user.findMany();
 	}
 
+	async search(nickname: string) {
+		return this.prisma.user.findMany({
+			where: {
+				nickname: {
+					contains: nickname,
+					mode: "insensitive",
+				},
+			},
+		});
+	}
+
 	async findOne(username: string) {
 		let result: User | null | undefined = await this.userCache.getAndUpdate(username);
 
@@ -46,6 +57,52 @@ export class UserService {
 		}
 
 		return result;
+	}
+
+	async updateTarget(usernameValue: string, updateUserDto: UpdateUserDto) {
+		const user = await this.prisma.user.findUnique({
+			where: { username: usernameValue },
+		});
+
+		if (!user)
+			throw new HttpException("User with that username doesnt exist!", HttpStatus.NOT_FOUND);
+
+		if (updateUserDto.username && usernameValue !== updateUserDto.username) {
+			const check = await this.prisma.user.findUnique({
+				where: { username: updateUserDto.username },
+			});
+
+			if (check)
+				throw new HttpException("User with that username already exists!", HttpStatus.BAD_REQUEST);
+		}
+
+		if (updateUserDto.nickname) {
+			const check = await this.prisma.user.findFirst({
+				where: { nickname: updateUserDto.nickname },
+			});
+
+			if (check)
+				throw new HttpException("User with that nickname already exists!", HttpStatus.BAD_REQUEST);
+		}
+
+		if (updateUserDto.password)
+			updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+
+		return await this.prisma.$transaction(async (client) => {
+			const updatedUser = await client.user.update({
+				where: { username: usernameValue },
+				data: updateUserDto,
+			});
+
+			if (!updatedUser)
+				throw new HttpException("Unable to update user!", HttpStatus.INTERNAL_SERVER_ERROR);
+
+			await this.userCache.update(usernameValue, updatedUser);
+
+			const { password, twoFactorAuthenticationSecret, ...result } = updatedUser;
+
+			return result;
+		});
 	}
 
 	async update(req: Request, usernameValue: string, updateUserDto: UpdateUserDto) {
@@ -73,6 +130,15 @@ export class UserService {
 				throw new HttpException("User with that username already exists!", HttpStatus.BAD_REQUEST);
 		}
 
+		if (updateUserDto.nickname) {
+			const check = await this.prisma.user.findFirst({
+				where: { nickname: updateUserDto.nickname },
+			});
+
+			if (check)
+				throw new HttpException("User with that nickname already exists!", HttpStatus.BAD_REQUEST);
+		}
+
 		if (updateUserDto.password)
 			updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
 
@@ -89,8 +155,16 @@ export class UserService {
 
 			const { password, twoFactorAuthenticationSecret, ...result } = updatedUser;
 
+			let twoFaValidation = authenticatedUser.valid2Fa;
+
+			if (
+				authenticatedUser.user.twoFactorAuthenticationEnabled &&
+				!updatedUser.twoFactorAuthenticationEnabled
+			)
+				twoFaValidation = false;
+
 			req.logIn(
-				{ user: result, valid2Fa: authenticatedUser.valid2Fa } as AuthenticatedUser,
+				{ user: result, valid2Fa: twoFaValidation } as AuthenticatedUser,
 				{ session: true },
 				(error: unknown) => {
 					if (error && error instanceof Error)
@@ -101,7 +175,7 @@ export class UserService {
 				}
 			);
 
-			return updatedUser;
+			return result;
 		});
 	}
 
@@ -120,11 +194,11 @@ export class UserService {
 			throw new HttpException("User with that username doesnt exist!", HttpStatus.NOT_FOUND);
 
 		return await this.prisma.$transaction(async (client) => {
-			const result = await client.user.delete({
+			const removedUser = await client.user.delete({
 				where: { username },
 			});
 
-			if (!result)
+			if (!removedUser)
 				throw new HttpException("Unable to delete user!", HttpStatus.INTERNAL_SERVER_ERROR);
 
 			await this.userCache.delete(username);
@@ -136,6 +210,8 @@ export class UserService {
 						HttpStatus.INTERNAL_SERVER_ERROR
 					);
 			});
+
+			const { password, twoFactorAuthenticationSecret, ...result } = removedUser;
 
 			return result;
 		});

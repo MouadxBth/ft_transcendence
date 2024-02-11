@@ -1,7 +1,10 @@
 import { Module } from "@nestjs/common";
-import { OnlineStatusGateway } from "./online-status.gateway";
+import { OnlineStatusController } from "./online-status.controller";
+import { OnlineStatusService } from "./online-status.service";
 
 @Module({
-	providers: [OnlineStatusGateway],
+	providers: [OnlineStatusService],
+	controllers: [OnlineStatusController],
+	exports: [OnlineStatusService],
 })
 export class OnlineStatusModule {}

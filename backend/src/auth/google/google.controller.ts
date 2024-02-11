@@ -1,12 +1,15 @@
-import { Controller, Get, HttpStatus, Req, UseGuards } from "@nestjs/common";
+import { Controller, Get, HttpStatus, Req, Res, UseGuards } from "@nestjs/common";
 import { GoogleGuard } from "./guards/google.guard";
-import type { Request } from "express";
+import type { Request, Response } from "express";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { User } from "src/user/entities/user.entity";
+import { GoogleService } from "./google.service";
 
 @ApiTags("Auth | Google")
 @Controller("auth/google")
 export class GoogleController {
+	constructor(private readonly service: GoogleService) {}
+
 	@Get("login")
 	@UseGuards(GoogleGuard)
 	@ApiOperation({
@@ -41,7 +44,7 @@ export class GoogleController {
 		status: HttpStatus.UNAUTHORIZED,
 		description: "If the user's credentials don't match, a Unauthorized exception will be returned",
 	})
-	async googleRedirect(@Req() req: Request) {
-		return req.user;
+	async googleRedirect(@Res() res: Response) {
+		return this.service.redirect(res);
 	}
 }

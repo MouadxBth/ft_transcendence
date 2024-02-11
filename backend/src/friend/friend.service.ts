@@ -10,25 +10,53 @@ export class FriendService {
 			where: { username },
 			select: {
 				username: true,
-				friends: { select: { username: true } },
+				friends: {
+					select: { username: true, nickname: true, avatar: true, firstName: true, lastName: true },
+				},
 			},
 		});
 
 		if (!result) throw new HttpException("User does not exist!", HttpStatus.NOT_FOUND);
 
-		return {
-			username: result.username,
-			friends: result.friends.map((friend) => friend.username),
-		};
+		return result.friends;
+	}
+
+	async friendStatus(username: string, target: string) {
+		if (username === target)
+			throw new HttpException("Cannot check friend status with yourself!", HttpStatus.BAD_REQUEST);
+
+		return await Promise.all([
+			this.friends(username).then((result) => result.some((friend) => friend.username === target)),
+			this.prismaService.friendRequest.findFirst({
+				where: {
+					OR: [
+						{
+							sender: { username },
+							target: { username: target },
+						},
+						{
+							sender: { username: target },
+							target: { username },
+						},
+					],
+				},
+			}),
+		]).then((value) => {
+			return {
+				friends: value[0],
+				sentRequest: value[1]?.senderId === username,
+				receivedRequest: value[1]?.senderId === target,
+			};
+		});
 	}
 
 	async sendFriendRequest(username: string, target: string) {
 		if (username === target)
 			throw new HttpException("Cannot send a friend request to yourself!", HttpStatus.BAD_REQUEST);
 
-		const userWithFriends = await this.friends(username);
+		const friends = await this.friends(username);
 
-		if (userWithFriends.friends.find((friend) => friend === target))
+		if (friends.find((friend) => friend.username === target))
 			throw new HttpException("Target is already a friend of you!", HttpStatus.BAD_REQUEST);
 
 		const senderRequest = await this.prismaService.friendRequest.findFirst({
@@ -55,6 +83,23 @@ export class FriendService {
 				sender: { connect: { username } },
 				target: { connect: { username: target } },
 			},
+			select: {
+				createdAt: true,
+				sender: {
+					select: {
+						username: true,
+						nickname: true,
+						avatar: true,
+					},
+				},
+				target: {
+					select: {
+						username: true,
+						nickname: true,
+						avatar: true,
+					},
+				},
+			},
 		});
 	}
 
@@ -63,16 +108,24 @@ export class FriendService {
 			where: { username },
 			select: {
 				username: true,
-				sentFriendRequests: { select: { id: true, targetId: true } },
+				sentFriendRequests: {
+					select: {
+						createdAt: true,
+						target: {
+							select: {
+								username: true,
+								nickname: true,
+								avatar: true,
+							},
+						},
+					},
+				},
 			},
 		});
 
 		if (!result) throw new HttpException("User does not exist!", HttpStatus.NOT_FOUND);
 
-		return {
-			username: result.username,
-			sentFriendRequests: result.sentFriendRequests.map((request) => request.targetId),
-		};
+		return result;
 	}
 
 	async receivedFriendRequests(username: string) {
@@ -80,16 +133,24 @@ export class FriendService {
 			where: { username },
 			select: {
 				username: true,
-				receivedFriendRequests: { select: { id: true, senderId: true } },
+				receivedFriendRequests: {
+					select: {
+						createdAt: true,
+						sender: {
+							select: {
+								username: true,
+								nickname: true,
+								avatar: true,
+							},
+						},
+					},
+				},
 			},
 		});
 
 		if (!result) throw new HttpException("User does not exist!", HttpStatus.NOT_FOUND);
 
-		return {
-			username: result.username,
-			receivedFriendRequests: result.receivedFriendRequests.map((request) => request.senderId),
-		};
+		return result;
 	}
 
 	async acceptFriendRequest(username: string, sender: string) {
@@ -99,9 +160,9 @@ export class FriendService {
 				HttpStatus.BAD_REQUEST
 			);
 
-		const userWithFriends = await this.friends(username);
+		const friends = await this.friends(username);
 
-		if (userWithFriends.friends.find((value) => value === sender))
+		if (friends.find((value) => value.username === sender))
 			throw new HttpException("Target is already a friend of you!", HttpStatus.BAD_REQUEST);
 
 		const friendRequest = await this.prismaService.friendRequest.findFirst({
@@ -114,7 +175,7 @@ export class FriendService {
 		if (!friendRequest)
 			throw new HttpException("No request from target to accept!", HttpStatus.BAD_REQUEST);
 
-		const [_, result] = await Promise.all([
+		const [senderResult, targetResult] = await Promise.all([
 			this.prismaService.user.update({
 				where: { username: sender },
 				data: {
@@ -122,7 +183,17 @@ export class FriendService {
 				},
 				select: {
 					username: true,
-					friends: { select: { username: true } },
+					nickname: true,
+					avatar: true,
+					friends: {
+						select: {
+							username: true,
+							firstName: true,
+							lastName: true,
+							nickname: true,
+							avatar: true,
+						},
+					},
 				},
 			}),
 			this.prismaService.user.update({
@@ -132,7 +203,17 @@ export class FriendService {
 				},
 				select: {
 					username: true,
-					friends: { select: { username: true } },
+					nickname: true,
+					avatar: true,
+					friends: {
+						select: {
+							username: true,
+							firstName: true,
+							lastName: true,
+							nickname: true,
+							avatar: true,
+						},
+					},
 				},
 			}),
 		]);
@@ -141,8 +222,9 @@ export class FriendService {
 			where: { id: friendRequest.id },
 		});
 		return {
-			username: result.username,
-			friends: result.friends.map((friend) => friend.username),
+			createdAt: friendRequest.createdAt,
+			sender: senderResult,
+			target: targetResult,
 		};
 	}
 
@@ -150,9 +232,9 @@ export class FriendService {
 		if (username === sender)
 			throw new HttpException("Cannot deny a friend request to yourself!", HttpStatus.BAD_REQUEST);
 
-		const userWithFriends = await this.friends(username);
+		const friends = await this.friends(username);
 
-		if (userWithFriends.friends.find((value) => value === sender))
+		if (friends.find((value) => value.username === sender))
 			throw new HttpException("Target is already a friend! of you", HttpStatus.BAD_REQUEST);
 
 		const friendRequest = await this.prismaService.friendRequest.findFirst({
@@ -169,7 +251,64 @@ export class FriendService {
 			where: {
 				id: friendRequest.id,
 			},
+			select: {
+				createdAt: true,
+				sender: {
+					select: {
+						username: true,
+						nickname: true,
+						avatar: true,
+					},
+				},
+				target: {
+					select: {
+						username: true,
+						nickname: true,
+						avatar: true,
+					},
+				},
+			},
 		});
+	}
+
+	async cancelFriendRequest(username: string, target: string) {
+		if (username === target)
+			throw new HttpException(
+				"Cannot cancel a friend request to yourself!",
+				HttpStatus.BAD_REQUEST
+			);
+
+		const friendRequest = await this.prismaService.friendRequest.findFirst({
+			where: {
+				sender: { username },
+				target: { username: target },
+			},
+		});
+
+		if (!friendRequest)
+			throw new HttpException("No request was sent from you to target!", HttpStatus.BAD_REQUEST);
+
+		const result = await this.prismaService.friendRequest.delete({
+			where: { id: friendRequest.id },
+			select: {
+				createdAt: true,
+				sender: {
+					select: {
+						username: true,
+						nickname: true,
+						avatar: true,
+					},
+				},
+				target: {
+					select: {
+						username: true,
+						nickname: true,
+						avatar: true,
+					},
+				},
+			},
+		});
+		return result;
 	}
 
 	async unfriendUser(username: string, target: string) {
@@ -182,12 +321,12 @@ export class FriendService {
 
 		if (!targetUser) throw new HttpException("Target does not exist!", HttpStatus.NOT_FOUND);
 
-		const userWithFriends = await this.friends(username);
+		const friends = await this.friends(username);
 
-		if (!userWithFriends.friends.find((friend) => friend === target))
+		if (!friends.find((friend) => friend.username === target))
 			throw new HttpException("Target is not your friend!", HttpStatus.BAD_REQUEST);
 
-		const [_, result] = await Promise.all([
+		const [senderResult, targetResult] = await Promise.all([
 			this.prismaService.user.update({
 				where: { username: target },
 				data: {
@@ -195,7 +334,17 @@ export class FriendService {
 				},
 				select: {
 					username: true,
-					friends: { select: { username: true } },
+					nickname: true,
+					avatar: true,
+					friends: {
+						select: {
+							username: true,
+							firstName: true,
+							lastName: true,
+							nickname: true,
+							avatar: true,
+						},
+					},
 				},
 			}),
 			this.prismaService.user.update({
@@ -205,14 +354,24 @@ export class FriendService {
 				},
 				select: {
 					username: true,
-					friends: { select: { username: true } },
+					nickname: true,
+					avatar: true,
+					friends: {
+						select: {
+							username: true,
+							firstName: true,
+							lastName: true,
+							nickname: true,
+							avatar: true,
+						},
+					},
 				},
 			}),
 		]);
 
 		return {
-			username: result.username,
-			friends: result.friends.map((friend) => friend.username),
+			sender: senderResult,
+			target: targetResult,
 		};
 	}
 }

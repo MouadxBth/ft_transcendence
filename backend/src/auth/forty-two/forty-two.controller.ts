@@ -1,12 +1,15 @@
-import { Controller, Get, HttpStatus, Req, UseGuards } from "@nestjs/common";
+import { Controller, Get, HttpStatus, Req, Res, UseGuards } from "@nestjs/common";
 import { FortyTwoGuard } from "./guards/forty-two.guard";
-import { type Request } from "express";
+import { type Request, type Response } from "express";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { User } from "src/user/entities/user.entity";
+import { FortyTwoService } from "./forty-two.service";
 
 @ApiTags("Auth | 42")
 @Controller("auth/42")
 export class FortyTwoController {
+	constructor(private readonly service: FortyTwoService) {}
+
 	@Get("login")
 	@UseGuards(FortyTwoGuard)
 	@ApiOperation({
@@ -41,7 +44,7 @@ export class FortyTwoController {
 		status: HttpStatus.UNAUTHORIZED,
 		description: "If the user's credentials don't match, a Unauthorized exception will be returned",
 	})
-	async fortyTwoRedirect(@Req() req: Request) {
-		return req.user;
+	async fortyTwoRedirect(@Res() res: Response) {
+		return this.service.redirect(res);
 	}
 }

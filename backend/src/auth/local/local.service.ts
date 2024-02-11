@@ -12,7 +12,7 @@ export class LocalService {
 	async validate(username: string, pass: string): Promise<AuthenticatedUser> {
 		const user = await this.userService.findOne(username);
 
-		const { password, twoFactorAuthenticationSecret, ...result } = user;
+		const { password, twoFactorAuthenticationSecret, ...result } = user!;
 
 		if (!password) throw new HttpException("Invalid credentials!", HttpStatus.UNAUTHORIZED);
 
@@ -39,6 +39,7 @@ export class LocalService {
 		const createUserDto = {
 			...dto,
 			password: await this.hash(dto.password, 10),
+			avatar: dto.avatar ?? encodeURI(`https://robohash.org/${dto.firstName} ${dto.lastName}`),
 		} as CreateUserDto;
 
 		const { twoFactorAuthenticationSecret, password, ...result } =

@@ -17,14 +17,12 @@ export class TwoFactorService {
 
 		const secret = authenticator.generateSecret();
 
-		const otpAuthUrl = authenticator.keyuri(user.username, "ft_transcendence", secret);
-
 		await this.userService.update(req, user.username, {
 			twoFactorAuthenticationEnabled: true,
 			twoFactorAuthenticationSecret: secret,
 		});
 
-		return await toDataURL(otpAuthUrl);
+		return req.user;
 	}
 
 	async disableTwoFactorAuth(req: Request) {
@@ -35,10 +33,11 @@ export class TwoFactorService {
 
 		await this.userService.update(req, user.username, {
 			twoFactorAuthenticationEnabled: false,
-			twoFactorAuthenticationSecret: undefined,
+			twoFactorAuthenticationFirstTime: true,
+			twoFactorAuthenticationSecret: null,
 		});
 
-		return "2FA disabled!";
+		return req.user;
 	}
 
 	async isTwoFactorAuthenticationCodeValid(
@@ -69,7 +68,13 @@ export class TwoFactorService {
 				);
 		});
 
-		return "2FA Code validated Successfully!";
+		if (user.twoFactorAuthenticationFirstTime) {
+			await this.userService.update(req, user.username, {
+				twoFactorAuthenticationFirstTime: false,
+			});
+		}
+
+		return req.user;
 	}
 
 	async getQrCode(req: Request) {

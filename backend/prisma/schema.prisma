@@ -17,13 +17,16 @@ enum ChannelStatus {
 }
 
 enum MatchType {
+
 	CLASSIC
 	CUSTOM
 }
 
 model User {
-  username   String @id
+  username  String @id
 	password	String?
+
+	nickname String?
 
 	firstTime	Boolean @default(true)
 
@@ -34,8 +37,15 @@ model User {
   lastName   String?
 
   avatar     String?
+  banner     String?
+
+	level				Int @default(1)
+	experience	Float @default(0.0)
+
+	eloRating	Int @default(1200)
 
 	twoFactorAuthenticationEnabled	Boolean @default(false)
+	twoFactorAuthenticationFirstTime	Boolean @default(true)
 	twoFactorAuthenticationSecret	String?
 
   friends    User[]   @relation("UserFriends")
@@ -47,7 +57,7 @@ model User {
 	sentFriendRequests FriendRequest[] @relation("SentFriendRequests")
 	receivedFriendRequests FriendRequest[] @relation("ReceivedFriendRequests")
 
-	achievements Achievement[]
+	achievements UserAchievement[]
 
 	ownedChannels Channel[]
 	channelMessages Message[]
@@ -80,9 +90,23 @@ model Achievement {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+	brief String?
+
   description String?
 
-	users User[]
+	users UserAchievement[]
+}
+
+model UserAchievement {
+	user User @relation(fields: [userId], references: [username])
+	userId String
+
+	achievement Achievement @relation(fields: [achievementId], references: [name])
+	achievementId String
+
+	unlockedAt DateTime
+
+	@@id([userId, achievementId])
 }
 
 model Channel {

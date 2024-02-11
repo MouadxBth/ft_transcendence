@@ -8,10 +8,10 @@ export class AuthService {
 	constructor(private readonly configService: ConfigService) {}
 
 	logout(request: Request, response: Response) {
-		if (!request.isAuthenticated())
-			throw new HttpException("You are not logged in!", HttpStatus.BAD_REQUEST);
-
 		const sessionName = this.configService.get<string>("SESSION_NAME")!;
+		const landingPage = this.configService.get<string>("FRONTEND_LANDING_PAGE")!;
+
+		if (!request.isAuthenticated()) return response.redirect(landingPage);
 
 		response.clearCookie(sessionName);
 
@@ -23,6 +23,6 @@ export class AuthService {
 				);
 		});
 
-		return "Logged out";
+		return response.redirect(landingPage);
 	}
 }

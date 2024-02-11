@@ -12,6 +12,13 @@ import { ConversationModule } from "./conversation/conversation.module";
 import { BlockedModule } from "./blocked/blocked.module";
 import { FriendModule } from "./friend/friend.module";
 import { OnlineStatusModule } from "./online-status/online-status.module";
+import { AchievementModule } from "./achievement/achievement.module";
+import { FileUploadModule } from "./file-upload/file-upload.module";
+import { ChannelModule } from "./channel/channel.module";
+import { MatchHistoryModule } from "./match-history/match-history.module";
+import { EloRankingModule } from "./elo-ranking/elo-ranking.module";
+import { NotificationsModule } from "./notifications/notifications.module";
+import { LevelModule } from "./level/level.module";
 import { MatchHistoryModule } from "./game/match-history/match-history.module";
 import { GameModule } from "./game/game.module";
 
@@ -43,6 +50,13 @@ import { GameModule } from "./game/game.module";
 		BlockedModule,
 		FriendModule,
 		OnlineStatusModule,
+		AchievementModule,
+		FileUploadModule,
+		ChannelModule,
+		MatchHistoryModule,
+		EloRankingModule,
+		NotificationsModule,
+		LevelModule,
 		MatchHistoryModule,
 		GameModule,
 	],

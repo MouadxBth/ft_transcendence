@@ -1,35 +1,23 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { UserService } from "src/user/user.service";
-import z, { ZodError } from "zod";
+import { ZodError } from "zod";
 import { AuthenticatedUser } from "../entities/authenticated-user.entity";
-
-const profileSchema = z.object({
-	username: z.string(),
-	_json: z.object({
-		image: z.object({
-			link: z.string().optional(),
-		}),
-	}),
-	name: z
-		.object({
-			givenName: z.string().optional(),
-			familyName: z.string().optional(),
-		})
-		.optional(),
-	displayName: z.string(),
-});
-
-type UserProfile = z.infer<typeof profileSchema>;
+import fortyTwoProfileSchema, { FortyTwoUserProfile } from "./schemas/profile.schema";
+import { ConfigService } from "@nestjs/config";
+import { Response } from "express";
 
 @Injectable()
 export class FortyTwoService {
-	constructor(private readonly userService: UserService) {}
+	constructor(
+		private readonly userService: UserService,
+		private readonly configService: ConfigService
+	) {}
 
 	async validate(profile: unknown): Promise<AuthenticatedUser | null> {
-		let userProfile: UserProfile;
+		let userProfile: FortyTwoUserProfile;
 
 		try {
-			userProfile = profileSchema.parse(profile);
+			userProfile = fortyTwoProfileSchema.parse(profile);
 		} catch (error: unknown) {
 			if (error instanceof ZodError) {
 				throw new HttpException(`Invalid profile: ${error.message}}`, HttpStatus.BAD_REQUEST);
@@ -54,7 +42,12 @@ export class FortyTwoService {
 		};
 	}
 
-	async handleFirstTime(profile: UserProfile) {
+	redirect(res: Response) {
+		const landingPage = this.configService.get<string>("FRONTEND_HOME_PAGE")!;
+		return res.redirect(landingPage);
+	}
+
+	async handleFirstTime(profile: FortyTwoUserProfile) {
 		const avatar =
 			profile._json.image.link ||
 			encodeURI(`https://robohash.org/${profile.displayName.toLocaleLowerCase()}`);

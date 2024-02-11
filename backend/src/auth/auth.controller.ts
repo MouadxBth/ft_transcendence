@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, HttpStatus, Req, Res, UseGuards } from "@nestjs/common";
+import { Controller, Get, HttpStatus, Req, Res, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthenticatedGuard } from "./guards/authenticated.guard";
 
@@ -27,7 +27,7 @@ export class AuthController {
 		return req.user;
 	}
 
-	@Delete("logout")
+	@Get("logout")
 	@ApiOperation({
 		summary: "Log out the current authenticated User",
 		description: "Used to Log out the current authenticated User",

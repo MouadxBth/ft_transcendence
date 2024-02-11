@@ -40,4 +40,10 @@ export const ConfigSchema = Joi.object({
 			scheme: ["http", "https"],
 		})
 		.required(),
+	FRONTEND_LANDING_PAGE: Joi.string().required(),
+	FRONTEND_HOME_PAGE: Joi.string().required(),
+
+	GAINED_EXPERIENCE_CONSTANT: Joi.number().default(150),
+	GAINED_POINTS_CONSTANT: Joi.number().default(10),
+	LEVEL_EXPERIENCE_CONSTANT: Joi.number().default(1.05 * 1000),
 }).unknown(false);

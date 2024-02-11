@@ -9,12 +9,14 @@ import RedisStore from "connect-redis";
 import passport from "passport";
 import { RequestHandler } from "express";
 import { WsSessionAdapter } from "./socket-io/ws-session.adapter";
+import { useContainer } from "class-validator";
 
 declare const module: any;
 
 let sessionMiddleware: RequestHandler;
 
 function configureApp(app: INestApplication<any>) {
+	useContainer(app.select(AppModule), { fallbackOnErrors: true });
 	app.setGlobalPrefix("api/v1");
 	app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
 }
@@ -28,6 +30,7 @@ function configureExpressSession(app: INestApplication<any>) {
 		secret: configService.get<string>("SESSION_SECRET")!,
 		resave: false,
 		saveUninitialized: false,
+		rolling: true,
 		store: new RedisStore({
 			client: redis,
 		}),
@@ -48,6 +51,13 @@ function configurePassport(app: INestApplication<any>) {
 
 function configureWebsocketAdapter(app: INestApplication<any>) {
 	app.useWebSocketAdapter(new WsSessionAdapter(sessionMiddleware, app));
+}
+
+function configureCors(app: INestApplication<any>) {
+	app.enableCors({
+		origin: "http://localhost:4000",
+		credentials: true,
+	});
 }
 
 function configureSwagger(app: INestApplication<any>) {
@@ -75,6 +85,7 @@ async function bootstrap() {
 	configureExpressSession(app);
 	configurePassport(app);
 	configureWebsocketAdapter(app);
+	configureCors(app);
 	configureSwagger(app);
 	hotModuleReplacement(app);
 
