@@ -19,6 +19,7 @@ import { MatchHistoryModule } from "./match-history/match-history.module";
 import { EloRankingModule } from "./elo-ranking/elo-ranking.module";
 import { NotificationsModule } from "./notifications/notifications.module";
 import { LevelModule } from "./level/level.module";
+import { GameModule } from "./game/game.module";
 
 @Module({
 	imports: [
@@ -55,6 +56,8 @@ import { LevelModule } from "./level/level.module";
 		EloRankingModule,
 		NotificationsModule,
 		LevelModule,
+		MatchHistoryModule,
+		GameModule,
 	],
 })
 export class AppModule {}
