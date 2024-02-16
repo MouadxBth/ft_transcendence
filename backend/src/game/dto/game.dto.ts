@@ -18,16 +18,7 @@ export class GameRoomDto {
 	matchId?: number;
 	@IsString()
 	@IsOptional()
-	map?: string;
-	@IsString()
-	@IsOptional()
 	powerUp?: string;
-	@IsNumber()
-	@IsNotEmpty()
-	time: number;
-	@IsNumber()
-	@IsNotEmpty()
-	winningPoints: number;
 	// gameState: GameState;
 }
 
