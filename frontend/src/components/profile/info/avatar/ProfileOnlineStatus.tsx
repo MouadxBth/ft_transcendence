@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import useSockets from "@/hooks/socket/useSockets";
 import useOnlineStatus from "@/hooks/user/useOnlineStatus";
 import { User } from "@/lib/types/user/user";
+import { getOnlineStatusVariant } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 
 export interface ProfileOnlineStatusProps {
@@ -10,32 +11,35 @@ export interface ProfileOnlineStatusProps {
 }
 
 const ProfileOnlineStatus = ({ username, className }: ProfileOnlineStatusProps) => {
-	const [online, setOnline] = useState(false);
+	const [onlineStatus, setOnlineStatus] = useState<string>("Offline");
 	const [loading, setLoading] = useState(true);
 	const { notifications } = useSockets();
 	const { data, isLoading } = useOnlineStatus(username);
 
 	useEffect(() => {
 		notifications?.on("connected", (args: User) => {
-			if (args.username === username) setOnline(true);
+			if (args.username === username) setOnlineStatus("Online");
 		});
 
 		notifications?.on("disconnected", (args: User) => {
-			if (args.username === username) setOnline(false);
+			if (args.username === username) setOnlineStatus("Offline");
 		});
 
 		if (isLoading) return;
 
-		setOnline(data!);
+		if (data) {
+			setOnlineStatus(data);
+		}
+
 		setLoading(false);
 	}, [notifications, isLoading, data, username]);
 
 	return (
 		<Badge
 			className={className}
-			variant={loading ? "secondary" : online ? "default" : "destructive"}
+			variant={loading ? "secondary" : getOnlineStatusVariant(onlineStatus)}
 		>
-			{loading ? "Loading" : online ? "Online" : "Offline"}
+			{loading ? "Loading" : onlineStatus}
 		</Badge>
 	);
 };

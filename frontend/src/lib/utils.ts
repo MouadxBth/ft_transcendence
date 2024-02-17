@@ -67,3 +67,10 @@ export const formattedDate = (input: string) => {
 		.toString()
 		.padStart(2, "0")}:${inputDate.getMinutes().toString().padStart(2, "0")}`;
 };
+
+export const getOnlineStatusVariant = (status: string) => {
+	if (status === "Offline") return "destructive";
+	if (status === "Online") return "default";
+	if (status === "In-game") return "outline";
+	return "secondary";
+};

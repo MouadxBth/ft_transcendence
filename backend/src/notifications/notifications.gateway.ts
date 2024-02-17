@@ -25,14 +25,14 @@ export class NotificationsGateway implements OnGatewayConnection, OnGatewayDisco
 
 	handleConnection(client: Socket, ..._args: any[]) {
 		const authenticatedUser = (client.request as Request).user! as AuthenticatedUser;
-		this.onlineStatusService.updateOnlineStatus(authenticatedUser.user.username, true);
+		this.onlineStatusService.updateOnlineStatus(authenticatedUser.user.username, "Online");
 		client.join(authenticatedUser.user.username);
 		this.server.emit("connected", authenticatedUser.user);
 	}
 
 	handleDisconnect(client: Socket) {
 		const authenticatedUser = (client.request as Request).user! as AuthenticatedUser;
-		this.onlineStatusService.updateOnlineStatus(authenticatedUser.user.username, false);
+		this.onlineStatusService.updateOnlineStatus(authenticatedUser.user.username, "Offline");
 		client.leave(authenticatedUser.user.username);
 		this.server.emit("disconnected", authenticatedUser.user);
 	}
