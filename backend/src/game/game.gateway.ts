@@ -32,7 +32,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	private readonly server: Socket;
 	connnectedPlayers: Set<string> = new Set<string>();
 	activeGames: Set<GameRoomDto> = new Set<GameRoomDto>();
-	startedActiveGames: Set<GameRoomDto> = new Set<GameRoomDto>();
+	readyActiveGames: Set<GameRoomDto> = new Set<GameRoomDto>();
 	classicPlayersQueue: Array<string> = new Array<string>();
 	superPlayersQueue: Array<string> = new Array<string>();
 
@@ -59,28 +59,37 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		// client.leave(authenticatedUser.user.username);
 		this.activeGames.forEach((gameRoom) => {
 			if (gameRoom.player1 === authenticatedUser.user.username) {
-				if (!this.connnectedPlayers.has(gameRoom.player2))
+				if (this.connnectedPlayers.has(gameRoom.player2))
 					this.server.to(gameRoom.player2).emit("opponent_disconnected", gameRoom);
 			} else if (gameRoom.player2 === authenticatedUser.user.username) {
-				if (!this.connnectedPlayers.has(gameRoom.player1))
+				if (this.connnectedPlayers.has(gameRoom.player1))
 					this.server.to(gameRoom.player1).emit("opponent_disconnected", gameRoom);
 			}
 		});
+	}
+
+	async activateGameRoom(dto: GameRoomDto) {
+		const { player1, player2, matchId, ...otherInfo } = dto;
+		const matchHistory = await this.matchHistoryService.create(otherInfo);
+
+		dto.matchId = matchHistory.id;
+		this.activeGames.add(dto);
+		return dto;
+	}
+
+	isConnected(playerName: string) {
+		if (!this.connnectedPlayers.has(playerName))
+			throw new WsException("Your opponenet is not connected");
+		return true;
 	}
 
 	@SubscribeMessage("send_request")
 	async sendRequest(@ConnectedSocket() client: Socket, @MessageBody() dto: GameRoomDto) {
 		const authenticatedUser = (client.request as Request).user as AuthenticatedUser;
 
-		console.log("Received this", dto);
-
-		if (authenticatedUser.user.username !== dto.player1)
-			throw new WsException("Usage of your actual username is required");
-		if (!this.connnectedPlayers.has(dto.player2))
-			// this.server.rooms.has(dto.player2);
-			throw new WsException("Your opponenet is not connected");
-
-		this.server.to(dto.player2).emit("game_request", dto);
+		if (dto.player2 === authenticatedUser.user.username)
+			throw new WsException("Can't send request to yourself!");
+		if (this.isConnected(dto.player2)) this.server.to(dto.player2).emit("game_request", dto);
 	}
 
 	@SubscribeMessage("join_classic_queue")
@@ -129,21 +138,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		}
 	}
 
-	async activateGameRoom(dto: GameRoomDto) {
-		const { player1, player2, matchId, ...otherInfo } = dto;
-		const matchHistory = await this.matchHistoryService.create(otherInfo);
-
-		dto.matchId = matchHistory.id;
-		this.activeGames.add(dto);
-		return dto;
-	}
-
 	@SubscribeMessage("accept_request")
 	async acceptRequest(@ConnectedSocket() client: Socket, @MessageBody() dto: GameRoomDto) {
 		client;
+		// if the inviter disconnected this will throw an exception to the invited
+		this.isConnected(dto.player1);
 
 		dto = await this.activateGameRoom(dto);
-
 		this.server.to(dto.player1).emit("request_accepted", dto);
 		this.server.to(dto.player2).emit("request_accepted", dto);
 	}
@@ -151,7 +152,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@SubscribeMessage("deny_request")
 	async denyRequest(@ConnectedSocket() client: Socket, @MessageBody() dto: GameRoomDto) {
 		client;
-		this.server.to(dto.player1).emit("request_denied", dto);
+		if (this.isConnected(dto.player1)) this.server.to(dto.player1).emit("request_denied", dto);
 	}
 
 	@SubscribeMessage("end_game")
@@ -183,13 +184,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 		this.server.to(dto.target).emit("player_moved", dto);
 	}
-	@SubscribeMessage("is_game_started")
+	@SubscribeMessage("is_game_ready")
 	async isGameStarted(@ConnectedSocket() client: Socket, @MessageBody() dto: GameRoomDto) {
 		client;
-		if (this.startedActiveGames.has(dto)) {
-			this.server.to(dto.player1).emit("game_started", dto);
-			this.server.to(dto.player2).emit("game_started", dto);
-			this.startedActiveGames.delete(dto);
-		} else this.startedActiveGames.add(dto);
+		if (this.readyActiveGames.has(dto)) {
+			this.server.to(dto.player1).emit("game_ready", dto);
+			this.server.to(dto.player2).emit("game_ready", dto);
+			this.readyActiveGames.delete(dto);
+		} else this.readyActiveGames.add(dto);
 	}
 }

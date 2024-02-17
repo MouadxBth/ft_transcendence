@@ -7,14 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import SelectModeField from "../components/GameMatchmaking/SelectModeField";
-import SelectRankedField from "../components/GameMatchmaking/SelectRankedField";
 import InvitedFriendItem from "./InvitedFriendItem";
 import useSockets from "@/hooks/socket/useSockets";
 import useAuthenticatedUser from "@/hooks/authentication/useAuthenticatedUser";
 
 const FormSchema = z.object({
 	mode: z.string().default("classic").optional(),
-	ranked: z.boolean().default(false).optional(),
 	invite: z
 		.string({
 			required_error: "Please select a language.",
@@ -35,7 +33,6 @@ const InviteFriendToGame = ({ invitedFriend }: InviteFriendToGameProps) => {
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
 			mode: "classicmode",
-			ranked: false,
 			invite: invitedFriend.nickname,
 		},
 	});
@@ -64,7 +61,6 @@ const InviteFriendToGame = ({ invitedFriend }: InviteFriendToGameProps) => {
 				className="space-y-4 flex flex-col items-center justify-center w-full h-full"
 			>
 				<SelectModeField form={form} />
-				<SelectRankedField form={form} />
 				<InvitedFriendItem
 					value={invitedFriend.nickname}
 					friend={invitedFriend}

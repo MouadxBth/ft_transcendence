@@ -18,7 +18,7 @@ const SelectModeField = ({ form }: Matchmakingprops) => {
 				control={form.control}
 				name="mode"
 				render={({ field }) => (
-					<FormItem className="space-y-3 flex flex-col justify-center items-center">
+					<FormItem className="space-y-3 flex flex-col justify-center items-center text-white">
 						<FormDescription>choose your game mode</FormDescription>
 						<FormControl>
 							<RadioGroup
