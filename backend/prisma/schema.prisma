@@ -192,13 +192,7 @@ model MatchHistory {
 
 	type MatchType @default(CLASSIC)
 
-	map String?
-
-	time Int?
-
 	powerUp String?
-
-	winningPoints Int?
 
 	members MatchResult[]
 }

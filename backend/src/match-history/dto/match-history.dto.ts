@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 
 export class MatchHistoryDto {
 	@IsString()
@@ -9,11 +9,4 @@ export class MatchHistoryDto {
 	@IsOptional()
 	powerUp?: string;
 
-	@IsNumber()
-	@IsNotEmpty()
-	time: number;
-
-	@IsNumber()
-	@IsNotEmpty()
-	winningPoints: number;
 }
