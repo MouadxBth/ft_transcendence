@@ -7,12 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import SelectModeField from "./SelectModeField";
-import SelectRankedField from "./SelectRankedField";
 import InviteField from "./InviteField";
 
 const FormSchema = z.object({
 	mode: z.string().default("classic").optional(),
-	ranked: z.boolean().default(false).optional(),
 	invite: z
 		.string({
 			required_error: "Please select a language.",
@@ -29,7 +27,6 @@ const GameMatchmaking = () => {
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
 			mode: "classicmode",
-			ranked: false,
 		},
 	});
 	function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -49,7 +46,6 @@ const GameMatchmaking = () => {
 				className="space-y-4 flex flex-col items-center justify-center w-full h-full"
 			>
 				<SelectModeField form={form} />
-				<SelectRankedField form={form} />
 				<InviteField form={form} />
 				<Button
 					type="submit"
