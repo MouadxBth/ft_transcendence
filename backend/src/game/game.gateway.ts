@@ -32,7 +32,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	private readonly server: Socket;
 	connnectedPlayers: Set<string> = new Set<string>();
 	activeGames: Set<GameRoomDto> = new Set<GameRoomDto>();
-	startedActiveGames: Set<GameRoomDto> = new Set<GameRoomDto>();
+	readyActiveGames: Set<GameRoomDto> = new Set<GameRoomDto>();
 	classicPlayersQueue: Array<string> = new Array<string>();
 	superPlayersQueue: Array<string> = new Array<string>();
 
@@ -184,13 +184,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 		this.server.to(dto.target).emit("player_moved", dto);
 	}
-	@SubscribeMessage("is_game_started")
+	@SubscribeMessage("is_game_ready")
 	async isGameStarted(@ConnectedSocket() client: Socket, @MessageBody() dto: GameRoomDto) {
 		client;
-		if (this.startedActiveGames.has(dto)) {
-			this.server.to(dto.player1).emit("game_started", dto);
-			this.server.to(dto.player2).emit("game_started", dto);
-			this.startedActiveGames.delete(dto);
-		} else this.startedActiveGames.add(dto);
+		if (this.readyActiveGames.has(dto)) {
+			this.server.to(dto.player1).emit("game_ready", dto);
+			this.server.to(dto.player2).emit("game_ready", dto);
+			this.readyActiveGames.delete(dto);
+		} else this.readyActiveGames.add(dto);
 	}
 }
