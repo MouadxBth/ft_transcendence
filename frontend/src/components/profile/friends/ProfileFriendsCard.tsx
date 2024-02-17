@@ -11,12 +11,14 @@ import useFriendsUpdate from "@/hooks/user/friends/useFriendsUpdate";
 import { FriendType } from "@/lib/types/friend/friend";
 import { useState, useEffect } from "react";
 import ProfileFriendsListSkeleton from "./list/skeleton/ProfileFriendsListSkeleton";
+import { useAuthentication } from "@/hooks/authentication/useAuthentication";
 
 export interface ProfileFriendsCardProps {
 	user?: User;
 }
 
 const ProfileFriendsCard = ({ user }: ProfileFriendsCardProps) => {
+	const { authenticatedUser } = useAuthentication();
 	const { data, isLoading, isSuccess, isError, error } = useFriendsFetch(user?.username ?? null);
 	const [friends, setFriends] = useState<FriendType[]>([]);
 	const [loading, setLoading] = useState(true);
@@ -35,7 +37,7 @@ const ProfileFriendsCard = ({ user }: ProfileFriendsCardProps) => {
 
 	return (
 		<Card className=" relative">
-			{user && (
+			{user && user?.username !== authenticatedUser?.user.username && (
 				<ProfileFriend
 					user={user}
 					className="absolute top-2 right-2 z-10"
