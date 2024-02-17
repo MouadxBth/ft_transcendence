@@ -5,10 +5,12 @@ export interface SocketsContextType {
 	notifications?: Socket;
 	conversations?: Socket;
 	channels?: Socket;
+	game?: Socket;
 }
 
 export const SocketsContext = createContext<SocketsContextType>({
 	notifications: undefined,
 	conversations: undefined,
 	channels: undefined,
+	game: undefined,
 });

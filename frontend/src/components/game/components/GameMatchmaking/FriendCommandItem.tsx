@@ -17,7 +17,7 @@ const FriendCommandItem = (props: FriendCommandItemProps) => {
 		<>
 			<CommandItem
 				className="flex space-x-2"
-				value={props.friend.nickname}
+				value={props.friend.username}
 				onSelect={(currentValue) => {
 					props.setValue(currentValue === props.value ? "" : currentValue);
 					props.form.setValue("invite", currentValue === props.value ? "" : currentValue);

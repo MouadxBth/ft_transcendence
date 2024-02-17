@@ -9,6 +9,8 @@ import { toast } from "@/components/ui/use-toast";
 import SelectModeField from "./SelectModeField";
 import SelectRankedField from "./SelectRankedField";
 import InviteField from "./InviteField";
+import useSockets from "@/hooks/socket/useSockets";
+import useAuthenticatedUser from "@/hooks/authentication/useAuthenticatedUser";
 
 const FormSchema = z.object({
 	mode: z.string().default("classic").optional(),
@@ -25,6 +27,10 @@ export interface Matchmakingprops {
 }
 
 const GameMatchmaking = () => {
+
+	const { game } = useSockets();
+	const { data: userData } = useAuthenticatedUser();
+
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
@@ -33,8 +39,17 @@ const GameMatchmaking = () => {
 		},
 	});
 	function onSubmit(data: z.infer<typeof FormSchema>) {
+
+		console.log("emitting...");
+
+		game?.emit("send_request", {
+			player1: userData?.user.username,
+			player2: data.invite,
+		});
+
+
 		toast({
-			title: "You submitted the following values:",
+			title: "You submitted the following values?",
 			description: (
 				<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
 					<code className="text-white">{JSON.stringify(data, null, 2)}</code>

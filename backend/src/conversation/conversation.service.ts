@@ -72,7 +72,7 @@ export class ConversationService {
 			include: {
 				members: {
 					select: {
-						nickname: true,
+						username: true,
 					},
 					where: {
 						username: {

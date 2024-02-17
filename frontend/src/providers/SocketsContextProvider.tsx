@@ -19,6 +19,7 @@ const initializer = (user: AuthenticatedUser | null) => {
 		notificationsSocket: io(uri + "/notifications", options),
 		conversationSocket: io(uri + "/conversation", options),
 		channelSocket: io(uri + "/channel", options),
+		gameSocket: io(uri + "/game", options),
 	};
 
 	return result;
@@ -29,23 +30,27 @@ const SocketsContextProvider = ({ children }: { children: React.ReactNode }) => 
 	const [notifications, setNotifications] = useState<Socket | undefined>(undefined);
 	const [conversations, setConversations] = useState<Socket | undefined>(undefined);
 	const [channels, setChannels] = useState<Socket | undefined>(undefined);
+	const [game, setGame] = useState<Socket | undefined>(undefined);
 
 	useEffect(() => {
-		const { notificationsSocket, conversationSocket, channelSocket } =
+		const { notificationsSocket, conversationSocket, channelSocket, gameSocket } =
 			initializer(authenticatedUser);
 
 		setNotifications(notificationsSocket);
 		setConversations(conversationSocket);
 		setChannels(channelSocket);
+		setGame(gameSocket)
 
 		return () => {
 			notificationsSocket.offAny();
 			conversationSocket.offAny();
 			channelSocket.offAny();
+			gameSocket.offAny();
 
 			if (notificationsSocket.connected) notificationsSocket.disconnect();
 			if (conversationSocket.connected) conversationSocket.disconnect();
 			if (channelSocket.connected) channelSocket.disconnect();
+			if (gameSocket.connected) gameSocket.disconnect();
 		};
 	}, [authenticatedUser]);
 
@@ -55,6 +60,7 @@ const SocketsContextProvider = ({ children }: { children: React.ReactNode }) => 
 				notifications,
 				conversations,
 				channels,
+				game,
 			}}
 		>
 			{children}

@@ -39,26 +39,26 @@ services:
       timeout: 10s
       retries: 3
 
-  backend:
-    container_name: backend
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.${ENVIRONMENT}
-    image: backend:latest
-    ports:
-      - ${BACKEND_PORT}:3000
-    env_file:
-      - .env
-    networks:
-      - ft_transcendence
-    volumes:
-      - backend_volume:/usr/src/app
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    command: sh prepare.sh
+  # backend:
+  #   container_name: backend
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile.${ENVIRONMENT}
+  #   image: backend:latest
+  #   ports:
+  #     - ${BACKEND_PORT}:3000
+  #   env_file:
+  #     - .env
+  #   networks:
+  #     - ft_transcendence
+  #   volumes:
+  #     - backend_volume:/usr/src/app
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   command: sh prepare.sh
 
 networks:
   ft_transcendence:
@@ -68,7 +68,8 @@ networks:
 volumes:
   redis_volume:
     name: redis_volume
-    driver: local
+    # driver: local
+    external: true
     # driver_opts:
     #   o: bind
     #   type: none
@@ -76,16 +77,17 @@ volumes:
 
   postgres_volume:
     name: postgres_volume
-    driver: local
+    # driver: local
+    external: true
     # driver_opts:
     #   o: bind
     #   type: none
     #   device: ${POSTGRES_DATA_DIR}
 
-  backend_volume:
-    name: backend_volume
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ${BACKEND_DIR}
+  # backend_volume:
+  #   name: backend_volume
+  #   driver: local
+  #   driver_opts:
+  #     o: bind
+  #     type: none
+  #     device: ${BACKEND_DIR}

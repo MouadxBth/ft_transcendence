@@ -72,6 +72,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	async sendRequest(@ConnectedSocket() client: Socket, @MessageBody() dto: GameRoomDto) {
 		const authenticatedUser = (client.request as Request).user as AuthenticatedUser;
 
+		console.log("Received this", dto);
+
 		if (authenticatedUser.user.username !== dto.player1)
 			throw new WsException("Usage of your actual username is required");
 		if (!this.connnectedPlayers.has(dto.player2))
