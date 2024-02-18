@@ -1,17 +1,17 @@
 import { Sonner } from "@/components/ui/sonner";
-import useSockets from "../socket/useSockets"
+import useSockets from "../socket/useSockets";
 import { toast as sonner } from "sonner";
 import { useEffect } from "react";
 
 interface matchDto {
-	player1: string,
-	player2: string,
+	player1: string;
+	player2: string;
 }
 
 interface matchErrorDto {
-	error: string,
-	message: string,
-	data: matchDto,
+	error: string;
+	message: string;
+	data: matchDto;
 }
 
 const useGame = () => {
@@ -20,11 +20,11 @@ const useGame = () => {
 
 	const refuseRequest = () => {
 		game?.emit("deny_request", matchDetails);
-	}
+	};
 
 	const acceptRequest = () => {
 		game?.emit("accept_request", matchDetails);
-	}
+	};
 
 	function gameRequestHandler(data: any) {
 		matchDetails = data;
@@ -38,16 +38,16 @@ const useGame = () => {
 			cancel: {
 				label: "Refuse",
 				onClick: refuseRequest,
-			}
-		})
+			},
+		});
 	}
 
 	function requestDenied(dto: matchDto) {
-		sonner(`${dto.player2} didn't accept your game request.`)
+		sonner(`${dto.player2} didn't accept your game request.`);
 	}
 
 	function requestAccepted(dto: matchDto) {
-		sonner(`${dto.player2} accepted your game request!`)
+		sonner(`${dto.player2} accepted your game request!`);
 	}
 
 	function errorHandler(error: matchErrorDto) {
@@ -59,7 +59,7 @@ const useGame = () => {
 		game?.on("request_denied", requestDenied);
 		game?.on("request_accepted", requestAccepted);
 		game?.on("error", errorHandler);
-	}, [game])
-}
+	});
+};
 
 export default useGame;
