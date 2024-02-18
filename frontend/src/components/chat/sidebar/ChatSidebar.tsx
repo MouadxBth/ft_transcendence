@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import ChatSidebarTriggerList from "./ChatSidebarTriggerList";
 import ChatSidebarTrigger from "./ChatSidebarTrigger";
 import ConversationTab from "../conversation/ConversationTab";
+import ChannelTab from "../channel/ChannelTab";
 
 interface ChatSidebarProps {
 	className?: string;
@@ -20,6 +21,7 @@ const ChatSidebar = ({ className }: ChatSidebarProps) => {
 			</ChatSidebarTriggerList>
 
 			<ConversationTab />
+			<ChannelTab />
 		</Tabs>
 	);
 };

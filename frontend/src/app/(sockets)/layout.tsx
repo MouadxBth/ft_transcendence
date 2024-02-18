@@ -1,6 +1,7 @@
 "use client";
 
 import useAchievementNotification from "@/hooks/notifications/useAchievementNotifications";
+import useChannelNotifications from "@/hooks/notifications/useChannelNotifications";
 import useConversationNotifications from "@/hooks/notifications/useConversationNotifications";
 import useErrorNotifications from "@/hooks/notifications/useErrorNotifications";
 import useFriendStatusNotifications from "@/hooks/notifications/useFriendStatusNotifications";
@@ -11,6 +12,7 @@ const SocketLayout = ({ children }: { children: React.ReactNode }) => {
 	useFriendStatusNotifications();
 	useAchievementNotification();
 	useConversationNotifications();
+	useChannelNotifications();
 	return <>{children}</>;
 };
 

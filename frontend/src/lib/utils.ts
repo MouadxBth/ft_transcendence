@@ -74,3 +74,9 @@ export const getOnlineStatusVariant = (status: string) => {
 	if (status === "In-game") return "outline";
 	return "secondary";
 };
+
+export const getStatusColor = (status: string) => {
+	if (status === "PUBLIC") return "text-green-500";
+	else if (status === "PROTECTED") return "text-amber-500";
+	else return "text-blue-500";
+};
