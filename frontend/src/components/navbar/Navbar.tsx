@@ -41,7 +41,7 @@ export const links: NavbarItemContent[] = [
 
 const Navbar = () => {
 	return (
-		<nav className="flex flex-row items-center h-20 justify-between px-5">
+		<nav className="flex flex-row items-center h-20 justify-between px-5 border-b">
 			<NavbarTitle />
 			<SearchContextProvider>
 				<UserSearch />
