@@ -7,21 +7,20 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ProfileFormType } from "@/lib/types/form/profile-form";
 import { cn } from "@/lib/utils";
 import { Control, FieldValues, Path } from "react-hook-form";
 
-export interface GenericFormFieldProps<ProfileFormType extends FieldValues> {
+export interface GenericFormFieldProps<T extends FieldValues> {
 	label: string;
 	description?: string;
-	control: Control<ProfileFormType>;
-	name: Path<ProfileFormType>;
+	control: Control<T>;
+	name: Path<T>;
 	type: string;
 	placeholder?: string;
 	className?: string;
 }
 
-const GenericFormField = ({
+const GenericFormField = <T extends FieldValues>({
 	label,
 	description,
 	control,
@@ -29,7 +28,7 @@ const GenericFormField = ({
 	type,
 	placeholder,
 	className,
-}: GenericFormFieldProps<ProfileFormType>) => {
+}: GenericFormFieldProps<T>) => {
 	return (
 		<FormField
 			control={control}

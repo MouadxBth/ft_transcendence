@@ -9,11 +9,22 @@ import { AuthModule } from "src/auth/auth.module";
 import { UserModule } from "src/user/user.module";
 import { ConversationCache } from "./conversation.cache";
 import { BlockedModule } from "src/blocked/blocked.module";
+import { ConversationUtilities } from "./conversation.utilities";
+import { DirectMessageGateway } from "./direct-message/direct-message.gateway";
+import { DirectMessageUtilities } from "./direct-message/direct-message.utilities";
 
 @Module({
 	imports: [AuthModule, UserModule, BlockedModule],
 	controllers: [ConversationController, DirectMessageController],
-	providers: [ConversationService, ConversationGateway, ConversationCache, DirectMessageService],
+	providers: [
+		ConversationUtilities,
+		ConversationService,
+		ConversationGateway,
+		ConversationCache,
+		DirectMessageUtilities,
+		DirectMessageService,
+		DirectMessageGateway,
+	],
 })
 export class ConversationModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {

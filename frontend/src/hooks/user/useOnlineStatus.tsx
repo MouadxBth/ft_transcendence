@@ -1,9 +1,9 @@
 import axiosClient from "@/lib/axios";
+import { onlineStatusSchema } from "@/lib/types/user/online-status";
 import { useQuery } from "@tanstack/react-query";
-import { z } from "zod";
 
 export const parseOnlineStatus = (data: unknown) => {
-	const result = z.boolean().safeParse(data);
+	const result = onlineStatusSchema.safeParse(data);
 
 	if (!result || !result.success) {
 		throw new Error(`Unable to parse data into an Online Status Result ${result.error.message}`);

@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import Title from "@/components/ui/title";
 import { useAuthentication } from "@/hooks/authentication/useAuthentication";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -23,13 +24,33 @@ const TitleSection = () => {
 				className="sm:w-[382px] sm:h-[272px] w-[382px] h-[272px] rounded-lg shadow-xl shadow-blue-500/50"
 			/>
 
-			<Button
-				className={`${authenticatedUser ? " block" : " hidden"} mt-12 rounded-xl w-32`}
-				variant="default"
-				onClick={() => push("/profile")}
+			<div
+				className={cn(
+					"mt-12 flex space-x-4",
+					{
+						block: authenticatedUser !== null,
+					},
+					{
+						hidden: authenticatedUser === null,
+					}
+				)}
 			>
-				Play
-			</Button>
+				<Button
+					className={`rounded-xl w-32`}
+					variant="default"
+					onClick={() => push(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/logout`)}
+				>
+					Log out
+				</Button>
+
+				<Button
+					className={`rounded-xl w-32`}
+					variant="default"
+					onClick={() => push("/profile")}
+				>
+					Play
+				</Button>
+			</div>
 		</>
 	);
 };

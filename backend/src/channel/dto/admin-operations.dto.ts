@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class AdminOperationsDto {
 	@IsString()
@@ -17,4 +17,12 @@ export class AdminOperationsDto {
 		example: "john_doe",
 	})
 	channel: string;
+
+	@IsNumber()
+	@IsOptional()
+	@ApiProperty({
+		description: "Username of the member to perform the operation on",
+		example: "john_doe",
+	})
+	duration?: number;
 }

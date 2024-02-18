@@ -1,13 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AdminOperationsDto } from "../dto/admin-operations.dto";
-import { User } from "src/user/entities/user.entity";
 
 @Injectable()
 export class ChannelOwnerService {
 	constructor(private readonly prisma: PrismaService) {}
 
-	async verifyOperation(user: User, dto: AdminOperationsDto) {
+	async verifyOperation(username: string, dto: AdminOperationsDto) {
 		const channelResult = await this.prisma.channel.findUnique({
 			where: {
 				name: dto.channel,
@@ -26,9 +25,12 @@ export class ChannelOwnerService {
 
 		if (!channelResult) throw new HttpException("No such channel!", HttpStatus.BAD_REQUEST);
 
-		if (user.username !== channelResult.ownerId)
+		if (username === dto.member)
+			throw new HttpException("Cannot apply operation on yourself", HttpStatus.BAD_REQUEST);
+
+		if (username !== channelResult.ownerId)
 			throw new HttpException(
-				"Permission denied, user isn't owner in the channel",
+				"Permission denied, you are not the owner of channel",
 				HttpStatus.BAD_REQUEST
 			);
 
@@ -42,8 +44,23 @@ export class ChannelOwnerService {
 		return { channelResult, member };
 	}
 
-	async createAdmin(user: User, dto: AdminOperationsDto) {
-		const result = await this.verifyOperation(user, dto);
+	private formatChannelMember() {
+		return {
+			id: true,
+			admin: true,
+			muted: true,
+			user: {
+				select: {
+					username: true,
+					nickname: true,
+					avatar: true,
+				},
+			},
+		};
+	}
+
+	async promote(username: string, dto: AdminOperationsDto) {
+		const result = await this.verifyOperation(username, dto);
 
 		if (result.member.admin)
 			throw new HttpException(
@@ -58,11 +75,12 @@ export class ChannelOwnerService {
 			data: {
 				admin: true,
 			},
+			select: this.formatChannelMember(),
 		});
 	}
 
-	async removeAdmin(user: User, dto: AdminOperationsDto) {
-		const result = await this.verifyOperation(user, dto);
+	async demote(username: string, dto: AdminOperationsDto) {
+		const result = await this.verifyOperation(username, dto);
 
 		if (!result.member.admin)
 			throw new HttpException(
@@ -77,6 +95,7 @@ export class ChannelOwnerService {
 			data: {
 				admin: false,
 			},
+			select: this.formatChannelMember(),
 		});
 	}
 }

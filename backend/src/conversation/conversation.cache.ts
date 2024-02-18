@@ -1,8 +1,8 @@
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Inject, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Conversation } from "@prisma/client";
 import { type Cache } from "cache-manager";
+import { Conversation } from "./entities/conversation.entity";
 
 @Injectable()
 export class ConversationCache {

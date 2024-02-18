@@ -1,0 +1,15 @@
+export enum ChannelEvent {
+	SEND_MESSAGE = "send_message",
+	CREATE = "create_channel",
+	DELETE = "delete_channel",
+	JOIN = "join_channel",
+	LEAVE = "leave_channel",
+	INVITE = "invite_to_channel",
+	KICK = "kick_from_channel",
+	BAN = "ban_from_channel",
+	UNBAN = "unban_from_channel",
+	MUTE = "mute_on_channel",
+	UNMUTE = "unmute_on_channel",
+	PROMOTE = "promote_in_channel",
+	DEMOTE = "demote_in_channel",
+}

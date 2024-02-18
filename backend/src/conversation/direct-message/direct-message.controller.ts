@@ -70,8 +70,8 @@ export class DirectMessageController {
 	) {
 		const authenticatedUser = req.user! as AuthenticatedUser;
 
-		if (cursor && quantity) {
-			const parsedCursor = parseInt(cursor);
+		if (quantity) {
+			const parsedCursor = parseInt(cursor ?? "-1");
 
 			if (Number.isNaN(parsedCursor))
 				throw new HttpException("Invalid cursor query value!", HttpStatus.BAD_REQUEST);
@@ -82,13 +82,13 @@ export class DirectMessageController {
 				throw new HttpException("Invalid quantity query value!", HttpStatus.BAD_REQUEST);
 
 			return this.directMessageService.findLastSent(
-				authenticatedUser.user.username,
+				authenticatedUser.user,
 				target,
 				parsedCursor,
 				parsedQuantity
 			);
 		}
-		return this.directMessageService.findAll(authenticatedUser.user.username, target);
+		return this.directMessageService.findAll(authenticatedUser.user, target);
 	}
 
 	@Patch(":target/dms")

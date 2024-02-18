@@ -3,102 +3,81 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { DirectMessageDto } from "../dto/direct-message.dto";
 import { UpdateDirectMessageDto } from "../dto/update-direct-message.dto";
 import { ConversationService } from "../conversation.service";
-import { BlockedService } from "src/blocked/blocked.service";
+import { User } from "src/user/entities/user.entity";
+import { DirectMessageUtilities } from "./direct-message.utilities";
 
 @Injectable()
 export class DirectMessageService {
 	constructor(
 		private readonly prismaService: PrismaService,
-		private readonly conversationService: ConversationService,
-		private readonly blockedService: BlockedService
+		private readonly directMessageUtilities: DirectMessageUtilities,
+		private readonly conversationService: ConversationService
 	) {}
 
-	async create(sender: string, message: DirectMessageDto) {
-		const blockedInfo = await this.blockedService.getBlockedAndBlockedBy(sender);
-
-		if (blockedInfo.blocked.find((username) => username === message.target))
-			throw new HttpException(
-				"You have blocked this user, unblock him to send a message!",
-				HttpStatus.BAD_REQUEST
-			);
-
-		if (blockedInfo.blockedBy.find((username) => username === message.target))
-			throw new HttpException(
-				"You are blocked by this user, you can't send a message!",
-				HttpStatus.BAD_REQUEST
-			);
+	async create(sender: User, message: DirectMessageDto) {
+		await this.directMessageUtilities.checkBlockedStatus(sender, message.target);
 
 		const conversation = await this.conversationService.findOne(sender, message.target);
 
-		return await this.prismaService.directMessage.create({
+		const createdMessage = await this.prismaService.directMessage.create({
 			data: {
-				senderId: sender,
+				senderId: sender.username,
 				content: message.content,
 				conversationId: conversation.id,
 			},
+			select: this.directMessageUtilities.getDirectMessageSelectFields(sender.username),
 		});
+
+		return this.directMessageUtilities.formatRawDirectMessage(createdMessage);
 	}
 
-	async findLastSent(first: string, second: string, cursor: number, quantity: number) {
-		if (cursor <= 0) throw new HttpException("Invalid Cursor!", HttpStatus.BAD_REQUEST);
+	async findLastSent(sender: User, target: string, cursor: number, quantity: number) {
+		this.directMessageUtilities.validateFindLastSentParams(quantity);
 
-		if (quantity <= 0) throw new HttpException("Invalid quantity!", HttpStatus.BAD_REQUEST);
+		const conversation = await this.conversationService.findOne(sender, target);
 
-		const conversation = await this.conversationService.findOne(first, second);
+		const directMessages = await this.directMessageUtilities.findDirectMessages(
+			sender.username,
+			conversation.id,
+			cursor,
+			quantity
+		);
 
-		const result = await this.prismaService.directMessage.findMany({
-			where: { conversationId: conversation.id },
-			orderBy: { createdAt: "desc" },
-			cursor: { id: cursor },
-			take: quantity,
-			select: {
-				id: true,
-				createdAt: true,
-				updatedAt: true,
-				senderId: true,
-				content: true,
-				read: true,
-			},
-		});
+		const formattedMessages = directMessages.map((message) =>
+			this.directMessageUtilities.formatRawDirectMessage(message)
+		);
 
-		if (result && result.length) result.reverse();
-		return result;
+		return formattedMessages.reverse();
 	}
 
-	async findAll(first: string, second: string) {
-		const conversation = await this.conversationService.findOne(first, second);
+	async findAll(sender: User, target: string) {
+		const conversation = await this.conversationService.findOne(sender, target);
 
-		return await this.prismaService.directMessage.findMany({
+		const directMessages = await this.prismaService.directMessage.findMany({
 			where: { conversationId: conversation.id },
-			select: {
-				id: true,
-				senderId: true,
-				content: true,
-				read: true,
-				createdAt: true,
-				updatedAt: true,
-			},
+			select: this.directMessageUtilities.getDirectMessageSelectFields(sender.username),
 		});
+
+		return directMessages.map((message) =>
+			this.directMessageUtilities.formatRawDirectMessage(message)
+		);
 	}
 
 	async update(sender: string, target: string, updateDto: UpdateDirectMessageDto) {
-		if (sender === target)
-			throw new HttpException("Cannot find a conversation with yourself!", HttpStatus.BAD_REQUEST);
+		this.directMessageUtilities.validateParams(sender, target);
 
-		const directMessage = await this.prismaService.directMessage.findUnique({
-			where: { id: updateDto.id },
-		});
+		await this.directMessageUtilities.getDirectMessage(updateDto.id);
 
-		if (!directMessage)
-			throw new HttpException("Direct Message does not exist!", HttpStatus.NOT_FOUND);
-
-		return await this.prismaService.directMessage.update({
+		const updateResult = await this.prismaService.directMessage.update({
 			where: { id: updateDto.id },
 			data: {
 				content: updateDto.content,
 				read: updateDto.read,
 			},
+			select: this.directMessageUtilities.getDirectMessageSelectFields(sender),
 		});
+
+		return this.directMessageUtilities.formatRawDirectMessage(updateResult);
 	}
 
 	async readLastSent(first: string, second: string, cursor: number, quantity: number) {
@@ -129,18 +108,15 @@ export class DirectMessageService {
 	}
 
 	async delete(sender: string, target: string, id: number) {
-		if (sender === target)
-			throw new HttpException("Cannot find a conversation with yourself!", HttpStatus.BAD_REQUEST);
+		this.directMessageUtilities.validateParams(sender, target);
 
-		const directMessage = await this.prismaService.directMessage.findUnique({
+		await this.directMessageUtilities.getDirectMessage(id);
+
+		const deleteResult = await this.prismaService.directMessage.delete({
 			where: { id },
+			select: this.directMessageUtilities.getDirectMessageSelectFields(sender),
 		});
 
-		if (!directMessage)
-			throw new HttpException("Direct Message does not exist!", HttpStatus.NOT_FOUND);
-
-		return await this.prismaService.directMessage.delete({
-			where: { id },
-		});
+		return this.directMessageUtilities.formatRawDirectMessage(deleteResult);
 	}
 }

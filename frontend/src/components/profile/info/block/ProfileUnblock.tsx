@@ -5,9 +5,10 @@ import useSockets from "@/hooks/socket/useSockets";
 
 export interface ProfileUnblockProps {
 	username: string;
+	className?: string;
 }
 
-const ProfileUnblock = ({ username }: ProfileUnblockProps) => {
+const ProfileUnblock = ({ username, className }: ProfileUnblockProps) => {
 	const { notifications } = useSockets();
 
 	const unblock = () => {
@@ -17,6 +18,7 @@ const ProfileUnblock = ({ username }: ProfileUnblockProps) => {
 	return (
 		<Button
 			onClick={() => unblock()}
+			className={className}
 			variant="outline"
 		>
 			Unblock
