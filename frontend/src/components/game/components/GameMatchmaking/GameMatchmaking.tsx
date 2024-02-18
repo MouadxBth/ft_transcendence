@@ -28,13 +28,11 @@ export interface Matchmakingprops {
 }
 
 interface GameMatchmakingProps {
-	setStatus: (stat: string) => void, 
-	setOpponent: (op: string) => void,
+	setStatus: (stat: string) => void;
+	setOpponent: (op: string) => void;
 }
 
-
-const GameMatchmaking = ({setStatus, setOpponent} : GameMatchmakingProps ) => {
-
+const GameMatchmaking = ({ setStatus, setOpponent }: GameMatchmakingProps) => {
 	const { game } = useSockets();
 	const { data: userData } = useAuthenticatedUser();
 
@@ -46,14 +44,13 @@ const GameMatchmaking = ({setStatus, setOpponent} : GameMatchmakingProps ) => {
 	});
 
 	function onSubmit(data: z.infer<typeof FormSchema>) {
-
 		console.log("emitting...");
 
 		game?.emit("send_request", {
 			player1: userData?.user.username,
 			player2: data.invite,
 		});
-		
+
 		setOpponent(data.invite);
 		setStatus("loading");
 
@@ -68,11 +65,7 @@ const GameMatchmaking = ({setStatus, setOpponent} : GameMatchmakingProps ) => {
 	}
 	return (
 		<Card className="w-1/2 h-1/2 flex flex-col items-center justify-center">
-			<CardHeader>
-				<CardTitle>
-					<MatchmakingTitle />
-				</CardTitle>
-			</CardHeader>
+			<MatchmakingTitle />
 			<CardContent>
 				<Form {...form}>
 					<form
