@@ -2,117 +2,95 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { ConversationCache } from "./conversation.cache";
 import { UserService } from "src/user/user.service";
-import { Conversation } from "@prisma/client";
+import { User } from "src/user/entities/user.entity";
+import { Conversation } from "./entities/conversation.entity";
+import { BlockedService } from "src/blocked/blocked.service";
+import { ConversationUtilities } from "./conversation.utilities";
 
 @Injectable()
 export class ConversationService {
 	constructor(
 		private readonly prismaService: PrismaService,
 		private readonly userService: UserService,
+		private readonly blockedService: BlockedService,
+		private readonly conversationUtilities: ConversationUtilities,
 		private readonly cache: ConversationCache
 	) {}
 
-	async create(first: string, second: string) {
-		if (first === second)
-			throw new HttpException(
-				"Cannot create a conversation with yourself!",
-				HttpStatus.BAD_REQUEST
-			);
+	async create(sender: User, target: string) {
+		this.conversationUtilities.guardAgainstSelfConversation(sender, target);
 
-		await this.userService.findOne(second);
+		await this.userService.findOne(target);
 
-		const conversationCheck = await this.prismaService.conversation.findFirst({
-			where: {
-				AND: [
-					{ members: { some: { username: first } } },
-					{ members: { some: { username: second } } },
-				],
-			},
-		});
+		const blockStatus = await this.blockedService.blockStatus(sender, target);
+		this.conversationUtilities.handleBlockStatus(blockStatus);
 
-		if (conversationCheck)
+		const conversationExists = await this.conversationUtilities.checkConversationExists(
+			sender,
+			target
+		);
+
+		if (conversationExists) {
 			throw new HttpException("Conversation already exists!", HttpStatus.BAD_REQUEST);
+		}
 
-		return await this.prismaService.conversation.create({
+		const createdConversation = await this.prismaService.conversation.create({
 			data: {
-				members: { connect: [{ username: first }, { username: second }] },
+				members: { connect: [{ username: sender.username }, { username: target }] },
 			},
+			select: this.conversationUtilities.getConversationSelectFields(sender.username),
 		});
+
+		const formattedResult = this.conversationUtilities.formatConversationResult(
+			sender,
+			createdConversation
+		);
+
+		return formattedResult;
 	}
 
-	async findOne(first: string, second: string) {
-		if (first === second)
-			throw new HttpException("Cannot find a conversation with yourself!", HttpStatus.BAD_REQUEST);
+	async findOne(sender: User, target: string) {
+		this.conversationUtilities.guardAgainstSelfConversation(sender, target);
 
-		let result: Conversation | null | undefined = await this.cache.getAndUpdate(first, second);
+		let result: Conversation | null | undefined = await this.cache.getAndUpdate(
+			sender.username,
+			target
+		);
 
 		if (!result) {
-			result = await this.prismaService.conversation.findFirst({
-				where: {
-					AND: [
-						{ members: { some: { username: first } } },
-						{ members: { some: { username: second } } },
-					],
-				},
-			});
+			const current = await this.conversationUtilities.findConversation(sender, target);
 
-			if (!result) throw new HttpException("Conversation does not exist!", HttpStatus.NOT_FOUND);
+			if (!current) {
+				throw new HttpException("Conversation does not exist!", HttpStatus.NOT_FOUND);
+			}
 
-			await this.cache.set(first, second, result);
+			result = this.conversationUtilities.formatConversationResult(sender, current);
+
+			await this.cache.set(sender.username, target, result);
 		}
 
 		return result;
 	}
 
-	async findAll(username: string) {
-		return await this.prismaService.conversation.findMany({
-			where: {
-				members: { some: { username } },
-			},
-			include: {
-				members: {
-					select: {
-						nickname: true,
-					},
-					where: {
-						username: {
-							not: username,
-						},
-					},
-				},
-			},
-		});
+	async findAll(sender: User) {
+		const conversations = await this.conversationUtilities.findUserConversations(sender);
+
+		return conversations.map((conversation) =>
+			this.conversationUtilities.formatConversationResult(sender, conversation)
+		);
 	}
 
-	async delete(first: string, second: string) {
-		if (first === second)
-			throw new HttpException(
-				"Cannot delete a conversation with yourself!",
-				HttpStatus.BAD_REQUEST
-			);
+	async delete(sender: User, target: string) {
+		this.conversationUtilities.guardAgainstSelfConversation(sender, target);
 
-		const conversationCheck = await this.prismaService.conversation.findFirst({
-			where: {
-				AND: [
-					{ members: { some: { username: first } } },
-					{ members: { some: { username: second } } },
-				],
-			},
-		});
+		const conversation = await this.conversationUtilities.findAndDeleteConversation(sender, target);
 
-		if (!conversationCheck)
+		if (!conversation) {
 			throw new HttpException("Conversation does not exist!", HttpStatus.BAD_REQUEST);
+		}
 
-		return this.prismaService.$transaction(async (client) => {
-			const result = await client.conversation.delete({
-				where: { id: conversationCheck.id },
-			});
+		await this.cache.delete(sender.username, target);
 
-			if (!result)
-				throw new HttpException("Unable to delete conversation!", HttpStatus.INTERNAL_SERVER_ERROR);
-
-			await this.cache.delete(first, second);
-			return result;
-		});
+		return this.conversationUtilities.formatConversationResult(sender, conversation);
 	}
 }
