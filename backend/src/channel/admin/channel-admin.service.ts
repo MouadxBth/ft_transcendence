@@ -1,83 +1,30 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AdminOperationsDto } from "../dto/admin-operations.dto";
-import { User } from "src/user/entities/user.entity";
 import { UserService } from "src/user/user.service";
+import { ChannelAdminUtilities } from "./channel-admin.utilities";
 
 @Injectable()
 export class ChannelAdminService {
 	constructor(
 		private readonly prisma: PrismaService,
-		private readonly userService: UserService
+		private readonly userService: UserService,
+		private readonly channelAdminUtilities: ChannelAdminUtilities
 	) {}
 
-	private async verifyOperation(user: User, dto: AdminOperationsDto, fetchMember: boolean) {
-		const channelResult = await this.prisma.channel.findUnique({
-			where: {
-				name: dto.channel,
-			},
-			select: {
-				name: true,
-				ownerId: true,
-				members: {
-					select: {
-						id: true,
-						userId: true,
-						admin: true,
-						muted: true,
-					},
-				},
-				banned: {
-					select: {
-						username: true,
-					},
-				},
-				invited: {
-					select: {
-						username: true,
-					},
-				},
-			},
-		});
-
-		if (!channelResult) throw new HttpException("No such channel!", HttpStatus.BAD_REQUEST);
-
-		const adminResult = channelResult.members.find((member) => member.userId == user.username);
-		if ((!adminResult || !adminResult.admin) && user.username !== channelResult.ownerId)
-			throw new HttpException(
-				"Permission denied, user isn't admin/owner in the channel",
-				HttpStatus.BAD_REQUEST
-			);
-
-		const member = channelResult.members.find((member) => member.userId == dto.member);
-		// const caller = arguments.callee.caller.name;
-		// if (!member && caller !== "unban")
-		if (!member && fetchMember === true)
-			throw new HttpException(
-				"Target user of the operation is not a member of the channel!",
-				HttpStatus.BAD_REQUEST
-			);
-		if (member && member.admin === true)
-			throw new HttpException(
-				"This operation cannot be performed on an admin",
-				HttpStatus.BAD_REQUEST
-			);
-
-		return { channelResult, adminResult, member };
-	}
-
-	async kick(user: User, dto: AdminOperationsDto) {
-		const result = await this.verifyOperation(user, dto, true);
+	async kick(username: string, dto: AdminOperationsDto) {
+		const result = await this.channelAdminUtilities.verifyOperation(username, dto, true);
 
 		return await this.prisma.channelMember.delete({
 			where: {
 				id: result.member!.id,
 			},
+			select: this.channelAdminUtilities.formatMember(),
 		});
 	}
 
-	async mute(user: User, dto: AdminOperationsDto) {
-		const result = await this.verifyOperation(user, dto, true);
+	async mute(username: string, dto: AdminOperationsDto) {
+		const result = await this.channelAdminUtilities.verifyOperation(username, dto, true);
 
 		if (result.member?.muted)
 			throw new HttpException("Member is already muted!", HttpStatus.BAD_REQUEST);
@@ -89,11 +36,12 @@ export class ChannelAdminService {
 			data: {
 				muted: true,
 			},
+			select: this.channelAdminUtilities.formatMember(),
 		});
 	}
 
-	async unmute(user: User, dto: AdminOperationsDto) {
-		const result = await this.verifyOperation(user, dto, true);
+	async unmute(username: string, dto: AdminOperationsDto) {
+		const result = await this.channelAdminUtilities.verifyOperation(username, dto, true);
 
 		if (!result.member!.muted)
 			throw new HttpException("Target user is not muted to be unmuted!", HttpStatus.BAD_REQUEST);
@@ -105,37 +53,45 @@ export class ChannelAdminService {
 			data: {
 				muted: false,
 			},
+			select: this.channelAdminUtilities.formatMember(),
 		});
 	}
 
-	async ban(user: User, dto: AdminOperationsDto) {
-		const result = await this.verifyOperation(user, dto, true);
+	async ban(username: string, dto: AdminOperationsDto) {
+		const result = await this.channelAdminUtilities.verifyOperation(username, dto, true);
 
 		const banned = result.channelResult.banned.find((banned) => banned.username === dto.member);
 
 		if (banned) throw new HttpException("Target user is already banned!", HttpStatus.BAD_REQUEST);
-		const update = await this.prisma.channel.update({
+
+		await this.prisma.channelMember.delete({
+			where: {
+				id: result.member!.id,
+			},
+		});
+
+		await this.prisma.channel.update({
 			where: {
 				name: result.channelResult.name,
 			},
 			data: {
 				banned: {
 					connect: {
-						username: result.member!.userId,
+						username: result.member!.user.username,
 					},
 				},
 			},
 		});
-		if (!update) return { banned: false };
-		return { banned: true };
+		return result.member;
 	}
 
-	async unban(user: User, dto: AdminOperationsDto) {
-		const result = await this.verifyOperation(user, dto, true);
+	async unban(username: string, dto: AdminOperationsDto) {
+		const result = await this.channelAdminUtilities.verifyOperation(username, dto, false);
 
 		const banned = result.channelResult.banned.find((member) => member.username == dto.member);
 		if (!banned)
 			throw new HttpException("Target user is not banned to be unbanned!", HttpStatus.BAD_REQUEST);
+
 		const update = await this.prisma.channel.update({
 			where: {
 				name: result.channelResult.name,
@@ -148,27 +104,46 @@ export class ChannelAdminService {
 				},
 			},
 		});
-		if (!update) return { banned: true };
-		return { banned: false };
+
+		if (!update) return { banned: false };
+
+		return { banned: true };
 	}
 
-	async invite(user: User, dto: AdminOperationsDto) {
-		const result = await this.verifyOperation(user, dto, false);
+	async invite(username: string, dto: AdminOperationsDto) {
+		const channelResult = await this.prisma.channel.findUnique({
+			where: {
+				name: dto.channel,
+			},
+			select: this.channelAdminUtilities.formatChannel(),
+		});
+
+		if (!channelResult) throw new HttpException("No such channel!", HttpStatus.BAD_REQUEST);
 
 		const userResult = await this.userService.findOne(dto.member);
 
-		const invited = result.channelResult.invited.find((invited) => invited.username === dto.member);
+		const adminResult = channelResult.members.find((member) => member.user.username == username);
+		if ((!adminResult || !adminResult.admin) && username !== channelResult.ownerId)
+			throw new HttpException(
+				"Permission denied! Only admins and above can invite another member",
+				HttpStatus.BAD_REQUEST
+			);
+
+		const member = channelResult.members.find((member) => member.user.username == dto.member);
+
+		if (member)
+			throw new HttpException("User is already a member of the channel", HttpStatus.BAD_REQUEST);
+
+		const invited = channelResult.invited.find((invited) => invited.username === dto.member);
 
 		if (invited) throw new HttpException("User has already been invited!", HttpStatus.BAD_REQUEST);
 		const update = await this.prisma.channel.update({
 			where: {
-				name: result.channelResult.name,
+				name: channelResult.name,
 			},
 			data: {
 				invited: {
-					connect: {
-						username: userResult.username,
-					},
+					connect: { username: userResult.username },
 				},
 			},
 		});
