@@ -14,6 +14,7 @@ const SocketLayout = ({ children }: { children: React.ReactNode }) => {
 	useAchievementNotification();
 	useConversationNotifications();
 	useChannelNotifications();
+	useGame();
 	return <>{children}</>;
 };
 
