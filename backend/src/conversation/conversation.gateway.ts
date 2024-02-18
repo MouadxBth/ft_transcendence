@@ -38,7 +38,7 @@ export class ConversationGateway implements OnGatewayConnection {
 		client.join(authenticatedUser.user.username);
 	}
 
-	@SubscribeMessage(ConversationEvent.CreateConversation)
+	@SubscribeMessage(ConversationEvent.CREATE)
 	async create(@ConnectedSocket() client: Socket, @MessageBody() targetNickname: string) {
 		const { user } = (client.request as Request).user! as AuthenticatedUser;
 		const targetUser = await this.userService.search(targetNickname);
@@ -57,7 +57,7 @@ export class ConversationGateway implements OnGatewayConnection {
 		});
 	}
 
-	@SubscribeMessage(ConversationEvent.DeleteConversation)
+	@SubscribeMessage(ConversationEvent.DELETE)
 	async delete(@ConnectedSocket() client: Socket, @MessageBody() targetUsername: string) {
 		const { user } = (client.request as Request).user! as AuthenticatedUser;
 

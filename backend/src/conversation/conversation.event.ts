@@ -1,5 +1,5 @@
 export enum ConversationEvent {
-	SendMessage = "send_message",
-	CreateConversation = "create_conversation",
-	DeleteConversation = "delete_conversation",
+	SEND_MESSAGE = "send_message",
+	CREATE = "create_conversation",
+	DELETE = "delete_conversation",
 }

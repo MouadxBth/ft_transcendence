@@ -34,7 +34,7 @@ export class DirectMessageGateway implements OnGatewayConnection {
 		client.join(authenticatedUser.user.username);
 	}
 
-	@SubscribeMessage(ConversationEvent.SendMessage)
+	@SubscribeMessage(ConversationEvent.SEND_MESSAGE)
 	async handleMessage(@ConnectedSocket() client: Socket, @MessageBody() payload: DirectMessageDto) {
 		const { user } = (client.request as Request).user! as AuthenticatedUser;
 		const createdMessage = await this.directMessageService.create(user, payload);
