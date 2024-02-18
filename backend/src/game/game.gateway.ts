@@ -89,7 +89,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 		if (dto.player2 === authenticatedUser.user.username)
 			throw new WsException("Can't send request to yourself!");
-		if (this.isConnected(dto.player2)) this.server.to(dto.player2).emit("game_request", dto);
+		this.isConnected(dto.player2);
+		this.server.to(dto.player2).emit("game_request", dto);
+		this.server.to(dto.player1).emit("request_sent", dto);
 	}
 
 	@SubscribeMessage("join_classic_queue")

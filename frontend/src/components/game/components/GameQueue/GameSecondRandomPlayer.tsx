@@ -10,7 +10,7 @@ export interface GameSecondPlayerProps {
 	opponent: string;
 }
 
-const GameSecondPlayer = ({ opponent }: GameSecondPlayerProps) => {
+const GameSecondRandomPlayer = ({ opponent }: GameSecondPlayerProps) => {
 
 	const { data } = useSingleUserSearch(opponent);
 
@@ -31,7 +31,7 @@ const GameSecondPlayer = ({ opponent }: GameSecondPlayerProps) => {
 			</Avatar>
 			<p>{data?.nickname}</p>
 		</div>
-	)
+	);
 };
 
-export default GameSecondPlayer;
+export default GameSecondRandomPlayer;

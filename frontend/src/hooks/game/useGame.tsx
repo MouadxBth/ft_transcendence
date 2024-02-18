@@ -3,12 +3,12 @@ import useSockets from "../socket/useSockets";
 import { toast as sonner } from "sonner";
 import { useEffect } from "react";
 
-interface matchDto {
+export interface matchDto {
 	player1: string;
 	player2: string;
 }
 
-interface matchErrorDto {
+export interface matchErrorDto {
 	error: string;
 	message: string;
 	data: matchDto;
@@ -59,7 +59,7 @@ const useGame = () => {
 		game?.on("request_denied", requestDenied);
 		game?.on("request_accepted", requestAccepted);
 		game?.on("error", errorHandler);
-	});
+	}, [game]);
 };
 
 export default useGame;

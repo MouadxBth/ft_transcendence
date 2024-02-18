@@ -1,12 +1,15 @@
 import { CardTitle } from "@/components/ui/card";
+import useSingleUserSearch from "@/hooks/user/useSingleUserSearch";
 import { Loader } from "lucide-react";
 
 export interface GameWaitingTitleProps {
 	opponent: string;
-	data: any;
 }
 
-const GameWaitingTitle = ({ opponent, data }: GameWaitingTitleProps) => {
+const GameWaitingTitle = ({ opponent }: GameWaitingTitleProps) => {
+
+	const { data } = useSingleUserSearch(opponent);
+
 	return (
 		<>
 			<CardTitle>
