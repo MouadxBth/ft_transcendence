@@ -6,7 +6,7 @@ import { ErrorType } from "@/lib/types/error";
 
 const useErrorNotifications = () => {
 	const { authenticatedUser } = useAuthentication();
-	const { notifications } = useSockets();
+	const { notifications, conversations } = useSockets();
 	const { toast } = useToast();
 
 	useEffect(() => {
@@ -19,7 +19,17 @@ const useErrorNotifications = () => {
 				});
 			}
 		});
-	}, [notifications, authenticatedUser, toast]);
+
+		conversations?.on("error", (args: ErrorType) => {
+			if (args.authenticatedUser.user.username === authenticatedUser?.user.username) {
+				toast({
+					title: "Error | Conversations",
+					variant: "destructive",
+					description: `${args.message}`,
+				});
+			}
+		});
+	}, [notifications, conversations, authenticatedUser, toast]);
 };
 
 export default useErrorNotifications;
