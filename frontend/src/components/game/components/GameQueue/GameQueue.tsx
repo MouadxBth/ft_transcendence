@@ -10,34 +10,33 @@ import useSockets from "@/hooks/socket/useSockets";
 import { useRouter } from "next/navigation";
 
 interface GameQueueProps {
-	opponent: string,
-	setStatus: (stat: string) => void,
+	opponent: string;
+	setStatus: (stat: string) => void;
 }
 
-const GameQueue = ({opponent, setStatus}: GameQueueProps) => {
-	
+const GameQueue = ({ opponent, setStatus }: GameQueueProps) => {
 	const { push } = useRouter();
 	const { game } = useSockets();
 
 	const handleAcceptRequest = () => {
 		push("/chat");
 		setStatus("confirmed");
-	}
+	};
 
 	const handleDenyRequest = () => {
 		setStatus("choose");
-	}
+	};
 
 	useEffect(() => {
-		game?.on("request_accepted", handleAcceptRequest)
-		game?.on("request_denied", handleDenyRequest)
-	}, [game])
+		game?.on("request_accepted", handleAcceptRequest);
+		game?.on("request_denied", handleDenyRequest);
+	});
 
 	const { authenticatedUser } = useAuthentication();
 	const avatar = authenticatedUser?.user.avatar;
 	const { data } = useSingleUserSearch(opponent);
 	const [isLoading, setIsLoading] = useState(true); //try true and false to see the difference
-	
+
 	console.log(opponent, data);
 
 	return (
@@ -47,10 +46,15 @@ const GameQueue = ({opponent, setStatus}: GameQueueProps) => {
 					{isLoading ? (
 						<CardTitle>
 							<div className="flex flex-col items-center justify-center space-y-3">
-								<Loader className="animate-spin" size={40}/>
-								{
-									opponent ? <h1>Waiting for {data?.nickname} to accept...</h1> : <h1>Waiting for a player to join</h1>
-								}
+								<Loader
+									className="animate-spin"
+									size={40}
+								/>
+								{opponent ? (
+									<h1>Waiting for {data?.nickname} to accept...</h1>
+								) : (
+									<h1>Waiting for a player to join</h1>
+								)}
 							</div>
 						</CardTitle>
 					) : (
@@ -99,7 +103,13 @@ const GameQueue = ({opponent, setStatus}: GameQueueProps) => {
 							<Avatar className="h-32 w-32 text-white border-amber-500 border-2">
 								<AvatarImage
 									className="object-cover"
-									src={data?.avatar}
+									src={
+										data?.avatar
+											? data?.avatar.startsWith("http")
+												? data?.avatar
+												: `${process.env.NEXT_PUBLIC_BACKEND_URL}/upload/avatar/${data?.avatar}`
+											: ""
+									}
 								/>
 								<AvatarFallback>{"flan".toUpperCase().slice(0, 2)}</AvatarFallback>
 							</Avatar>
