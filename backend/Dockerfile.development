@@ -2,4 +2,12 @@ FROM node:latest
 
 RUN npm install -g prisma
 
-WORKDIR /usr/src/app
+WORKDIR /transcendence
+
+COPY package.json /transcendence
+
+RUN npm i
+
+COPY . .
+
+CMD [ "bash", "./prepare.sh"]
