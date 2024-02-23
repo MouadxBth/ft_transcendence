@@ -43,8 +43,6 @@ const ProfileInfoCard = ({ user }: ProfileInfoCardProps) => {
 			<ProfileInfoLevel
 				username={username}
 				nickname={nickname!}
-				level={level}
-				experience={experience}
 			/>
 		</Card>
 	);

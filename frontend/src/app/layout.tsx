@@ -7,6 +7,7 @@ import { ReactQueryClientProvider } from "@/providers/ReactQueryClientProvider";
 import { Sonner } from "@/components/ui/sonner";
 import SocketsContextProvider from "@/providers/SocketsContextProvider";
 import { Toaster } from "@/components/ui/toaster";
+import { Suspense } from "react";
 
 const audiowide = Audiowide({ subsets: ["latin"], weight: "400" });
 
@@ -28,9 +29,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 		<html lang="en">
 			<body className={audiowide.className}>
 				<ReactQueryClientProvider>
-					<AuthenticationContextProvider>
-						<SocketsContextProvider>{children}</SocketsContextProvider>
-					</AuthenticationContextProvider>
+					<Suspense>
+						<AuthenticationContextProvider>
+							<SocketsContextProvider>{children}</SocketsContextProvider>
+						</AuthenticationContextProvider>
+					</Suspense>
 				</ReactQueryClientProvider>
 				<Sonner />
 				<Toaster />

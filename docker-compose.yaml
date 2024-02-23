@@ -4,6 +4,7 @@ services:
   redis:
     container_name: redis
     image: redis:latest
+    restart: on-failure
     env_file:
       - .env
     expose:
@@ -23,6 +24,7 @@ services:
   postgres:
     container_name: postgres
     image: postgres:latest
+    restart: on-failure
     env_file:
       - .env
     expose:
@@ -41,6 +43,7 @@ services:
 
   backend:
     container_name: backend
+    restart: on-failure
     build:
       context: ./backend
       dockerfile: Dockerfile.${ENVIRONMENT}
@@ -58,7 +61,23 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    command: sh prepare.sh
+
+  frontend:
+    container_name: frontend
+    restart: on-failure
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.${ENVIRONMENT}
+    image: frontend:latest
+    ports:
+      - ${FRONTEND_PORT}:3000
+    env_file:
+      - .env
+    networks:
+      - ft_transcendence
+    volumes:
+      - frontend_volume:/usr/src/app
+    depends_on: ["backend"]
 
 networks:
   ft_transcendence:
@@ -69,18 +88,10 @@ volumes:
   redis_volume:
     name: redis_volume
     driver: local
-    # driver_opts:
-    #   o: bind
-    #   type: none
-    #   device: ${REDIS_DATA_DIR}
 
   postgres_volume:
     name: postgres_volume
     driver: local
-    # driver_opts:
-    #   o: bind
-    #   type: none
-    #   device: ${POSTGRES_DATA_DIR}
 
   backend_volume:
     name: backend_volume
@@ -89,3 +100,11 @@ volumes:
       o: bind
       type: none
       device: ${BACKEND_DIR}
+
+  frontend_volume:
+    name: frontend_volume
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${FRONTEND_DIR}

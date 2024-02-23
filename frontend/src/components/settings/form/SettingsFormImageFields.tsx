@@ -4,7 +4,7 @@ import BannerFormField from "../../nickname/form/image/BannerFormField";
 import { UseFormReturn } from "react-hook-form";
 
 export interface SettingsFormImageFieldsProps {
-	form: UseFormReturn<ProfileFormType, any, undefined>;
+	form: UseFormReturn<ProfileFormType, any, ProfileFormType>;
 }
 
 const SettingsFormImageFields = ({ form }: SettingsFormImageFieldsProps) => {

@@ -5,7 +5,7 @@ import settingsFormFieldsContent from "./SettingsFormFieldsContent";
 import { ProfileFormType } from "@/lib/types/form/profile-form";
 
 export interface SettingsFormFieldsProps {
-	form: UseFormReturn<ProfileFormType, any, undefined>;
+	form: UseFormReturn<ProfileFormType, any, ProfileFormType>;
 }
 
 const SettingsFormFields = ({ form }: SettingsFormFieldsProps) => {

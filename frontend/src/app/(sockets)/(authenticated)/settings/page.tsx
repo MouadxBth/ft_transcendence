@@ -1,4 +1,3 @@
-"use client";
 import TwoFaContent from "@/components/settings/2fa/TwoFaContent";
 import SettingsHeader from "@/components/settings/SettingsHeader";
 import SettingsForm from "@/components/settings/form/SettingsForm";

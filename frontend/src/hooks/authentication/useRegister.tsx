@@ -7,7 +7,7 @@ import { AxiosError } from "axios";
 import { UseFormReturn } from "react-hook-form";
 
 export interface UseRegisterProps {
-	form: UseFormReturn<RegisterFormType, any, undefined>;
+	form: UseFormReturn<RegisterFormType, any, RegisterFormType>;
 }
 
 const registerRequest = async (values: RegisterFormType) => {

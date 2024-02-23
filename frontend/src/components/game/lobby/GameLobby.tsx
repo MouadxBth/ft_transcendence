@@ -1,3 +1,5 @@
+"use client";
+
 import { useSearchParams } from "next/navigation";
 import GameRequests from "../requests/GameRequests";
 import GameMatchmaking from "../matchmaking/GameMatchmaking";

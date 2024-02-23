@@ -1,0 +1,15 @@
+FROM node:latest
+
+RUN npm install -g prisma
+
+WORKDIR /transcendence
+
+COPY package.json /transcendence
+
+RUN npm i
+
+COPY . .
+
+RUN npm run build
+
+CMD [ "npm", "run", "start"]

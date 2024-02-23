@@ -3,7 +3,7 @@ import { Button } from "../../ui/button";
 import { ProfileFormType } from "@/lib/types/form/profile-form";
 
 export interface SettingsFormButtonsProps {
-	form: UseFormReturn<ProfileFormType, any, undefined>;
+	form: UseFormReturn<ProfileFormType, any, ProfileFormType>;
 }
 
 const SettingsFormButtons = ({ form }: SettingsFormButtonsProps) => {
