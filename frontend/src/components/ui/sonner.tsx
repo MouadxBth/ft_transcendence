@@ -13,7 +13,7 @@ const Sonner = ({ ...props }: SonnerProps) => {
 			theme={theme as SonnerProps["theme"]}
 			className="toaster group"
 			visibleToasts={5}
-			position="top-right"
+			position="top-left"
 			toastOptions={{
 				classNames: {
 					toast:

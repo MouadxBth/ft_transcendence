@@ -8,6 +8,7 @@ import useGameNotifications from "@/hooks/notifications/useGameNotifications";
 import { GameMatchType } from "@/lib/types/game/game-match";
 import { GamePlayerStatus } from "@/lib/types/game/game-match-player";
 import { GameRequestType } from "@/lib/types/game/game-request";
+import { cn } from "@/lib/utils";
 import { useState } from "react";
 
 const GamePage = () => {
@@ -19,7 +20,17 @@ const GamePage = () => {
 	useGameNotifications();
 
 	return (
-		<article className="h-full w-full container grid grid-cols-2 gap-2 py-2">
+		<article
+			className={cn(
+				"h-full w-full container py-2",
+				{
+					"grid grid-cols-2 gap-2": status !== "started",
+				},
+				{
+					"flex items-center justify-center": status === "started",
+				}
+			)}
+		>
 			{status === "lobby" && <GameLobby />}
 			{status === "waiting" && (
 				<GameLoading
@@ -33,8 +44,6 @@ const GamePage = () => {
 					match={game!}
 				/>
 			)}
-
-			{/* <GameOptionsForm /> */}
 		</article>
 	);
 };

@@ -42,6 +42,7 @@ export const ConfigSchema = Joi.object({
 		.required(),
 	FRONTEND_LANDING_PAGE: Joi.string().required(),
 	FRONTEND_HOME_PAGE: Joi.string().required(),
+	FRONTEND_URL: Joi.string().required(),
 
 	GAINED_EXPERIENCE_CONSTANT: Joi.number().default(150),
 	GAINED_POINTS_CONSTANT: Joi.number().default(10),

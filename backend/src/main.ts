@@ -54,8 +54,10 @@ function configureWebsocketAdapter(app: INestApplication<any>) {
 }
 
 function configureCors(app: INestApplication<any>) {
+	const configService = app.get(ConfigService);
+
 	app.enableCors({
-		origin: "http://localhost:4000",
+		origin: configService.get<string>("FRONTEND_URL"),
 		credentials: true,
 	});
 }

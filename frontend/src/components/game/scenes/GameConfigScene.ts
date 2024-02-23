@@ -85,7 +85,7 @@ export class GameConfigScene extends Phaser.Scene {
 
 				if (countdown < 0) {
 					// Countdown finished, remove the countdown text
-					this.gameComponents.gameState = GameState.IDLE;
+					this.gameComponents.gameState = GameState.RUNNING;
 					countdownText.destroy();
 					countdownEvent.remove(); // Stop the timer event
 

@@ -1,3 +1,7 @@
-prisma migrate dev --name init
+prisma generate
 
-exec npm run start
+prisma db push
+
+npm run build
+
+exec npm run start:prod
