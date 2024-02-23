@@ -1,8 +1,14 @@
+import { cn } from "@/lib/utils";
 import React from "react";
 
-const HorizontalSeparator = ({ text }: { text?: string }) => {
+export interface HorizontalSeparatorProps {
+	text?: string;
+	className?: string;
+}
+
+const HorizontalSeparator = ({ text, className }: HorizontalSeparatorProps) => {
 	return (
-		<div className="flex items-center">
+		<div className={cn("flex items-center", className)}>
 			<hr className="flex-grow border-t-2" />
 			<span className="mx-4 text-accent">{text}</span>
 			<hr className="flex-grow border-t-2 " />

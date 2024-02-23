@@ -23,8 +23,6 @@ const ChannelsContextProvider = ({ children }: { children: React.ReactNode }) =>
 			payload: data,
 		});
 
-		console.log("CHANNELS", data);
-
 		setLoading(false);
 	}, [isLoading, data, channelsDispatch]);
 

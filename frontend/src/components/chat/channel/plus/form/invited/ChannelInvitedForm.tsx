@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import useSockets from "@/hooks/socket/useSockets";
 import { ChannelJoinFormType, channelJoinFormSchema } from "@/lib/types/form/channel-join-form";
-import ChannelFind from "./ChannelInvited";
+import ChannelInvited from "./ChannelInvited";
 
 const ChannelInvitedForm = () => {
 	const { channels } = useSockets();
@@ -32,7 +32,7 @@ const ChannelInvitedForm = () => {
 					control={form.control}
 					name="channel"
 					render={({ field }) => (
-						<ChannelFind
+						<ChannelInvited
 							field={field}
 							form={form}
 						/>

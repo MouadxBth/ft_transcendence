@@ -5,6 +5,7 @@ import useChannelNotifications from "@/hooks/notifications/useChannelNotificatio
 import useConversationNotifications from "@/hooks/notifications/useConversationNotifications";
 import useErrorNotifications from "@/hooks/notifications/useErrorNotifications";
 import useFriendStatusNotifications from "@/hooks/notifications/useFriendStatusNotifications";
+import useGameRequestNotifications from "@/hooks/notifications/useGameRequestNotifications";
 import React from "react";
 
 const SocketLayout = ({ children }: { children: React.ReactNode }) => {
@@ -13,6 +14,8 @@ const SocketLayout = ({ children }: { children: React.ReactNode }) => {
 	useAchievementNotification();
 	useConversationNotifications();
 	useChannelNotifications();
+	useGameRequestNotifications();
+
 	return <>{children}</>;
 };
 

@@ -259,6 +259,24 @@ const useChannelNotifications = () => {
 				});
 			}
 		);
+
+		channels?.on("password_added", (args: ChannelType) => {
+			sonner.success("Channels", {
+				description: `Successfully added a password to channel "${args.name}"`,
+			});
+		});
+
+		channels?.on("password_modified", (args: ChannelType) => {
+			sonner.success("Channels", {
+				description: `Successfully modified the password of channel "${args.name}"`,
+			});
+		});
+
+		channels?.on("password_deleted", (args: ChannelType) => {
+			sonner.success("Channels", {
+				description: `Successfully deleted the password of channel "${args.name}"`,
+			});
+		});
 	}, [channels, queryClient, authenticatedUser]);
 };
 

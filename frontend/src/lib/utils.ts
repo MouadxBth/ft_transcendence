@@ -80,3 +80,14 @@ export const getStatusColor = (status: string) => {
 	else if (status === "PROTECTED") return "text-amber-500";
 	else return "text-blue-500";
 };
+
+export const getRankColor = (rank: number) => {
+	const colors = [
+		"text-amber-500",
+		"text-green-500",
+		"text-blue-500",
+		"", // default color
+	];
+
+	return colors[rank < colors.length ? rank : colors.length - 1];
+};

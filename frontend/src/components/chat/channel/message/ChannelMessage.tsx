@@ -19,7 +19,6 @@ const ChannelMessage = ({ id, reference, sender, avatar, message, date }: Channe
 	useEffect(() => {
 		if (!reference) return;
 
-		console.log("SCROLLING");
 		scrollToBottom();
 	});
 

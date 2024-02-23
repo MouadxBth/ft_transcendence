@@ -25,6 +25,10 @@ const ProfileOnlineStatus = ({ username, className }: ProfileOnlineStatusProps) 
 			if (args.username === username) setOnlineStatus("Offline");
 		});
 
+		notifications?.on("status_update", (user: string, status: string) => {
+			if (user === username) setOnlineStatus(status);
+		});
+
 		if (isLoading) return;
 
 		if (data) {

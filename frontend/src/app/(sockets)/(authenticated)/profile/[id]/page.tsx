@@ -2,6 +2,7 @@
 
 import ProfileAchievementsCard from "@/components/profile/achievements/ProfileAchievementsCard";
 import ProfileFriendsCard from "@/components/profile/friends/ProfileFriendsCard";
+import ProfileHistoryCard from "@/components/profile/history/ProfileHistoryCard";
 import ProfileInfoCard from "@/components/profile/info/ProfileInfoCard";
 import ProfileInfoCardSkeleton from "@/components/profile/info/skeleton/ProfileInfoCardSkeleton";
 import useProfile from "@/hooks/user/useProfile";
@@ -29,6 +30,12 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
 			<div className="grid grid-cols-2 gap-2">
 				{!loading && <ProfileAchievementsCard user={user!} />}
 				{!loading && <ProfileFriendsCard user={user!} />}
+				{!loading && (
+					<ProfileHistoryCard
+						user={user!}
+						className="col-span-2"
+					/>
+				)}
 			</div>
 		</article>
 	);

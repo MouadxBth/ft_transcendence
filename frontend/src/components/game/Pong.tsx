@@ -10,9 +10,21 @@ import {
 	GameBackgroundSceneKey,
 	GameOverSceneKey,
 } from "./consts/SceneKeys";
+import useGame from "@/hooks/game/useGame";
+import { useAuthentication } from "@/hooks/authentication/useAuthentication";
+import { GameMatchType } from "@/lib/types/game/game-match";
+import { GameData } from "@/lib/types/game/game-data";
+import { GameRequestType } from "@/lib/types/game/game-request";
 
-const Pong = () => {
+export interface PongProps {
+	className?: string;
+	match: GameMatchType;
+}
+
+const Pong = ({ className, match }: PongProps) => {
 	const gameRef = useRef<Game>();
+	const context = useGame();
+	const { authenticatedUser } = useAuthentication();
 
 	useEffect(() => {
 		const initPhaser = async () => {
@@ -20,7 +32,7 @@ const Pong = () => {
 				const Phaser = await import("phaser");
 				const { Preload } = await import("./scenes/Preload");
 				const { TitleScene } = await import("./scenes/TitleScene");
-				const { PongGame } = await import("./scenes/Game");
+				const { GameScene } = await import("./scenes/GameScene");
 				const { GameBackground } = await import("./scenes/GameBackground");
 				const { GameOver } = await import("./scenes/GameOver");
 
@@ -29,10 +41,9 @@ const Pong = () => {
 				const config = {
 					type: Phaser.AUTO,
 					parent: "phaser-game",
-					backgroundColor: "#FF0000",
 					scale: {
-						width: 800,
-						height: 600,
+						mode: Phaser.Scale.FIT,
+						autoCenter: Phaser.Scale.CENTER_BOTH,
 					},
 					physics: {
 						default: "arcade",
@@ -47,20 +58,29 @@ const Pong = () => {
 
 				gameRef.current.scene.add(TitleSceneKey, TitleScene);
 				gameRef.current.scene.add(PreloadSceneKey, Preload);
-				gameRef.current.scene.add(GameSceneKey, PongGame);
+				gameRef.current.scene.add(GameSceneKey, GameScene);
 				gameRef.current.scene.add(GameBackgroundSceneKey, GameBackground);
 				gameRef.current.scene.add(GameOverSceneKey, GameOver);
 
-				gameRef.current.scene.start(PreloadSceneKey);
+				gameRef.current.scene.start(PreloadSceneKey, {
+					context,
+					authenticatedUser,
+					match,
+				} satisfies GameData);
 			} catch (error: any) {
-				console.log(error);
+				console.error(error);
 			}
 		};
 
 		initPhaser();
-	}, []);
+	}, [context, authenticatedUser, match]);
 
-	return <div id="phaser-game"></div>;
+	return (
+		<div
+			id="phaser-game"
+			className={className}
+		></div>
+	);
 };
 
 export default Pong;

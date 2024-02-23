@@ -35,8 +35,8 @@ const ProfileAchievementsCard = ({ user }: ProfileAchievementsCardProps) => {
 	}, [data, isLoading, isError, isSuccess, error]);
 
 	return (
-		<Card className="flex flex-col space-y-2">
-			<CardHeader className="p-0 pt-6 px-6">
+		<Card className="flex flex-col space-y-1">
+			<CardHeader className="p-0 py-3 px-6">
 				<CardTitle>Achievements</CardTitle>
 			</CardHeader>
 

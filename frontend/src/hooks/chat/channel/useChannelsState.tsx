@@ -19,14 +19,6 @@ const channelsReducer: Reducer<ChannelsState, ChannelsAction> = (state, action) 
 				channels: [...state.channels, action.payload],
 			};
 		case "REMOVE_CHANNEL":
-			console.log(
-				"PAYLOAD",
-				action.payload,
-				"CURRENT ",
-				state.channels,
-				" WILL BE ",
-				state.channels.filter((channel) => channel.name !== action.payload.name)
-			);
 			return {
 				...state,
 				channels: state.channels.filter((channel) => channel.name !== action.payload.name),

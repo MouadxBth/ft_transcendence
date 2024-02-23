@@ -25,7 +25,6 @@ const ChannelInput = ({ channel }: ChannelInputProps) => {
 			placeholder="Type a message..."
 			disabled={result.isLoading || member.muted}
 			callback={(value) => {
-				console.log(value);
 				if (/^\s*$/.test(value)) return;
 				channels?.emit("send_message", {
 					channelName: channel,

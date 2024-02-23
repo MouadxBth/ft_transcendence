@@ -6,6 +6,7 @@ import { useConversations } from "@/hooks/chat/conversation/useConversations";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ConversationChallenge from "./ConversationChallenge";
 import ProfileBlockButton from "@/components/profile/info/block/ProfileBlockButton";
+import Link from "next/link";
 
 export interface ConversationHeaderProps {
 	name: string;
@@ -23,7 +24,10 @@ const ConversationHeader = ({ name }: ConversationHeaderProps) => {
 
 	return (
 		<div className="flex items-center justify-between py-2 px-6 border">
-			<div className="flex items-center space-x-4">
+			<Link
+				href={`/profile/${username}`}
+				className="flex items-center space-x-4"
+			>
 				<Avatar>
 					<AvatarImage
 						className="object-cover"
@@ -36,7 +40,7 @@ const ConversationHeader = ({ name }: ConversationHeaderProps) => {
 					<div>{nickname}</div>
 					<div className="text-xs">{`${firstName} ${lastName}`}</div>
 				</div>
-			</div>
+			</Link>
 			<div className="flex space-x-2">
 				<ProfileBlockButton
 					target={name}

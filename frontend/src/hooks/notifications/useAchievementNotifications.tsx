@@ -5,7 +5,7 @@ import { useAuthentication } from "@/hooks/authentication/useAuthentication";
 import { toast as sonner } from "sonner";
 import { formattedDate } from "@/lib/utils";
 
-const AchievementData = ({
+export const AchievementData = ({
 	name,
 	unlockedAt,
 	brief,

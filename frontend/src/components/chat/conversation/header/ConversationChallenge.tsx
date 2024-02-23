@@ -1,8 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import useSockets from "@/hooks/socket/useSockets";
 import { Joystick } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export interface ConversationChallengeProps {
 	name: string;
@@ -10,14 +10,13 @@ export interface ConversationChallengeProps {
 }
 
 const ConversationChallenge = ({ name, className }: ConversationChallengeProps) => {
-	const { conversations } = useSockets();
-
+	const { push } = useRouter();
 	return (
 		<Button
 			className={className}
 			variant="outline"
 			onClick={() => {
-				// conversations?.emit("delete_conversation", name);
+				push(`/game?friend=${name}`);
 			}}
 		>
 			<Joystick className="mr-2 h-4 w-4" />

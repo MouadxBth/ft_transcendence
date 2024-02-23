@@ -12,6 +12,8 @@ import ChannelMessageListSkeleton from "./ChannelMessageListSkeleton";
 import ChannelMessageLoadMore from "./ChannelMessageLoadMore";
 import useChannelMessagesState from "@/hooks/chat/channel/message/useChannelMessagesState";
 import useChannelMessagesInfinite from "@/hooks/chat/channel/message/useChannelMessagesInfinite";
+import { BlockStatusType } from "@/lib/types/block/block-status";
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface ChannelMessageListProps {
 	className?: string;
@@ -23,8 +25,9 @@ const ChannelMessageList = ({ className, channel }: ChannelMessageListProps) => 
 	const { messages, channelMessagesDispatch } = useChannelMessagesState();
 	const [loading, setLoading] = useState(true);
 	const { data, isFetching, fetchNextPage, hasNextPage } = useChannelMessagesInfinite(channel);
-	const { channels } = useSockets();
+	const { channels, notifications } = useSockets();
 	const { authenticatedUser } = useAuthentication();
+	const queryClient = useQueryClient();
 
 	useEffect(() => {
 		channels?.on("recieve_message", (message: ChannelMessageType) => {
@@ -34,8 +37,6 @@ const ChannelMessageList = ({ className, channel }: ChannelMessageListProps) => 
 			});
 		});
 		channels?.on("member_left", (channel: ChannelType, member: ChannelMemberType) => {
-			console.log(channel, member);
-
 			if (authenticatedUser?.user.username === member.user.username) {
 				return;
 			}
@@ -45,7 +46,21 @@ const ChannelMessageList = ({ className, channel }: ChannelMessageListProps) => 
 				payload: member,
 			});
 		});
-	}, [channels, authenticatedUser, channelMessagesDispatch]);
+
+		notifications?.on("user_blocked", (args: BlockStatusType) => {
+			if (authenticatedUser?.user.username === args.senderId) {
+				channelMessagesDispatch({
+					type: "FILTER_MESSAGES",
+					payload: args.targetId,
+				});
+			}
+		});
+		notifications?.on("user_unblocked", (args: BlockStatusType) => {
+			queryClient.invalidateQueries({
+				queryKey: ["channel-messages-infinite", channel],
+			});
+		});
+	}, [channel, channels, notifications, queryClient, authenticatedUser, channelMessagesDispatch]);
 
 	useEffect(() => {
 		if (isFetching) return;

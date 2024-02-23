@@ -14,6 +14,7 @@ import ChannelKick from "./kick/ChannelKick";
 import ChannelPromote from "./promote/ChannelPromote";
 import ChannelMute from "./mute/ChannelMute";
 import { cn } from "@/lib/utils";
+import ChannelUpdate from "./update/ChannelUpdate";
 
 export interface ChannelSettingsProps {
 	name: string;
@@ -58,43 +59,49 @@ const ChannelSettings = ({ name, className }: ChannelSettingsProps) => {
 		<div className={cn("", className)}>
 			<ChannelMembers
 				channel={channel}
-				className="rouneded"
+				className="rounded text-xs px-2"
 			/>
 
 			<ChannelPromote
 				name={name}
 				isOwner={isOwner}
-				className="rouneded"
+				className="rounded text-xs px-2"
 			/>
 
 			<ChannelInvite
 				name={name}
 				status={channel.status}
 				isAdmin={isAdmin}
-				className="rounded"
+				className="rounded text-xs px-2"
 			/>
 
 			<ChannelBan
 				name={name}
 				isAdmin={isAdmin}
-				className="rouneded"
+				className="rounded text-xs px-2"
 			/>
 
 			<ChannelMute
 				name={name}
 				isAdmin={isAdmin}
-				className="rouneded"
+				className="rounded text-xs px-2"
 			/>
 
 			<ChannelKick
 				name={name}
 				isAdmin={isAdmin}
-				className="rouneded"
+				className="rounded text-xs px-2"
+			/>
+
+			<ChannelUpdate
+				channel={channel}
+				isOwner={isOwner}
+				className="rounded text-xs px-2"
 			/>
 
 			<ChannelQuit
 				name={name}
-				className="rouneded"
+				className="rounded text-xs px-2"
 			/>
 		</div>
 	);

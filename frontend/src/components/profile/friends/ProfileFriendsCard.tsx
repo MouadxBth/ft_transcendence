@@ -43,7 +43,7 @@ const ProfileFriendsCard = ({ user }: ProfileFriendsCardProps) => {
 					className="absolute top-2 right-2 z-10"
 				/>
 			)}
-			<div className="flex flex-col space-y-2">
+			<div className="flex flex-col space-y-1">
 				<ProfileFriendsTitle />
 
 				<ProfileFriendsStats

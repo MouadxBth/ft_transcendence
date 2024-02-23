@@ -9,6 +9,7 @@ export interface ChannelMessagesState {
 export type ChannelMessagesAction =
 	| { type: "ADD_MESSAGE"; payload: ChannelMessageType }
 	| { type: "REMOVE_MESSAGES"; payload: ChannelMemberType }
+	| { type: "FILTER_MESSAGES"; payload: string }
 	| { type: "SET_MESSAGES"; payload: ChannelMessageType[] };
 
 const channelMessagesReducer: Reducer<ChannelMessagesState, ChannelMessagesAction> = (
@@ -25,6 +26,13 @@ const channelMessagesReducer: Reducer<ChannelMessagesState, ChannelMessagesActio
 			return {
 				...state,
 				messages: action.payload,
+			};
+		case "FILTER_MESSAGES":
+			return {
+				...state,
+				messages: state.messages.filter(
+					(message) => message.sender.user.username !== action.payload
+				),
 			};
 		case "REMOVE_MESSAGES":
 			return {

@@ -33,10 +33,8 @@ const ChannelMembers = ({ channel, className }: ChannelMembersProps) => {
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Channel Members</DialogTitle>
-					<DialogDescription>
-						<ChannelMemberList name={channel.name} />
-					</DialogDescription>
 				</DialogHeader>
+				<ChannelMemberList name={channel.name} />
 			</DialogContent>
 		</Dialog>
 	);

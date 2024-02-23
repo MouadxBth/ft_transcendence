@@ -7,7 +7,7 @@ export interface ProfileFriendsTitleProps {
 
 const ProfileFriendsTitle = ({ className }: ProfileFriendsTitleProps) => {
 	return (
-		<CardHeader className={cn("p-0 pt-6 px-6", className)}>
+		<CardHeader className={cn("p-0 py-3 px-6", className)}>
 			<CardTitle className="flex justify-between items-center relative">
 				<div>Friends</div>
 			</CardTitle>
