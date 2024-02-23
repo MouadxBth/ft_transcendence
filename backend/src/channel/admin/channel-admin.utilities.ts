@@ -67,10 +67,7 @@ export class ChannelAdminUtilities {
 
 		const adminResult = channelResult.members.find((member) => member.user.username == username);
 		if ((!adminResult || !adminResult.admin) && username !== channelResult.ownerId)
-			throw new HttpException(
-				"Permission denied, user isn't admin/owner in the channel",
-				HttpStatus.BAD_REQUEST
-			);
+			throw new HttpException("Permission denied!", HttpStatus.BAD_REQUEST);
 
 		const member = channelResult.members.find((member) => member.user.username == dto.member);
 		// const caller = arguments.callee.caller.name;
@@ -80,9 +77,16 @@ export class ChannelAdminUtilities {
 				"Target user of the operation is not a member of the channel!",
 				HttpStatus.BAD_REQUEST
 			);
-		if (member && member.admin === true && username !== channelResult.ownerId)
+
+		console.log(member, channelResult);
+
+		if (
+			member &&
+			(member.admin || member.user.username === channelResult.ownerId) &&
+			username !== channelResult.ownerId
+		)
 			throw new HttpException(
-				"This operation cannot be performed on an admin",
+				"This operation cannot be performed on an admin or above",
 				HttpStatus.BAD_REQUEST
 			);
 

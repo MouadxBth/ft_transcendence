@@ -32,6 +32,7 @@ export class WsExceptionFilter extends BaseWsExceptionFilter {
 				data: data,
 			};
 		} else {
+			console.error(exception);
 			errorResponse = {
 				authenticatedUser,
 				error: "Internal Server Error",

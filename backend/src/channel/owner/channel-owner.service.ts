@@ -1,10 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AdminOperationsDto } from "../dto/admin-operations.dto";
+import { PasswordOperationsDto } from "../dto/password-operations.dto";
+import { ChannelService } from "../channel.service";
+import { UpdateChannelDto } from "../dto/update-channel.dto";
+import { ChannelStatus } from "../enums/channel-status.enum";
 
 @Injectable()
 export class ChannelOwnerService {
-	constructor(private readonly prisma: PrismaService) {}
+	constructor(
+		private readonly prisma: PrismaService,
+		private readonly channelService: ChannelService
+	) {}
 
 	async verifyOperation(username: string, dto: AdminOperationsDto) {
 		const channelResult = await this.prisma.channel.findUnique({
@@ -97,5 +104,41 @@ export class ChannelOwnerService {
 			},
 			select: this.formatChannelMember(),
 		});
+	}
+
+	async addPassword(username: string, dto: PasswordOperationsDto) {
+		return await this.channelService.update(
+			dto.channel,
+			{
+				name: dto.channel,
+				password: dto.password,
+				status: ChannelStatus.PROTECTED,
+			} as UpdateChannelDto,
+			username
+		);
+	}
+
+	async modifyPassword(username: string, dto: PasswordOperationsDto) {
+		return await this.channelService.update(
+			dto.channel,
+			{
+				name: dto.channel,
+				password: dto.password,
+				status: ChannelStatus.PROTECTED,
+			} as UpdateChannelDto,
+			username
+		);
+	}
+
+	async deletePassword(username: string, channel: string) {
+		return await this.channelService.update(
+			channel,
+			{
+				name: channel,
+				password: null,
+				status: ChannelStatus.PUBLIC,
+			} as UpdateChannelDto,
+			username
+		);
 	}
 }

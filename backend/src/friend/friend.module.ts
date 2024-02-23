@@ -7,6 +7,7 @@ import { FriendGateway } from "./friend.gateway";
 @Module({
 	controllers: [FriendController],
 	providers: [FriendService, FriendGateway],
+	exports: [FriendService],
 })
 export class FriendModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {

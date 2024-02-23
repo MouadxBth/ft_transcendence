@@ -1,12 +1,7 @@
-import { IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsOptional } from "class-validator";
 
 export class MatchHistoryDto {
-	@IsString()
+	@IsBoolean()
 	@IsOptional()
-	map?: string;
-
-	@IsString()
-	@IsOptional()
-	powerUp?: string;
-
+	super?: boolean;
 }

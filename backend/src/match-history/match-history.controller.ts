@@ -9,6 +9,20 @@ import { ApiTags, ApiOkResponse, ApiParam } from "@nestjs/swagger";
 export class MatchHistoryController {
 	constructor(private readonly matchHistoryService: MatchHistoryService) {}
 
+	@Get("player/:username")
+	@ApiOkResponse({
+		description: "Returns a list of match histories for a specific player.",
+	})
+	@ApiParam({
+		name: "username",
+		description: "Username of the player.",
+		required: true,
+		type: String,
+	})
+	async findAll(@Param("username") username: string) {
+		return await this.matchHistoryService.findAll(username);
+	}
+
 	@Get(":id")
 	@ApiOkResponse({
 		description: "Returns details of a specific match history.",
@@ -25,19 +39,5 @@ export class MatchHistoryController {
 		if (Number.isNaN(parsedId))
 			throw new HttpException("Invalid id parameter value!", HttpStatus.BAD_REQUEST);
 		return await this.matchHistoryService.findOne(parsedId);
-	}
-
-	@Get("player/:username")
-	@ApiOkResponse({
-		description: "Returns a list of match histories for a specific player.",
-	})
-	@ApiParam({
-		name: "username",
-		description: "Username of the player.",
-		required: true,
-		type: String,
-	})
-	async findAll(@Param("username") username: string) {
-		return await this.matchHistoryService.findAll(username);
 	}
 }

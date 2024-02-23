@@ -7,6 +7,7 @@ import { AchievementGateway } from "./achievement.gateway";
 @Module({
 	controllers: [AchievementController],
 	providers: [AchievementService, AchievementGateway],
+	exports: [AchievementService],
 	imports: [UserModule],
 })
 export class AchievementModule {}

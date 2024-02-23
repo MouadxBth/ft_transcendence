@@ -18,6 +18,7 @@ import { UserService } from "src/user/user.service";
 import { ChannelService } from "../channel.service";
 import { ChannelOwnerService } from "./channel-owner.service";
 import { ChannelEvent } from "../channel.event";
+import { PasswordOperationsDto } from "../dto/password-operations.dto";
 
 @WebSocketGateway({
 	namespace: "channel",
@@ -84,6 +85,45 @@ export class ChannelOwnerGateway {
 				channel: dto.channel,
 				sender: user.nickname,
 			});
+		});
+	}
+
+	@SubscribeMessage(ChannelEvent.ADD_PASSWORD)
+	async addPassword(@ConnectedSocket() client: Socket, @MessageBody() dto: PasswordOperationsDto) {
+		const { user } = (client.request as Request).user as AuthenticatedUser;
+
+		const result = await this.channelOwnerService.addPassword(user.username, dto);
+
+		this.server.to(user.username).emit("password_added", result);
+		result.members.forEach((member) => {
+			this.server.to(member.user.username).emit("added_channel_password", result);
+		});
+	}
+
+	@SubscribeMessage(ChannelEvent.MODIFY_PASSWORD)
+	async modifyPassword(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() dto: PasswordOperationsDto
+	) {
+		const { user } = (client.request as Request).user as AuthenticatedUser;
+
+		const result = await this.channelOwnerService.modifyPassword(user.username, dto);
+
+		this.server.to(user.username).emit("password_modified", result);
+		result.members.forEach((member) => {
+			this.server.to(member.user.username).emit("modified_channel_password", result);
+		});
+	}
+
+	@SubscribeMessage(ChannelEvent.DELETE_PASSWORD)
+	async deletePassword(@ConnectedSocket() client: Socket, @MessageBody() channel: string) {
+		const { user } = (client.request as Request).user as AuthenticatedUser;
+
+		const result = await this.channelOwnerService.deletePassword(user.username, channel);
+
+		this.server.to(user.username).emit("password_deleted", result);
+		result.members.forEach((member) => {
+			this.server.to(member.user.username).emit("deleted_channel_password", result);
 		});
 	}
 }

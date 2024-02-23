@@ -8,5 +8,6 @@ import { MatchHistoryModule } from "src/match-history/match-history.module";
 	imports: [UserModule, MatchHistoryModule],
 	controllers: [EloRankingController],
 	providers: [EloRankingService],
+	exports: [EloRankingService],
 })
 export class EloRankingModule {}

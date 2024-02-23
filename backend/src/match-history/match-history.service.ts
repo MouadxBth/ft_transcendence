@@ -2,8 +2,9 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserService } from "src/user/user.service";
 import { MatchHistoryDto } from "./dto/match-history.dto";
-import { MatchResultDto, Player, PlayerDto } from "./dto/match-result.dto";
+import { MatchResultDto } from "./dto/match-result.dto";
 import { MatchType } from "@prisma/client";
+import { GamePlayer } from "src/game/entities/game-player.entity";
 
 @Injectable()
 export class MatchHistoryService {
@@ -14,11 +15,10 @@ export class MatchHistoryService {
 
 	async create(dto: MatchHistoryDto) {
 		let matchType: MatchType = MatchType.CLASSIC;
-		if (dto.map || dto.powerUp) matchType = MatchType.CUSTOM;
+		if (dto.super) matchType = MatchType.CUSTOM;
 
 		return await this.prismaService.matchHistory.create({
 			data: {
-				...dto,
 				type: matchType,
 			},
 		});
@@ -53,7 +53,7 @@ export class MatchHistoryService {
 	}
 
 	async findAll(username: string) {
-		return this.prismaService.matchHistory.findMany({
+		const result = await this.prismaService.matchHistory.findMany({
 			where: {
 				members: {
 					some: {
@@ -63,21 +63,40 @@ export class MatchHistoryService {
 					},
 				},
 			},
-			include: {
+			orderBy: {
+				createdAt: "desc",
+			},
+			select: {
+				id: true,
+				createdAt: true,
+				type: true,
 				members: {
 					select: {
 						winner: true,
 						draw: true,
 						score: true,
-						points: true,
 						user: {
 							select: {
 								username: true,
+								nickname: true,
+								avatar: true,
+								firstName: true,
+								lastName: true,
 							},
 						},
 					},
 				},
 			},
+		});
+
+		return result.map((match) => {
+			return {
+				id: match.id,
+				createdAt: match.createdAt,
+				type: match.type,
+				player1: match.members.find((member) => member.user.username === username)!,
+				player2: match.members.find((member) => member.user.username !== username)!,
+			};
 		});
 	}
 
@@ -90,36 +109,26 @@ export class MatchHistoryService {
 		return await this.prismaService.matchHistory.delete({ where: { id: id } });
 	}
 
-	private recordResult(dto: PlayerDto) {
-		const data: Player = dto;
-
+	private recordResult(id: number, { user, winner, draw, score }: GamePlayer) {
 		return this.prismaService.matchResult.create({
 			data: {
-				...data,
-				user: {
-					connect: {
-						username: dto.username,
-					},
-				},
-				match: {
-					connect: {
-						id: dto.matchId,
-					},
-				},
+				winner,
+				draw,
+				score,
+
+				user: { connect: { username: user.username } },
+				match: { connect: { id } },
 			},
 		});
 	}
 
-	async recordResults(dto: MatchResultDto) {
-		await this.userService.findOne(dto.Player1.username);
-		await this.userService.findOne(dto.Player2.username);
+	async recordResults({ matchId, player1, player2 }: MatchResultDto) {
+		await this.userService.findOne(player1.user.username);
+		await this.userService.findOne(player2.user.username);
 
-		if (dto.Player1.matchId !== dto.Player2.matchId)
-			throw new HttpException("Players don't share the same match id !!", HttpStatus.BAD_REQUEST);
+		const matchHistory = await this.findOne(matchId);
 
-		const matchHistory = await this.findOne(dto.Player1.matchId);
-
-		await Promise.all([this.recordResult(dto.Player1), this.recordResult(dto.Player2)]);
+		await Promise.all([this.recordResult(matchId, player1), this.recordResult(matchId, player2)]);
 
 		return await this.findOne(matchHistory.id);
 	}

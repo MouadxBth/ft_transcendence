@@ -25,11 +25,12 @@ export class AchievementGateway {
 	constructor(private readonly achievementService: AchievementService) {}
 
 	@SubscribeMessage("award_achievement")
-	async handleFriendRequest(@ConnectedSocket() client: Socket, @MessageBody() payload: string) {
+	async awardAchievement(@ConnectedSocket() client: Socket, @MessageBody() payload: string) {
 		const authenticatedUser = (client.request as Request).user! as AuthenticatedUser;
 		const result = await this.achievementService.awardAchievement(
 			payload,
-			authenticatedUser.user.username
+			authenticatedUser.user.username,
+			false
 		);
 		this.server.to(authenticatedUser.user.username).emit("achievement_awarded", result);
 	}

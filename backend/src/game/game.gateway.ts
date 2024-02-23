@@ -6,7 +6,6 @@ import {
 	SubscribeMessage,
 	WebSocketGateway,
 	WebSocketServer,
-	WsException,
 } from "@nestjs/websockets";
 import { Socket } from "socket.io";
 import { UseFilters, UseGuards, UsePipes } from "@nestjs/common";
@@ -15,9 +14,15 @@ import { WsAuthenticatedGuard } from "src/auth/guards/ws-authenticated.guard";
 import { WsExceptionFilter } from "src/socket-io/ws-exception.filter";
 import { Request } from "express";
 import { AuthenticatedUser } from "src/auth/entities/authenticated-user.entity";
-import { GameRoomDto, PlayerMovementDto } from "./dto/game.dto";
+import { GameService } from "./game.service";
 import { MatchHistoryService } from "src/match-history/match-history.service";
-import { MatchResultDto } from "src/match-history/dto/match-result.dto";
+import { OnlineStatusService } from "src/online-status/online-status.service";
+import { EloRankingService } from "src/elo-ranking/elo-ranking.service";
+import { Game } from "./entities/game.entity";
+import { LevelService } from "src/level/level.service";
+import { User } from "src/user/entities/user.entity";
+import { GamePlayer } from "./entities/game-player.entity";
+import { AchievementService } from "src/achievement/achievement.service";
 
 @WebSocketGateway({
 	namespace: "game",
@@ -26,171 +31,318 @@ import { MatchResultDto } from "src/match-history/dto/match-result.dto";
 @UseGuards(WsAuthenticatedGuard)
 @UseFilters(WsExceptionFilter)
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
-	constructor(private readonly matchHistoryService: MatchHistoryService) {}
+	constructor(
+		private readonly gameService: GameService,
+		private readonly matchHistoryService: MatchHistoryService,
+		private readonly onlineStatusService: OnlineStatusService,
+		private readonly eloRankingService: EloRankingService,
+		private readonly levelService: LevelService,
+		private readonly achievementService: AchievementService
+	) {}
 
 	@WebSocketServer()
 	private readonly server: Socket;
-	connnectedPlayers: Set<string> = new Set<string>();
-	activeGames: Set<GameRoomDto> = new Set<GameRoomDto>();
-	readyActiveGames: Set<GameRoomDto> = new Set<GameRoomDto>();
-	classicPlayersQueue: Array<string> = new Array<string>();
-	superPlayersQueue: Array<string> = new Array<string>();
+
+	private readonly lastScored = new Set<string>();
+	private readonly superPaddles = new Set<string>();
 
 	async handleConnection(@ConnectedSocket() client: Socket) {
-		const authenticatedUser = (client.request as Request).user as AuthenticatedUser;
+		const { user } = (client.request as Request).user as AuthenticatedUser;
 
-		console.log(client.id + " is connected.");
-		client.join(authenticatedUser.user.username);
-		this.connnectedPlayers.add(authenticatedUser.user.username);
+		console.log("GAME - JOIN: ", user.username);
+
+		client.join(user.username);
+	}
+
+	async endGame(user: User, game: Game, left: boolean) {
+		let winner: GamePlayer;
+		let loser: GamePlayer;
+
+		if (left) {
+			winner = game.player1.user.username === user.username ? game.player2 : game.player1;
+			loser = game.player1.user.username === user.username ? game.player1 : game.player2;
+
+			winner.winner = true;
+			loser.winner = false;
+		} else if (game.player1.score > game.player2.score) {
+			game.player1.winner = true;
+
+			winner = game.player1;
+			loser = game.player2;
+		} else if (game.player2.score > game.player1.score) {
+			game.player2.winner = true;
+
+			winner = game.player2;
+			loser = game.player1;
+		} else {
+			game.player1.draw = true;
+			game.player2.draw = true;
+
+			winner = game.player1;
+			loser = game.player1;
+		}
+
+		await this.matchHistoryService.recordResults({
+			matchId: game.id,
+			player1: game.player1,
+			player2: game.player2,
+		});
+
+		await this.eloRankingService.updateElo(game.id);
+
+		const [first, second] = await Promise.all([
+			this.levelService.grantExperience(winner),
+			this.levelService.grantExperience(loser),
+		]);
+
+		if (first.leveledUp) {
+			const achievement = await this.achievementService.create({
+				name: `Level-${first.updatedLevel}`,
+				brief: `Yay! Level ${first.updatedLevel}`,
+				description: `You did it! you leveld up to level ${first.updatedLevel}! Keep up :)`,
+			});
+
+			const result = await this.achievementService.awardAchievement(
+				achievement.name,
+				winner.user.username,
+				true
+			);
+			this.server.to(winner.user.username).emit("achievement_awarded", result);
+		}
+
+		if (second.leveledUp) {
+			const achievement = await this.achievementService.create({
+				name: `Level-${second.updatedLevel}`,
+				brief: `Yay! Level ${second.updatedLevel}`,
+				description: `You did it! you leveld up to level ${second.updatedLevel}! Keep up :)`,
+			});
+
+			const result = await this.achievementService.awardAchievement(
+				achievement.name,
+				loser.user.username,
+				true
+			);
+			this.server.to(loser.user.username).emit("achievement_awarded", result);
+		}
+
+		this.gameService.removeGame(winner.user.username);
+
+		this.server.emit(
+			"status_update",
+			winner.user.username,
+			this.onlineStatusService.onlineStatus(winner.user.username)
+		);
+
+		this.server.emit(
+			"status_update",
+			loser.user.username,
+			this.onlineStatusService.onlineStatus(loser.user.username)
+		);
+
+		return { winner, loser };
 	}
 
 	async handleDisconnect(@ConnectedSocket() client: Socket) {
-		const authenticatedUser = (client.request as Request).user as AuthenticatedUser;
+		const { user } = (client.request as Request).user as AuthenticatedUser;
 
-		console.log(client.id + " is disconnected.");
+		console.log("GAME - LEAVE: ", user.username);
 
-		this.connnectedPlayers.delete(authenticatedUser.user.username);
-		this.classicPlayersQueue = this.classicPlayersQueue.filter(
-			(player) => player !== authenticatedUser.user.username
-		);
-		this.superPlayersQueue = this.superPlayersQueue.filter(
-			(player) => player !== authenticatedUser.user.username
-		);
-		// client.leave(authenticatedUser.user.username);
-		this.activeGames.forEach((gameRoom) => {
-			if (gameRoom.player1 === authenticatedUser.user.username) {
-				if (this.connnectedPlayers.has(gameRoom.player2))
-					this.server.to(gameRoom.player2).emit("opponent_disconnected", gameRoom);
-			} else if (gameRoom.player2 === authenticatedUser.user.username) {
-				if (this.connnectedPlayers.has(gameRoom.player1))
-					this.server.to(gameRoom.player1).emit("opponent_disconnected", gameRoom);
+		const { status, game } = this.gameService.getPlayerStatus(user.username);
+
+		this.gameService.removeFromQueue(user.username);
+
+		const { sentResult } = this.gameService.removePlayer(user.username);
+
+		// WARNING: Super confusing stuff ahead
+
+		// request sent by user to another, member should have their receive list updated
+		if (sentResult) {
+			const receivedRequests = this.gameService.getReceivedRequests(sentResult.target.username);
+
+			this.server
+				.to(sentResult.target.username)
+				.emit("challenger_disconnected", sentResult.sender, receivedRequests);
+		}
+
+		if (!(game && (status === "ready" || status === "started"))) return;
+
+		const { winner, loser } = await this.endGame(user, game as Game, true);
+
+		this.server.to(winner.user.username).emit("end_game", winner, loser, game);
+		this.server.to(loser.user.username).emit("end_game", winner, loser, game);
+
+		this.server.to(winner.user.username).emit("opponent_disconnected", loser, game);
+	}
+
+	@SubscribeMessage("ready_player")
+	async ready(@ConnectedSocket() client: Socket) {
+		const { user } = (client.request as Request).user as AuthenticatedUser;
+
+		this.gameService.readyPlayer(user.username);
+
+		const start = this.gameService.startGame(user.username);
+
+		if (!start) return;
+
+		this.server.to(start.player1.user.username).emit("start_game", start);
+		this.server.to(start.player2.user.username).emit("start_game", start);
+	}
+
+	@SubscribeMessage("player_move")
+	async move(
+		@ConnectedSocket() _client: Socket,
+		@MessageBody()
+		dto: {
+			player: GamePlayer;
+			opponent: GamePlayer;
+			velocity: number;
+		}
+	) {
+		this.server.to(dto.opponent.user.username).emit("player_moved", dto.player, dto.velocity);
+	}
+
+	generate(right: boolean) {
+		if (right) {
+			// Generate a random number between 120 and 240
+			return Math.floor(Math.random() * (240 - 120 + 1) + 120);
+		}
+		// Generate a random number between -60 and 60
+		return Math.floor(Math.random() * (60 - -60 + 1) + -60);
+	}
+
+	@SubscribeMessage("player_score")
+	async score(@ConnectedSocket() client: Socket, @MessageBody() dto: string) {
+		const { user } = (client.request as Request).user as AuthenticatedUser;
+
+		const { game, status } = this.gameService.getPlayerStatus(user.username);
+
+		if (!game || status !== "started") return;
+
+		const match = game as Game;
+
+		let right = false;
+
+		console.log(match.type);
+
+		if (match.player1.user.username === dto) {
+			match.player1.score++;
+
+			if (match.type !== "CLASSIC") {
+				if (this.superPaddles.has(match.player1.user.username)) {
+					this.superPaddles.delete(match.player1.user.username);
+					// remove super paddle
+					this.server.to(match.player1.user.username).emit("normal_paddle", true);
+					this.server.to(match.player2.user.username).emit("normal_paddle", true);
+				}
+				if (this.lastScored.has(match.player1.user.username)) {
+					this.lastScored.delete(match.player1.user.username);
+					this.superPaddles.add(match.player1.user.username);
+					// make paddle bigger
+
+					this.server.to(match.player1.user.username).emit("super_paddle", true);
+					this.server.to(match.player2.user.username).emit("super_paddle", true);
+				} else {
+					this.lastScored.add(match.player1.user.username);
+
+					if (this.lastScored.has(match.player2.user.username)) {
+						this.lastScored.delete(match.player2.user.username);
+					}
+				}
 			}
-		});
-	}
+		} else if (match.player2.user.username === dto) {
+			match.player2.score++;
+			right = true;
 
-	async activateGameRoom(dto: GameRoomDto) {
-		const { player1, player2, matchId, ...otherInfo } = dto;
-		const matchHistory = await this.matchHistoryService.create(otherInfo);
+			if (match.type !== "CLASSIC") {
+				if (this.superPaddles.has(match.player2.user.username)) {
+					this.superPaddles.delete(match.player2.user.username);
+					// remove super paddle
+					this.server.to(match.player1.user.username).emit("normal_paddle", false);
+					this.server.to(match.player2.user.username).emit("normal_paddle", false);
+				}
+				if (this.lastScored.has(match.player2.user.username)) {
+					this.lastScored.delete(match.player2.user.username);
+					this.superPaddles.add(match.player2.user.username);
+					// make paddle bigger
 
-		dto.matchId = matchHistory.id;
-		this.activeGames.add(dto);
-		return dto;
-	}
+					this.server.to(match.player1.user.username).emit("super_paddle", false);
+					this.server.to(match.player2.user.username).emit("super_paddle", false);
+				} else {
+					this.lastScored.add(match.player2.user.username);
 
-	isConnected(playerName: string) {
-		if (!this.connnectedPlayers.has(playerName))
-			throw new WsException("Your opponenet is not connected");
-		return true;
-	}
+					if (this.lastScored.has(match.player1.user.username)) {
+						this.lastScored.delete(match.player1.user.username);
+					}
+				}
+			}
+		}
 
-	@SubscribeMessage("send_request")
-	async sendRequest(@ConnectedSocket() client: Socket, @MessageBody() dto: GameRoomDto) {
-		const authenticatedUser = (client.request as Request).user as AuthenticatedUser;
+		const angle = this.generate(right);
 
-		if (dto.player2 === authenticatedUser.user.username)
-			throw new WsException("Can't send request to yourself!");
-		if (this.isConnected(dto.player2)) this.server.to(dto.player2).emit("game_request", dto);
-	}
+		console.log("RESET: ", angle);
 
-	@SubscribeMessage("join_classic_queue")
-	async joinClassicQueue(@ConnectedSocket() client: Socket) {
-		// this is just the base functionallity, might require additional modification
-		const authenticatedUser = (client.request as Request).user as AuthenticatedUser;
+		this.server
+			.to(match.player1.user.username)
+			.emit("score_change", match.player1.score, match.player2.score);
+		this.server
+			.to(match.player2.user.username)
+			.emit("score_change", match.player1.score, match.player2.score);
 
-		if (this.classicPlayersQueue.find((player) => player === authenticatedUser.user.username))
-			throw new WsException("You're already in the queue !");
-		this.classicPlayersQueue.push(authenticatedUser.user.username);
-		this.server.to(authenticatedUser.user.username).emit("added_to_queue");
+		this.server.to(match.player1.user.username).emit("ball_reset", angle, 300);
+		this.server.to(match.player2.user.username).emit("ball_reset", angle, 300);
 
-		if (this.classicPlayersQueue.length >= 2) {
-			const player1 = this.classicPlayersQueue.shift();
-			const player2 = this.classicPlayersQueue.shift();
+		if (match.player1.score >= 7 || match.player2.score >= 7) {
+			const { winner, loser } = await this.endGame(user, match, false);
+			this.server.to(winner.user.username).emit("end_game", winner, loser, match);
+			this.server.to(loser.user.username).emit("end_game", winner, loser, match);
 
-			const dto = await this.activateGameRoom({ player1: player1!, player2: player2! });
-
-			this.server.to(player1!).emit("opponent_found", dto);
-			this.server.to(player2!).emit("opponent_found", dto);
+			this.lastScored.delete(match.player1.user.username);
+			this.lastScored.delete(match.player2.user.username);
 		}
 	}
 
-	@SubscribeMessage("join_super_queue")
-	async joinSuperQueue(@ConnectedSocket() client: Socket, @MessageBody() powerUp: string) {
-		// this is just the base functionallity, might require additional modification
-		const authenticatedUser = (client.request as Request).user as AuthenticatedUser;
+	@SubscribeMessage("countdown_done")
+	async countdownDone(@ConnectedSocket() client: Socket) {
+		const { user } = (client.request as Request).user as AuthenticatedUser;
+		const { game, status } = this.gameService.getPlayerStatus(user.username);
 
-		if (this.superPlayersQueue.find((player) => player === authenticatedUser.user.username))
-			throw new WsException("You're already in the queue !");
-		this.superPlayersQueue.push(authenticatedUser.user.username);
-		this.server.to(authenticatedUser.user.username).emit("added_to_queue");
+		if (!game || status !== "started") return;
 
-		if (this.superPlayersQueue.length >= 2) {
-			const player1 = this.superPlayersQueue.shift();
-			const player2 = this.superPlayersQueue.shift();
+		const match = game as Game;
 
-			const dto = await this.activateGameRoom({
-				player1: player1!,
-				player2: player2!,
-				powerUp: powerUp,
-			});
+		const { player1, player2 } = match;
 
-			this.server.to(player1!).emit("opponent_found", dto);
-			this.server.to(player2!).emit("opponent_found", dto);
+		const firstRandom = Math.random();
+		let angle = 0;
+
+		if (firstRandom <= 0.5) {
+			// Generate a random number between 120 and 240
+			angle = Math.floor(Math.random() * (240 - 120 + 1) + 120);
+		} else {
+			// Generate a random number between -60 and 60
+			angle = Math.floor(Math.random() * (60 - -60 + 1) + -60);
 		}
+
+		console.log("START: ", angle);
+
+		this.server.to(player1.user.username).emit("ball_start", angle, 300);
+		this.server.to(player2.user.username).emit("ball_start", angle, 300);
 	}
 
-	@SubscribeMessage("accept_request")
-	async acceptRequest(@ConnectedSocket() client: Socket, @MessageBody() dto: GameRoomDto) {
-		client;
-		// if the inviter disconnected this will throw an exception to the invited
-		this.isConnected(dto.player1);
+	@SubscribeMessage("change_ball")
+	async changeBall(
+		@ConnectedSocket() _client: Socket,
+		@MessageBody()
+		velocity: {
+			game: Game;
+			x: number;
+			y: number;
+		}
+	) {
+		const { x, y, game } = velocity;
+		const { player1, player2 } = game;
 
-		dto = await this.activateGameRoom(dto);
-		this.server.to(dto.player1).emit("request_accepted", dto);
-		this.server.to(dto.player2).emit("request_accepted", dto);
-	}
-
-	@SubscribeMessage("deny_request")
-	async denyRequest(@ConnectedSocket() client: Socket, @MessageBody() dto: GameRoomDto) {
-		client;
-		if (this.isConnected(dto.player1)) this.server.to(dto.player1).emit("request_denied", dto);
-	}
-
-	@SubscribeMessage("end_game")
-	async endGame(@ConnectedSocket() client: Socket, @MessageBody() dto: MatchResultDto) {
-		// this is just the base functionallity, might require additional modification
-		client;
-		await this.matchHistoryService.recordResults(dto);
-		// update the user's eloRating and level
-
-		this.activeGames.forEach((gameRoom) => {
-			if (gameRoom.matchId == dto.Player1.matchId) this.activeGames.delete(gameRoom);
-		});
-
-		if (this.connnectedPlayers.has(dto.Player1.username))
-			this.server.to(dto.Player1.username).emit("game_ended", dto);
-		if (this.connnectedPlayers.has(dto.Player2.username))
-			this.server.to(dto.Player2.username).emit("game_ended", dto);
-	}
-
-	@SubscribeMessage("broadcast_movement")
-	async broadcastMovment(@ConnectedSocket() client: Socket, @MessageBody() dto: PlayerMovementDto) {
-		client;
-
-		let activeGame;
-		this.activeGames.forEach((element) => {
-			if (element.matchId === dto.matchId) activeGame = element;
-		});
-		if (!activeGame) throw new WsException("You're not in an active game !");
-
-		this.server.to(dto.target).emit("player_moved", dto);
-	}
-	@SubscribeMessage("is_game_ready")
-	async isGameStarted(@ConnectedSocket() client: Socket, @MessageBody() dto: GameRoomDto) {
-		client;
-		if (this.readyActiveGames.has(dto)) {
-			this.server.to(dto.player1).emit("game_ready", dto);
-			this.server.to(dto.player2).emit("game_ready", dto);
-			this.readyActiveGames.delete(dto);
-		} else this.readyActiveGames.add(dto);
+		this.server.to(player1.user.username).emit("ball_change", x, y);
+		this.server.to(player2.user.username).emit("ball_change", x, y);
 	}
 }

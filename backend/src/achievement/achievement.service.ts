@@ -16,6 +16,12 @@ export class AchievementService {
 				brief: "Join the adventure, transcendence!",
 				description: "You have made it! you have transcended! Welcome",
 			},
+
+			{
+				name: "LevelUP",
+				brief: "Yay! Levels",
+				description: "You did it! you leveld up to level 2! Keep up :)",
+			},
 		];
 
 		Promise.all(seed.map((achievement) => this.create(achievement)));
@@ -90,7 +96,7 @@ export class AchievementService {
 			);
 	}
 
-	async awardAchievement(name: string, username: string) {
+	async awardAchievement(name: string, username: string, quiet: boolean) {
 		const user = await this.userService.findOne(username);
 		const achievement = await this.prismaService.achievement.findUnique({
 			where: {
@@ -98,7 +104,10 @@ export class AchievementService {
 			},
 		});
 
-		if (!achievement) throw new HttpException("Achievement does not exist!", HttpStatus.NOT_FOUND);
+		if (!achievement) {
+			if (!quiet) throw new HttpException("Achievement does not exist!", HttpStatus.NOT_FOUND);
+			return;
+		}
 
 		const userAchievement = await this.prismaService.userAchievement.findUnique({
 			where: {
@@ -110,7 +119,12 @@ export class AchievementService {
 		});
 
 		if (userAchievement) {
-			throw new HttpException(`User already has the achievement ${name}.`, HttpStatus.BAD_REQUEST);
+			if (!quiet)
+				throw new HttpException(
+					`User already has the achievement ${name}.`,
+					HttpStatus.BAD_REQUEST
+				);
+			return;
 		}
 
 		const createResult = await this.prismaService.userAchievement.create({

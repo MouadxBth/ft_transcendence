@@ -1,8 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { AuthenticatedUser } from "src/auth/entities/authenticated-user.entity";
 import { UserService } from "src/user/user.service";
-import { type Request } from "express";
 import { ConfigService } from "@nestjs/config";
+import { GamePlayer } from "src/game/entities/game-player.entity";
 
 @Injectable()
 export class LevelService {
@@ -30,24 +29,40 @@ export class LevelService {
 		return experience - this.calculateLevelExperience(level);
 	}
 
-	async grantExperience(req: Request, experience: number) {
-		const user = (req.user! as AuthenticatedUser).user;
+	async grantExperience(player: GamePlayer) {
+		const experience = player.score * 100 + 1000 + (player.winner ? 500 : 0);
 
-		let newLevel = user.level + 1;
-		let newExp = user.experience + experience;
+		console.log("EXP: ", player.user.experience, experience);
+
+		let newLevel = player.user.level;
+		let newExp = player.user.experience + experience;
 
 		while (this.calculateRequiredExperience(newExp, newLevel) >= 0) {
 			newExp = this.calculateRequiredExperience(newExp, newLevel);
 			newLevel++;
 		}
-		const updatedLevel = newExp === user.experience + experience ? user.level : newLevel;
-		await this.userService.update(req, user.username, { level: updatedLevel, experience: newExp });
-		return { updatedLevel, newExp };
+		const updatedLevel =
+			newExp === player.user.experience + experience ? player.user.level : newLevel;
+
+		await this.userService.updateTarget(player.user.username, {
+			level: updatedLevel,
+			experience: newExp,
+		});
+
+		const result = { updatedLevel, newExp, leveledUp: updatedLevel > player.user.level };
+
+		console.log("Giving: ", player.user.username, result);
+
+		return result;
 	}
 
 	async getRequiredExperience(target: string) {
 		const user = await this.userService.findOne(target);
 
-		return Math.abs(this.calculateRequiredExperience(user.experience, user.level + 1));
+		return {
+			level: user.level,
+			experience: user.experience,
+			required: Math.abs(this.calculateRequiredExperience(user.experience, user.level + 1)),
+		};
 	}
 }

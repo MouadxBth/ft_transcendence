@@ -12,4 +12,7 @@ export enum ChannelEvent {
 	UNMUTE = "unmute_on_channel",
 	PROMOTE = "promote_in_channel",
 	DEMOTE = "demote_in_channel",
+	ADD_PASSWORD = "add_channel_password",
+	MODIFY_PASSWORD = "modify_channel_password",
+	DELETE_PASSWORD = "delete_channel_password",
 }

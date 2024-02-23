@@ -15,7 +15,10 @@ export class ChannelUtilities {
 		}
 	}
 
-	async validateChannelPassword(status: ChannelStatus | undefined, password: string | undefined) {
+	async validateChannelPassword(
+		status: ChannelStatus | undefined,
+		password: string | null | undefined
+	) {
 		if (status === ChannelStatus.PROTECTED && (!password || !password.length)) {
 			throw new HttpException(
 				"Password must be set for protected channels.",

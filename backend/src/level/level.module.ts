@@ -7,5 +7,6 @@ import { UserModule } from "src/user/user.module";
 	imports: [UserModule],
 	controllers: [LevelController],
 	providers: [LevelService],
+	exports: [LevelService],
 })
 export class LevelModule {}

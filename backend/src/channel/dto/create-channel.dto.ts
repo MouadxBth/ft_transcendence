@@ -11,7 +11,7 @@ export class CreateChannelDto {
 	@IsString()
 	@IsOptional()
 	@ApiProperty({ example: "password" })
-	password?: string;
+	password?: string | null;
 
 	@IsEnum(ChannelStatus)
 	@IsOptional()

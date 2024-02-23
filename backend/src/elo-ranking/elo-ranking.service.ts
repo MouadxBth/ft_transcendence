@@ -25,13 +25,16 @@ export class EloRankingService {
 			select: {
 				username: true,
 				nickname: true,
+				avatar: true,
+				firstName: true,
+				lastName: true,
 				eloRating: true,
 			},
 		});
 	}
 
 	async getEloRanking(target: string) {
-		const { username, nickname, avatar, createdAt, eloRating } =
+		const { username, nickname, firstName, lastName, avatar, createdAt, eloRating } =
 			await this.userService.findOne(target);
 
 		const rank = await this.prismaService.user.count({
@@ -52,7 +55,7 @@ export class EloRankingService {
 			},
 		});
 
-		return { username, nickname, avatar, eloRating, rank: rank + 1 };
+		return { username, nickname, firstName, lastName, avatar, eloRating, rank: rank + 1 };
 	}
 
 	async updateElo(matchId: number) {

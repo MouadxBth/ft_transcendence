@@ -3,12 +3,14 @@ import { MessageDto } from "../dto/message.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { User } from "src/user/entities/user.entity";
 import { ChannelMessageUtilities } from "./channel-message.utilities";
+import { BlockedService } from "src/blocked/blocked.service";
 
 @Injectable()
 export class ChannelMessageService {
 	constructor(
 		private readonly prisma: PrismaService,
-		private readonly channelMessageUtilities: ChannelMessageUtilities
+		private readonly channelMessageUtilities: ChannelMessageUtilities,
+		private readonly blockedService: BlockedService
 	) {}
 
 	async create(username: string, dto: MessageDto) {
@@ -40,7 +42,7 @@ export class ChannelMessageService {
 		return result;
 	}
 
-	async findLastSent(channel: string, cursor: number, quantity: number) {
+	async findLastSent(username: string, channel: string, cursor: number, quantity: number) {
 		if (quantity <= 0) throw new HttpException("Invalid quantity!", HttpStatus.BAD_REQUEST);
 
 		const result = await this.prisma.channel
@@ -50,6 +52,7 @@ export class ChannelMessageService {
 					messages: {
 						orderBy: { createdAt: "desc" },
 						cursor: cursor < 0 ? undefined : { id: cursor },
+						skip: 1,
 						take: quantity,
 						select: this.channelMessageUtilities.formatChannelMessage(),
 					},
@@ -57,7 +60,11 @@ export class ChannelMessageService {
 			})
 			.then((value) => value?.messages);
 
-		if (result && result.length) result.reverse();
+		const { blocked } = await this.blockedService.getBlockedAndBlockedBy(username);
+
+		if (result && result.length) {
+			return result.reverse().filter((message) => !blocked.includes(message.sender.user.username));
+		}
 		return result;
 	}
 

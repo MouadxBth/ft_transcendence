@@ -112,7 +112,7 @@ export class ChannelService {
 		});
 	}
 
-	async update(id: string, updateChannelDto: UpdateChannelDto, user: User) {
+	async update(id: string, updateChannelDto: UpdateChannelDto, username: string) {
 		const channelResult = await this.prisma.channel.findUnique({
 			where: { name: id },
 			include: { owner: true }, // Include owner data for comparison
@@ -122,7 +122,7 @@ export class ChannelService {
 			throw new HttpException("No such channel with that name!", HttpStatus.BAD_REQUEST);
 		}
 
-		if (channelResult.owner.username !== user.username) {
+		if (channelResult.owner.username !== username) {
 			throw new HttpException("You're not the owner of the channel", HttpStatus.BAD_REQUEST);
 		}
 
@@ -159,7 +159,7 @@ export class ChannelService {
 				password: password ? await bcrypt.hash(password, 10) : undefined,
 				owner: {
 					connect: {
-						username: user.username,
+						username,
 					},
 				},
 			},
