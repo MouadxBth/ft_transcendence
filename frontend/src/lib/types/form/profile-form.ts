@@ -8,8 +8,8 @@ export const profileFormSchema = z
 		nickname: z.string(),
 		firstname: z.string(),
 		lastname: z.string(),
-		password: z.string().min(8).max(50),
-		confirmpassword: z.string().min(8).max(50),
+		password: z.string(),
+		confirmpassword: z.string(),
 		avatar: z
 			.custom<FileList>((val) => val instanceof FileList, "Required")
 			.refine((list) => list.length === 1, "One image is required!")

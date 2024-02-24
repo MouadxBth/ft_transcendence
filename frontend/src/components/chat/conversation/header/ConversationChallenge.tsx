@@ -16,7 +16,7 @@ const ConversationChallenge = ({ name, className }: ConversationChallengeProps) 
 			className={className}
 			variant="outline"
 			onClick={() => {
-				push(`/game?friend=${name}`);
+				push(`/game?user=${name}`);
 			}}
 		>
 			<Joystick className="mr-2 h-4 w-4" />

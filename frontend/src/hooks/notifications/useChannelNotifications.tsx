@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import useSockets from "../socket/useSockets";
 import { useAuthentication } from "@/hooks/authentication/useAuthentication";
-import { toast as sonner } from "sonner";
 import { formattedDate } from "@/lib/utils";
 import { ChannelType } from "@/lib/types/channel/channel";
 import { ChannelMemberType } from "@/lib/types/channel/channel-member";
 import { ChannelOperationResultType } from "@/lib/types/channel/channel-operation-result";
 import { useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/components/ui/use-toast";
 
 const ChannelData = ({
 	name,
@@ -32,11 +32,14 @@ const ChannelData = ({
 const useChannelNotifications = () => {
 	const { authenticatedUser } = useAuthentication();
 	const { channels } = useSockets();
+	const { toast } = useToast();
 	const queryClient = useQueryClient();
 
 	useEffect(() => {
 		channels?.on("channel_created", (args: ChannelType) => {
-			sonner.success("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
 				description: (
 					<ChannelData
 						name={args.name}
@@ -48,8 +51,16 @@ const useChannelNotifications = () => {
 			});
 		});
 
+		// toast({
+		// 	title: "Channels",
+		// 	className: "rounded",
+		// 	description: ,
+		// });
+
 		channels?.on("channel_deleted", (args: ChannelType) => {
-			sonner.success("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
 				description: (
 					<ChannelData
 						name={args.name}
@@ -63,19 +74,25 @@ const useChannelNotifications = () => {
 
 		channels?.on("member_joined", (channel: ChannelType, member: ChannelMemberType) => {
 			if (authenticatedUser?.user.username === member.user.username) {
-				return sonner.success("Channels", {
+				return toast({
+					title: "Channels",
+					className: "rounded",
 					description: `You have joined channel ${channel.name}`,
 				});
 			}
 
-			sonner.success("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
 				description: `${member.user.nickname} has joined channel ${channel.name}`,
 			});
 		});
 
 		channels?.on("member_left", (channel: ChannelType, member: ChannelMemberType) => {
 			if (authenticatedUser?.user.username === member.user.username) {
-				return sonner.info("Channels", {
+				return toast({
+					title: "Channels",
+					className: "rounded",
 					description: `You have left channel ${channel.name}`,
 				});
 			}
@@ -85,43 +102,59 @@ const useChannelNotifications = () => {
 				message = `Owner ${member.user.nickname} has deleted channel ${channel.name}`;
 			}
 
-			sonner.info("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
 				description: message,
 			});
 		});
 
 		channels?.on("invite_successful", (args: boolean) => {
 			if (args) {
-				return sonner.success("Channels", {
+				return toast({
+					title: "Channels",
+					className: "rounded",
 					description: "User successfully invited!",
 				});
 			}
 
-			sonner.error("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
+				variant: "destructive",
 				description: "Unable to invite user!",
 			});
 		});
 
 		channels?.on("invited_to_channel", (args: ChannelOperationResultType) => {
-			sonner.info("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
 				description: `You have been invited to channel "${args.channel}" by "${args.sender}"`,
 			});
 		});
 
 		channels?.on("ban_successful", (args: boolean) => {
 			if (args) {
-				return sonner.success("Channels", {
+				return toast({
+					title: "Channels",
+					className: "rounded",
 					description: "User successfully banned!",
 				});
 			}
 
-			sonner.error("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
+				variant: "destructive",
 				description: "Unable to ban user!",
 			});
 		});
 
 		channels?.on("banned_from_channel", (args: ChannelOperationResultType) => {
-			sonner.info("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
 				description: `You have been banned from channel "${args.channel}" by "${args.sender}"`,
 			});
 
@@ -130,18 +163,25 @@ const useChannelNotifications = () => {
 
 		channels?.on("kick_successful", (args: boolean) => {
 			if (args) {
-				return sonner.success("Channels", {
+				return toast({
+					title: "Channels",
+					className: "rounded",
 					description: "User successfully kicked!",
 				});
 			}
 
-			sonner.error("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
+				variant: "destructive",
 				description: "Unable to kick user!",
 			});
 		});
 
 		channels?.on("kicked_from_channel", (args: ChannelOperationResultType) => {
-			sonner.info("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
 				description: `You have been kicked from channel "${args.channel}" by "${args.sender}"`,
 			});
 
@@ -150,30 +190,42 @@ const useChannelNotifications = () => {
 
 		channels?.on("unban_successful", (args: boolean) => {
 			if (args) {
-				return sonner.success("Channels", {
+				return toast({
+					title: "Channels",
+					className: "rounded",
 					description: "User successfully unbanned!",
 				});
 			}
 
-			sonner.error("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
+				variant: "destructive",
 				description: "Unable to unban user!",
 			});
 		});
 
 		channels?.on("unbanned_from_channel", (args: ChannelOperationResultType) => {
-			sonner.info("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
 				description: `You have been unbanned from channel "${args.channel}" by "${args.sender}"`,
 			});
 		});
 
 		channels?.on("promote_successful", (args: boolean) => {
 			if (args) {
-				return sonner.success("Channels", {
+				return toast({
+					title: "Channels",
+					className: "rounded",
 					description: "User successfully promoted!",
 				});
 			}
 
-			sonner.error("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
+				variant: "destructive",
 				description: "Unable to promote user!",
 			});
 		});
@@ -185,12 +237,16 @@ const useChannelNotifications = () => {
 
 				if (authenticatedUser?.user.username === member.user.username) {
 					queryClient.invalidateQueries({ queryKey: ["channel", channel.name] });
-					return sonner.success("Channels", {
+					return toast({
+						title: "Channels",
+						className: "rounded",
 						description: `You have been promoted to Admin in channel "${channel.name}" by "${issuer.sender}"`,
 					});
 				}
 
-				return sonner.success("Channels", {
+				return toast({
+					title: "Channels",
+					className: "rounded",
 					description: `${member.user.nickname} has been promoted to Admin in channel "${channel.name}" by "${issuer.sender}"`,
 				});
 			}
@@ -198,12 +254,17 @@ const useChannelNotifications = () => {
 
 		channels?.on("demote_successful", (args: boolean) => {
 			if (args) {
-				return sonner.success("Channels", {
+				return toast({
+					title: "Channels",
+					className: "rounded",
 					description: "User successfully demoted!",
 				});
 			}
 
-			sonner.error("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
+				variant: "destructive",
 				description: "Unable to demote user!",
 			});
 		});
@@ -215,25 +276,33 @@ const useChannelNotifications = () => {
 
 				if (authenticatedUser?.user.username === member.user.username) {
 					queryClient.invalidateQueries({ queryKey: ["channel", channel.name] });
-					return sonner.success("Channels", {
+					return toast({
+						title: "Channels",
+						className: "rounded",
 						description: `You have been demoted to Member in channel "${channel.name}" by "${issuer.sender}"`,
 					});
 				}
 
-				return sonner.success("Channels", {
+				return toast({
+					title: "Channels",
+					className: "rounded",
 					description: `${member.user.nickname} has been demoted to Member in channel "${channel.name}" by "${issuer.sender}"`,
 				});
 			}
 		);
 
 		channels?.on("mute_successful", (member: ChannelMemberType) => {
-			return sonner.success("Channels", {
+			return toast({
+				title: "Channels",
+				className: "rounded",
 				description: "User successfully muted!",
 			});
 		});
 
 		channels?.on("unmute_successful", (member: ChannelMemberType) => {
-			return sonner.success("Channels", {
+			return toast({
+				title: "Channels",
+				className: "rounded",
 				description: "User successfully unmuted!",
 			});
 		});
@@ -243,7 +312,9 @@ const useChannelNotifications = () => {
 			(channel: ChannelType, member: ChannelMemberType, issuer: ChannelOperationResultType) => {
 				if (authenticatedUser?.user.username !== member.user.username) return;
 
-				return sonner.info("Channels", {
+				return toast({
+					title: "Channels",
+					className: "rounded",
 					description: `You have been muted on channel "${channel.name}" by "${issuer.sender}" for ${issuer.duration} seconds!`,
 				});
 			}
@@ -254,30 +325,38 @@ const useChannelNotifications = () => {
 			(channel: ChannelType, member: ChannelMemberType, issuer: ChannelOperationResultType) => {
 				if (authenticatedUser?.user.username !== member.user.username) return;
 
-				return sonner.info("Channels", {
+				return toast({
+					title: "Channels",
+					className: "rounded",
 					description: `You have been unmuted on channel "${channel.name}"!`,
 				});
 			}
 		);
 
 		channels?.on("password_added", (args: ChannelType) => {
-			sonner.success("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
 				description: `Successfully added a password to channel "${args.name}"`,
 			});
 		});
 
 		channels?.on("password_modified", (args: ChannelType) => {
-			sonner.success("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
 				description: `Successfully modified the password of channel "${args.name}"`,
 			});
 		});
 
 		channels?.on("password_deleted", (args: ChannelType) => {
-			sonner.success("Channels", {
+			toast({
+				title: "Channels",
+				className: "rounded",
 				description: `Successfully deleted the password of channel "${args.name}"`,
 			});
 		});
-	}, [channels, queryClient, authenticatedUser]);
+	}, [channels, queryClient, authenticatedUser, toast]);
 };
 
 export default useChannelNotifications;

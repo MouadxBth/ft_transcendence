@@ -107,7 +107,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 				winner.user.username,
 				true
 			);
+
+			if (result) {
 			this.server.to(winner.user.username).emit("achievement_awarded", result);
+			}
 		}
 
 		if (second.leveledUp) {
@@ -122,7 +125,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 				loser.user.username,
 				true
 			);
+
+			if (result) {
 			this.server.to(loser.user.username).emit("achievement_awarded", result);
+			}
 		}
 
 		this.gameService.removeGame(winner.user.username);
@@ -151,7 +157,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 		this.gameService.removeFromQueue(user.username);
 
-		const { sentResult } = this.gameService.removePlayer(user.username);
+		const { sentResult, receiveResult } = this.gameService.removePlayer(user.username);
 
 		// WARNING: Super confusing stuff ahead
 
@@ -162,6 +168,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			this.server
 				.to(sentResult.target.username)
 				.emit("challenger_disconnected", sentResult.sender, receivedRequests);
+		}
+
+		// request sent by another to user, member should have their sent list updated
+		if (receiveResult) {
+			receiveResult.forEach((game) => {
+				this.server.to(game.sender.username).emit("player_disconnected", game);
+			});
 		}
 
 		if (!(game && (status === "ready" || status === "started"))) return;

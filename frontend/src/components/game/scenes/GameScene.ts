@@ -4,12 +4,8 @@ import { GameConfigScene } from "./GameConfigScene";
 
 export class GameScene extends GameConfigScene {
 	update() {
-		// if (this.gameComponents.gameState !== GameState.RUNNING) return;
-
-		// this.ballVelocity();
-		this.processPlayerInput();
+		// this.processPlayerInput();
 		this.checkScore();
-		// this.powerUpActivation();
 	}
 
 	processPlayerInput() {
@@ -89,29 +85,4 @@ export class GameScene extends GameConfigScene {
 			context.game?.emit("player_score", match.player2!.user.username);
 		}
 	}
-
-	resetBall() {
-		// const angle =
-		// 	Math.random() < 0.5 ? Phaser.Math.Between(-120, -170) : Phaser.Math.Between(0, 60);
-
-		// -60 60 right
-		// 240 120 left
-
-		this.gameComponents.ball.setPosition(this.midWidth, this.midHeight);
-	}
-	// powerUpActivation() {
-	// 	//need to check if power ups are enabled
-	// 	if (this.p1Score === 2) {
-	// 		//logic for powerup
-	// 		this.paddleLeft.displayHeight = 150;
-	// 		this.p1Score = 0;
-	// 		this.p2Score = 0;
-	// 	} else if (this.p2Score === 2) {
-	// 		this.paddleRight.displayHeight = 150;
-	// 		this.p1Score = 0;
-	// 		this.p2Score = 0;
-	// 	}
-	// 	if (this.p1Score !== 0) this.paddleLeft.displayHeight = this.paddleHeight;
-	// 	if (this.p2Score !== 0) this.paddleRight.displayHeight = this.paddleHeight;
-	// }
 }

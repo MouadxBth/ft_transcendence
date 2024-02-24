@@ -4,10 +4,9 @@ import AuthenticationContextProvider from "@/providers/AuthenticationContextProv
 import { AUTHORS } from "@/lib/authors";
 import { Audiowide } from "next/font/google";
 import { ReactQueryClientProvider } from "@/providers/ReactQueryClientProvider";
-import { Sonner } from "@/components/ui/sonner";
 import SocketsContextProvider from "@/providers/SocketsContextProvider";
-import { Toaster } from "@/components/ui/toaster";
 import { Suspense } from "react";
+import { Toaster } from "@/components/ui/toaster";
 
 const audiowide = Audiowide({ subsets: ["latin"], weight: "400" });
 
@@ -31,12 +30,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<ReactQueryClientProvider>
 					<Suspense>
 						<AuthenticationContextProvider>
-							<SocketsContextProvider>{children}</SocketsContextProvider>
+							<SocketsContextProvider>
+								{children}
+								<Toaster />
+							</SocketsContextProvider>
 						</AuthenticationContextProvider>
 					</Suspense>
 				</ReactQueryClientProvider>
-				<Sonner />
-				<Toaster />
 			</body>
 		</html>
 	);

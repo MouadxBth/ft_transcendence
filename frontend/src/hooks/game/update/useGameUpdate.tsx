@@ -21,6 +21,11 @@ const useGameUpdate = (
 			});
 		});
 
+		game?.on("player_disconnected", (args: GameRequestType) => {
+			setRequest(undefined);
+			setStatus("lobby");
+		});
+
 		game?.on("opponent_disconnected", (leaver: GameMatchPlayerType, match: GameMatchType) => {
 			setStatus("lobby");
 			setRequest(undefined);

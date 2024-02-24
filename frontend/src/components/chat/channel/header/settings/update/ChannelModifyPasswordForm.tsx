@@ -47,20 +47,20 @@ const ChannelModifyPasswordForm = ({ channel }: ChannelModifyPasswordFormProps) 
 					className="col-span-2"
 					control={form.control}
 					name="password"
-					placeholder="Enter the target's nickname."
+					placeholder="Enter a good password."
 					label="Password"
 					type="password"
-					description="Kick a member if he's being annoying:"
+					description="Modify your channel's password:"
 				/>
 
 				<GenericFormField
 					className="col-span-2"
 					control={form.control}
 					name="confirmPassword"
-					placeholder="Enter the target's nickname."
+					placeholder="Confirm your password."
 					label="Confirm Password"
 					type="password"
-					description="Kick a member if he's being annoying:"
+					description="Confirm your password:"
 				/>
 
 				<Button

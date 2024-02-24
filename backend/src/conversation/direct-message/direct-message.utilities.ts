@@ -123,7 +123,7 @@ export class DirectMessageUtilities {
 			orderBy: { createdAt: "desc" },
 			cursor: cursor < 0 ? undefined : { id: cursor },
 			take: quantity,
-			skip: 1,
+			skip: cursor < 0 ? 0 : 1,
 			select: this.getDirectMessageSelectFields(username),
 		});
 	}

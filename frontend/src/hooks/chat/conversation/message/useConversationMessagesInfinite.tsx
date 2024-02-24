@@ -17,7 +17,7 @@ export const parseConversationMessages = async (data: unknown) => {
 
 const fetchData = async ({ target, cursor }: { target: string; cursor: number }) => {
 	return await axiosClient
-		.get(`/conversation/${target}/dms?quantity=10&cursor=${cursor}`)
+		.get(`/conversation/${target}/dms?quantity=11&cursor=${cursor}`)
 		.then(({ data }) => parseConversationMessages(data));
 };
 
@@ -39,7 +39,7 @@ const useConversationMessagesInfinite = (target: string) => {
 		}),
 
 		getNextPageParam: (lastPage) => {
-			if (lastPage.length < 10) return undefined;
+			if (lastPage.length < 11) return undefined;
 			return {
 				target: target,
 				cursor: lastPage[0].id,

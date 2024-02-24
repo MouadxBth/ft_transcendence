@@ -52,7 +52,7 @@ export class ChannelMessageService {
 					messages: {
 						orderBy: { createdAt: "desc" },
 						cursor: cursor < 0 ? undefined : { id: cursor },
-						skip: 1,
+						skip: cursor < 0 ? 0 : 1,
 						take: quantity,
 						select: this.channelMessageUtilities.formatChannelMessage(),
 					},

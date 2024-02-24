@@ -25,7 +25,7 @@ const UserSelection = ({ field, form, defaultSelection, className }: UserSelecti
 
 	return (
 		<FormItem className={cn("flex flex-col", className)}>
-			<FormLabel>Friend</FormLabel>
+			<FormLabel>Challenge someone:</FormLabel>
 			<Popover>
 				<UserSelectionTrigger name={field.value} />
 				<UserSelectionContent

@@ -17,7 +17,7 @@ export const parseChannelMessages = async (data: unknown) => {
 
 const fetchData = async ({ channel, cursor }: { channel: string; cursor: number }) => {
 	return await axiosClient
-		.get(`/channel/${channel}/messages?quantity=10&cursor=${cursor}`)
+		.get(`/channel/${channel}/messages?quantity=11&cursor=${cursor}`)
 		.then(({ data }) => parseChannelMessages(data));
 };
 
@@ -38,7 +38,7 @@ const useChannelMessagesInfinite = (channel: string) => {
 		}),
 
 		getNextPageParam: (lastPage) => {
-			if (lastPage.length < 10) return undefined;
+			if (lastPage.length < 11) return undefined;
 			return {
 				channel: channel,
 				cursor: lastPage[0].id,

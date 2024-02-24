@@ -37,6 +37,9 @@ export class GameConfigScene extends Phaser.Scene {
 
 		this.gameComponents.data = data;
 
+		this.gameComponents.isLeft =
+			data.match.player1?.user.username === data.authenticatedUser?.user.username;
+
 		this.updateMovement(data);
 
 		this.handleEndGame(data);
@@ -168,11 +171,13 @@ export class GameConfigScene extends Phaser.Scene {
 	updateMovement({ context, match }: GameData) {
 		context.game?.on("player_moved", (player: GameMatchPlayerType, velocity: number) => {
 			if (match.player1?.user.username === player.user.username) {
-				this.gameComponents.paddleLeft.setVelocityY(velocity);
+				this.gameComponents.paddleLeft.y = velocity;
 				return;
 			}
 			// right paddle
-			this.gameComponents.paddleRight.setVelocityY(velocity);
+			this.gameComponents.paddleRight.y = velocity;
+
+			// this.gameComponents.paddleRight.setVelocityY(velocity);
 		});
 	}
 
@@ -267,6 +272,26 @@ export class GameConfigScene extends Phaser.Scene {
 			undefined,
 			this
 		);
+
+		this.input.on("pointermove", (pointer: any) => {
+			if (this.gameComponents.gameState !== GameState.RUNNING) return;
+
+			if (this.gameComponents.isLeft) {
+				this.gameComponents.data.context.game?.emit("player_move", {
+					player: this.gameComponents.data.match.player1,
+					opponent: this.gameComponents.data.match.player2,
+					velocity: pointer.y,
+				});
+				this.gameComponents.paddleLeft.y = pointer.y;
+			} else {
+				this.gameComponents.data.context.game?.emit("player_move", {
+					player: this.gameComponents.data.match.player2,
+					opponent: this.gameComponents.data.match.player1,
+					velocity: pointer.y,
+				});
+				this.gameComponents.paddleRight.y = pointer.y;
+			}
+		});
 	}
 
 	private configureScore() {

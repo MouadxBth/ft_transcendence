@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import useSockets from "../socket/useSockets";
 import { useAuthentication } from "@/hooks/authentication/useAuthentication";
-import { toast as sonner } from "sonner";
 import { formattedDate } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { ConversationType } from "@/lib/types/conversation/conversation";
+import { useToast } from "@/components/ui/use-toast";
 
 const ConversationData = ({
 	name,
@@ -27,11 +27,14 @@ const ConversationData = ({
 const useConversationNotifications = () => {
 	const { authenticatedUser } = useAuthentication();
 	const { conversations } = useSockets();
+	const { toast } = useToast();
 	const queryClient = useQueryClient();
 
 	useEffect(() => {
 		conversations?.on("conversation_created", (args: ConversationType) => {
-			sonner.success("Conversations", {
+			toast({
+				title: "Conversations",
+				className: "rounded",
 				description: (
 					<ConversationData
 						name={args.target.nickname}
@@ -43,7 +46,9 @@ const useConversationNotifications = () => {
 		});
 
 		conversations?.on("conversation_added", (args: ConversationType) => {
-			sonner.success("Conversations", {
+			toast({
+				title: "Conversations",
+				className: "rounded",
 				description: (
 					<ConversationData
 						name={args.sender.nickname}
@@ -55,7 +60,9 @@ const useConversationNotifications = () => {
 		});
 
 		conversations?.on("conversation_deleted", (args: ConversationType) => {
-			sonner.success("Conversations", {
+			toast({
+				title: "Conversations",
+				className: "rounded",
 				description: (
 					<ConversationData
 						name={args.target.nickname}
@@ -67,7 +74,9 @@ const useConversationNotifications = () => {
 		});
 
 		conversations?.on("conversation_removed", (args: ConversationType) => {
-			sonner.success("Conversations", {
+			toast({
+				title: "Conversations",
+				className: "rounded",
 				description: (
 					<ConversationData
 						name={args.sender.nickname}
@@ -77,7 +86,7 @@ const useConversationNotifications = () => {
 				),
 			});
 		});
-	}, [conversations, queryClient, authenticatedUser]);
+	}, [conversations, queryClient, authenticatedUser, toast]);
 };
 
 export default useConversationNotifications;

@@ -2,8 +2,8 @@ import useSockets from "@/hooks/socket/useSockets";
 import { AchievementsUpdateType } from "@/lib/types/achievement/achievements-update";
 import { useEffect } from "react";
 import { useAuthentication } from "@/hooks/authentication/useAuthentication";
-import { toast as sonner } from "sonner";
 import { formattedDate } from "@/lib/utils";
+import { useToast } from "@/components/ui/use-toast";
 
 export const AchievementData = ({
 	name,
@@ -31,14 +31,15 @@ export const AchievementData = ({
 const useAchievementNotification = () => {
 	const { authenticatedUser } = useAuthentication();
 	const { notifications } = useSockets();
+	const { toast } = useToast();
 	const myUsername = authenticatedUser?.user.username!;
 
 	useEffect(() => {
 		notifications?.on("achievement_awarded", (args: AchievementsUpdateType) => {
 			if (myUsername !== args.username) return;
 
-			sonner.success("Achievements", {
-				important: true,
+			toast({
+				title: "Achievements",
 				description: (
 					<AchievementData
 						name={args.latest.name}
@@ -49,7 +50,7 @@ const useAchievementNotification = () => {
 				),
 			});
 		});
-	}, [notifications, myUsername]);
+	}, [notifications, myUsername, toast]);
 };
 
 export default useAchievementNotification;

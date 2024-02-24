@@ -4,6 +4,7 @@ import Pong from "@/components/game/Pong";
 import GameLoading from "@/components/game/loading/GameLoading";
 import GameLobby from "@/components/game/lobby/GameLobby";
 import useGameRequestUpdate from "@/hooks/game/update/useGameRequestUpdate";
+import useGameUpdate from "@/hooks/game/update/useGameUpdate";
 import useGameNotifications from "@/hooks/notifications/useGameNotifications";
 import { GameMatchType } from "@/lib/types/game/game-match";
 import { GamePlayerStatus } from "@/lib/types/game/game-match-player";
@@ -17,6 +18,7 @@ const GamePage = () => {
 	const [status, setStatus] = useState<GamePlayerStatus>("lobby");
 
 	useGameRequestUpdate(setStatus, setGame, setRequest);
+	useGameUpdate(setStatus, setRequest);
 	useGameNotifications();
 
 	return (
