@@ -17,7 +17,16 @@ export class LocalGuard extends AuthGuard("local") implements CanActivate {
 			throw new HttpException("Already logged in!", HttpStatus.BAD_REQUEST);
 		}
 
-		const result = (await super.canActivate(context)) as boolean;
+		let result;
+
+		try {
+			result = (await super.canActivate(context)) as boolean;
+		} catch (error: unknown) {
+			if (error instanceof HttpException && error.getStatus() === HttpStatus.AMBIGUOUS) {
+				throw new HttpException("Already logged in!", HttpStatus.BAD_REQUEST);
+			}
+			return false;
+		}
 
 		if (result) await super.logIn(request);
 

@@ -4,10 +4,14 @@ import { CreateUserDto } from "src/user/dto/create-user.dto";
 import * as bcrypt from "bcrypt";
 import { Request } from "express";
 import { AuthenticatedUser } from "../entities/authenticated-user.entity";
+import { OnlineStatusService } from "src/online-status/online-status.service";
 
 @Injectable()
 export class LocalService {
-	constructor(private readonly userService: UserService) {}
+	constructor(
+		private readonly userService: UserService,
+		private readonly onlineStatusService: OnlineStatusService
+	) {}
 
 	async validate(username: string, pass: string): Promise<AuthenticatedUser> {
 		const user = await this.userService.findOne(username);
@@ -19,6 +23,12 @@ export class LocalService {
 		const comparison = await bcrypt.compare(pass, password);
 
 		if (!comparison) throw new HttpException("Invalid credentials!", HttpStatus.UNAUTHORIZED);
+
+		const status = this.onlineStatusService.onlineStatus(username);
+
+		if (status && status !== "Offline") {
+			throw new HttpException(`Already logged in!`, HttpStatus.AMBIGUOUS);
+		}
 
 		return {
 			user: result,

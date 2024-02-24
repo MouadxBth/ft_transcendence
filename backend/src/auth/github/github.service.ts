@@ -5,12 +5,14 @@ import { AuthenticatedUser } from "../entities/authenticated-user.entity";
 import githubProfileSchema, { GithubUserProfile } from "./schemas/profile.schema";
 import { ConfigService } from "@nestjs/config";
 import { Response } from "express";
+import { OnlineStatusService } from "src/online-status/online-status.service";
 
 @Injectable()
 export class GithubService {
 	constructor(
 		private readonly userService: UserService,
-		private readonly configService: ConfigService
+		private readonly configService: ConfigService,
+		private readonly onlineStatusService: OnlineStatusService
 	) {}
 
 	async validate(profile: unknown): Promise<AuthenticatedUser | null> {
@@ -24,6 +26,12 @@ export class GithubService {
 			} else {
 				throw new HttpException(`Unexpected issue: ${error}`, HttpStatus.BAD_REQUEST);
 			}
+		}
+
+		const status = this.onlineStatusService.onlineStatus(userProfile.username);
+
+		if (status && status !== "Offline") {
+			throw new HttpException(`You are already connected somewhere else!`, HttpStatus.AMBIGUOUS);
 		}
 
 		let user;

@@ -25,6 +25,7 @@ import { TwoFactorController } from "./two-factor/two-factor.controller";
 import { TwoFactorService } from "./two-factor/two-factor.service";
 import { WsAuthenticatedGuard } from "./guards/ws-authenticated.guard";
 import { TwoFactorMiddleware } from "./two-factor/middleware/two-factor.middleware";
+import { OnlineStatusModule } from "src/online-status/online-status.module";
 
 const controllers = [
 	LocalController,
@@ -47,6 +48,7 @@ const strategies = [LocalStrategy, FortyTwoStrategy, GithubStrategy, GoogleStrat
 @Module({
 	imports: [
 		forwardRef(() => UserModule),
+		OnlineStatusModule,
 		PassportModule.register({
 			session: true,
 		}),
