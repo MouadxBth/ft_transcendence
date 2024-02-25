@@ -26,7 +26,6 @@ const useGameUpdate = (
 		});
 
 		game?.on("opponent_disconnected", (leaver: GameMatchPlayerType, match: GameMatchType) => {
-			setStatus("lobby");
 			setRequest(undefined);
 			queryClient.invalidateQueries({
 				queryKey: ["sent-game-requests"],
