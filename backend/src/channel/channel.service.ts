@@ -19,7 +19,7 @@ export class ChannelService {
 		private readonly channelUtilities: ChannelUtilities
 	) {}
 
-	mutedUsers: Map<string, MutedPlayer> = new Map();
+	mutedUsers: Map<string, MutedPlayer[]> = new Map();
 
 	async create(createChannelDto: CreateChannelDto, user: User) {
 		await this.channelUtilities.checkChannelNameAvailability(createChannelDto.name);

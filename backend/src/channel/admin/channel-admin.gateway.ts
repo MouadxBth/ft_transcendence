@@ -148,10 +148,15 @@ export class ChannelAdminGateway {
 		}
 
 		try {
-			const timeout = this.channelService.mutedUsers.get(userResult[0]!.username);
+			const mutedPlayer = this.channelService.mutedUsers.get(userResult[0]!.username);
+			const muteResult = mutedPlayer && mutedPlayer.find((res) => res.channel === dto.channel);
 
-			if (timeout) {
-				this.channelService.mutedUsers.delete(userResult[0]!.username);
+			if (muteResult && muteResult.channel === dto.channel) {
+				// clearTimeout(muteResult.timeout);
+				this.channelService.mutedUsers.set(
+					userResult[0]!.username,
+					mutedPlayer.filter((res) => res.channel !== dto.channel)
+				);
 			}
 
 			const unmuteResult = await this.channelAdminService.unmute(user.username, {
@@ -192,12 +197,29 @@ export class ChannelAdminGateway {
 			member: userResult[0]!.username,
 		});
 
-		this.channelService.mutedUsers.set(userResult[0]!.username, {
-			channel: dto.channel,
-			timeout: setTimeout(async () => {
-				await this.unmuteUser(client, dto);
-			}, dto.duration * 1e3),
-		});
+		const mutedPlayer = this.channelService.mutedUsers.get(userResult[0]!.username);
+
+		this.channelService.mutedUsers.set(
+			userResult[0]!.username,
+			mutedPlayer
+				? [
+						...mutedPlayer,
+						{
+							channel: dto.channel,
+							timeout: setTimeout(async () => {
+								await this.unmuteUser(client, dto);
+							}, dto.duration * 1e3),
+						},
+					]
+				: [
+						{
+							channel: dto.channel,
+							timeout: setTimeout(async () => {
+								await this.unmuteUser(client, dto);
+							}, dto.duration * 1e3),
+						},
+					]
+		);
 
 		const channelUpdate = await this.channelService.findOne(dto.channel);
 
@@ -221,10 +243,11 @@ export class ChannelAdminGateway {
 			throw new WsException("User with that nickname was not found!");
 		}
 
-		const timeout = this.channelService.mutedUsers.get(userResult[0]!.username);
+		const mutedPlayer = this.channelService.mutedUsers.get(userResult[0]!.username);
+		const muteResult = mutedPlayer && mutedPlayer.find((res) => res.channel === dto.channel);
 
-		if (timeout && timeout.channel === dto.channel) {
-			clearTimeout(timeout.timeout);
+		if (muteResult && muteResult.channel === dto.channel) {
+			clearTimeout(muteResult.timeout);
 		}
 
 		const unmuteResult = await this.channelAdminService.unmute(user.username, {
