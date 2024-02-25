@@ -18,11 +18,6 @@ const icons: IconType[] = [
 		href: "42",
 	},
 	{
-		src: "/icons/google.svg",
-		alt: "Google logo",
-		href: "google",
-	},
-	{
 		src: "/icons/github.svg",
 		alt: "GitHub logo",
 		href: "github",
