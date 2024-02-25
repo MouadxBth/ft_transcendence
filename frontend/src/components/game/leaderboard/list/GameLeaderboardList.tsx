@@ -11,7 +11,7 @@ export interface GameLeaderboardListProps {
 const GameLeaderboardList = ({ members }: GameLeaderboardListProps) => {
 	return (
 		<ScrollArea className="w-full border">
-			<div className="h-32 text-center w-full">
+			<div className="h-60 text-center w-full">
 				{!members || !members.length
 					? "Leaderboard is currently empty!"
 					: members.map((member, index) => (

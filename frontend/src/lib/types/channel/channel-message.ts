@@ -7,6 +7,7 @@ export const channelMessageSchema = z.object({
 	updatedAt: z.string(),
 	content: z.string(),
 	sender: channelMemberSchema,
+	channel: z.string(),
 });
 
 export type ChannelMessageType = z.infer<typeof channelMessageSchema>;

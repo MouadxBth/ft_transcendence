@@ -5,6 +5,26 @@ import { User } from "src/user/entities/user.entity";
 import { ChannelMessageUtilities } from "./channel-message.utilities";
 import { BlockedService } from "src/blocked/blocked.service";
 
+export interface ChannelMessageResult {
+	createdAt: Date;
+	updatedAt: Date;
+	id: number;
+	content: string;
+	sender: {
+		channel: {
+			name: string;
+		};
+		id: number;
+		admin: boolean;
+		muted: boolean;
+		user: {
+			username: string;
+			nickname: string | null;
+			avatar: string | null;
+		};
+	};
+}
+
 @Injectable()
 export class ChannelMessageService {
 	constructor(
@@ -16,7 +36,7 @@ export class ChannelMessageService {
 	async create(username: string, dto: MessageDto) {
 		const { member } = await this.channelMessageUtilities.verifyMessage(username, dto);
 
-		return await this.prisma.message.create({
+		const result = await this.prisma.message.create({
 			data: {
 				content: dto.message,
 				sender: {
@@ -28,18 +48,8 @@ export class ChannelMessageService {
 			},
 			select: this.channelMessageUtilities.formatChannelMessage(),
 		});
-	}
 
-	async findAll(channel: string) {
-		const result = this.prisma.channel.findUnique({
-			where: { name: channel },
-			select: {
-				messages: {
-					select: this.channelMessageUtilities.formatChannelMessage(),
-				},
-			},
-		});
-		return result;
+		return this.channelMessageUtilities.formatChannelMessageResult(result);
 	}
 
 	async findLastSent(username: string, channel: string, cursor: number, quantity: number) {
@@ -58,7 +68,11 @@ export class ChannelMessageService {
 					},
 				},
 			})
-			.then((value) => value?.messages);
+			.then((value) =>
+				value?.messages.map((message) =>
+					this.channelMessageUtilities.formatChannelMessageResult(message)
+				)
+			);
 
 		const { blocked } = await this.blockedService.getBlockedAndBlockedBy(username);
 
@@ -101,11 +115,13 @@ export class ChannelMessageService {
 			);
 		}
 
-		return this.prisma.message.update({
+		const updateResult = await this.prisma.message.update({
 			where: { id },
 			data: { content: message },
 			select: this.channelMessageUtilities.formatChannelMessage(),
 		});
+
+		return this.channelMessageUtilities.formatChannelMessageResult(updateResult);
 	}
 
 	async delete(user: User, channel: string, id: number) {
@@ -129,11 +145,12 @@ export class ChannelMessageService {
 				HttpStatus.BAD_REQUEST
 			);
 
-		return await this.prisma.message.delete({
+		const deletionResult = await this.prisma.message.delete({
 			where: {
 				id: id,
 			},
 			select: this.channelMessageUtilities.formatChannelMessage(),
 		});
+		return this.channelMessageUtilities.formatChannelMessageResult(deletionResult);
 	}
 }

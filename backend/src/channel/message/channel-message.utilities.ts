@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { MessageDto } from "../dto/message.dto";
 import { WsException } from "@nestjs/websockets";
 import { PrismaService } from "src/prisma/prisma.service";
+import { ChannelMessageResult } from "./channel-message.service";
 
 @Injectable()
 export class ChannelMessageUtilities {
@@ -18,6 +19,11 @@ export class ChannelMessageUtilities {
 					id: true,
 					admin: true,
 					muted: true,
+					channel: {
+						select: {
+							name: true,
+						},
+					},
 					user: {
 						select: {
 							username: true,
@@ -41,6 +47,22 @@ export class ChannelMessageUtilities {
 					nickname: true,
 					avatar: true,
 				},
+			},
+		};
+	}
+
+	formatChannelMessageResult(result: ChannelMessageResult) {
+		return {
+			id: result.id,
+			content: result.content,
+			createdAt: result.createdAt,
+			updatedAt: result.updatedAt,
+			channel: result.sender.channel.name,
+			sender: {
+				id: result.sender.id,
+				admin: result.sender.admin,
+				muted: result.sender.muted,
+				user: result.sender.user,
 			},
 		};
 	}

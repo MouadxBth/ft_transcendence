@@ -31,32 +31,27 @@ const ChannelMessageList = ({ className, channel }: ChannelMessageListProps) => 
 
 	useEffect(() => {
 		channels?.on("recieve_message", (message: ChannelMessageType) => {
+			if (message.channel != channel) return;
 			channelMessagesDispatch({
 				type: "ADD_MESSAGE",
 				payload: message,
 			});
 		});
-		channels?.on("member_left", (channel: ChannelType, member: ChannelMemberType) => {
+		channels?.on("member_left", (channelLeft: ChannelType, member: ChannelMemberType) => {
 			if (authenticatedUser?.user.username === member.user.username) {
 				return;
 			}
 
-			channelMessagesDispatch({
-				type: "REMOVE_MESSAGES",
-				payload: member,
-			});
+			if (channelLeft.name === channel) {
+				channelMessagesDispatch({
+					type: "REMOVE_MESSAGES",
+					payload: member,
+				});
+			}
 		});
 
 		notifications?.on("user_blocked", (args: BlockStatusType) => {
 			if (authenticatedUser?.user.username === args.senderId && args.blocking) {
-				console.log(
-					"REMOVING MESSAGES SENT BY ",
-					args.targetId,
-					" FOR: ",
-					authenticatedUser.user.username,
-					args.senderId,
-					args
-				);
 				channelMessagesDispatch({
 					type: "FILTER_MESSAGES",
 					payload: args.targetId,
