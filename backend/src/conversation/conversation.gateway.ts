@@ -50,11 +50,7 @@ export class ConversationGateway implements OnGatewayConnection {
 		const createdConversation = await this.conversationService.create(user, targetUser[0].username);
 
 		this.server.to(user.username).emit("conversation_created", createdConversation);
-		this.server.to(targetUser[0].username).emit("conversation_added", {
-			...createdConversation,
-			sender: createdConversation.target,
-			target: createdConversation.sender,
-		});
+		this.server.to(targetUser[0].username).emit("conversation_added", createdConversation);
 	}
 
 	@SubscribeMessage(ConversationEvent.DELETE)
@@ -64,10 +60,6 @@ export class ConversationGateway implements OnGatewayConnection {
 		const deletedConversation = await this.conversationService.delete(user, targetUsername);
 
 		this.server.to(user.username).emit("conversation_deleted", deletedConversation);
-		this.server.to(targetUsername).emit("conversation_removed", {
-			...deletedConversation,
-			sender: deletedConversation.target,
-			target: deletedConversation.sender,
-		});
+		this.server.to(targetUsername).emit("conversation_removed", deletedConversation);
 	}
 }
