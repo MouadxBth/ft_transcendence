@@ -39,7 +39,7 @@ export class ChannelAdminGateway {
 	@SubscribeMessage(ChannelEvent.INVITE)
 	async invite(@ConnectedSocket() client: Socket, @MessageBody() dto: AdminOperationsDto) {
 		const { user } = (client.request as Request).user as AuthenticatedUser;
-		const userResult = await this.userService.search(dto.member);
+		const userResult = await this.userService.find(dto.member);
 
 		if (userResult.length !== 1) {
 			throw new WsException("User with that nickname was not found!");
@@ -60,7 +60,7 @@ export class ChannelAdminGateway {
 	@SubscribeMessage(ChannelEvent.KICK)
 	async kick(@ConnectedSocket() client: Socket, @MessageBody() dto: AdminOperationsDto) {
 		const { user } = (client.request as Request).user as AuthenticatedUser;
-		const userResult = await this.userService.search(dto.member);
+		const userResult = await this.userService.find(dto.member);
 
 		if (userResult.length !== 1) {
 			throw new WsException("User with that nickname was not found!");
@@ -89,7 +89,7 @@ export class ChannelAdminGateway {
 	@SubscribeMessage(ChannelEvent.BAN)
 	async ban(@ConnectedSocket() client: Socket, @MessageBody() dto: AdminOperationsDto) {
 		const { user } = (client.request as Request).user as AuthenticatedUser;
-		const userResult = await this.userService.search(dto.member);
+		const userResult = await this.userService.find(dto.member);
 
 		if (userResult.length !== 1) {
 			throw new WsException("User with that nickname was not found!");
@@ -118,7 +118,7 @@ export class ChannelAdminGateway {
 	@SubscribeMessage(ChannelEvent.UNBAN)
 	async unban(@ConnectedSocket() client: Socket, @MessageBody() dto: AdminOperationsDto) {
 		const { user } = (client.request as Request).user as AuthenticatedUser;
-		const userResult = await this.userService.search(dto.member);
+		const userResult = await this.userService.find(dto.member);
 
 		if (userResult.length !== 1) {
 			throw new WsException("User with that nickname was not found!");
@@ -142,7 +142,7 @@ export class ChannelAdminGateway {
 	private async unmuteUser(client: Socket, dto: AdminOperationsDto, notify: boolean) {
 		const { user } = (client.request as Request).user as AuthenticatedUser;
 
-		const userResult = await this.userService.search(dto.member);
+		const userResult = await this.userService.find(dto.member);
 
 		if (userResult.length !== 1) {
 			throw new WsException("User with that nickname was not found!");
@@ -176,7 +176,7 @@ export class ChannelAdminGateway {
 			throw new WsException("Invalid duration!");
 		}
 
-		const userResult = await this.userService.search(dto.member);
+		const userResult = await this.userService.find(dto.member);
 
 		if (userResult.length !== 1) {
 			throw new WsException("User with that nickname was not found!");
@@ -209,7 +209,7 @@ export class ChannelAdminGateway {
 
 	@SubscribeMessage(ChannelEvent.UNMUTE)
 	async unmute(@ConnectedSocket() client: Socket, @MessageBody() dto: AdminOperationsDto) {
-		const userResult = await this.userService.search(dto.member);
+		const userResult = await this.userService.find(dto.member);
 
 		if (userResult.length !== 1) {
 			throw new WsException("User with that nickname was not found!");

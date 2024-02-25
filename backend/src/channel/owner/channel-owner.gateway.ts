@@ -39,7 +39,7 @@ export class ChannelOwnerGateway {
 	@SubscribeMessage(ChannelEvent.PROMOTE)
 	async promote(@ConnectedSocket() client: Socket, @MessageBody() dto: AdminOperationsDto) {
 		const { user } = (client.request as Request).user as AuthenticatedUser;
-		const userResult = await this.userService.search(dto.member);
+		const userResult = await this.userService.find(dto.member);
 
 		if (userResult.length !== 1) {
 			throw new WsException("User with that nickname was not found!");
@@ -66,7 +66,7 @@ export class ChannelOwnerGateway {
 	@SubscribeMessage(ChannelEvent.DEMOTE)
 	async demote(@ConnectedSocket() client: Socket, @MessageBody() dto: AdminOperationsDto) {
 		const { user } = (client.request as Request).user as AuthenticatedUser;
-		const userResult = await this.userService.search(dto.member);
+		const userResult = await this.userService.find(dto.member);
 
 		if (userResult.length !== 1) {
 			throw new WsException("User with that nickname was not found!");

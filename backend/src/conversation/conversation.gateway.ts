@@ -41,7 +41,7 @@ export class ConversationGateway implements OnGatewayConnection {
 	@SubscribeMessage(ConversationEvent.CREATE)
 	async create(@ConnectedSocket() client: Socket, @MessageBody() targetNickname: string) {
 		const { user } = (client.request as Request).user! as AuthenticatedUser;
-		const targetUser = await this.userService.search(targetNickname);
+		const targetUser = await this.userService.find(targetNickname);
 
 		if (targetUser.length !== 1 || !targetUser[0]) {
 			throw new WsException("User with that nickname was not found!");
@@ -50,7 +50,11 @@ export class ConversationGateway implements OnGatewayConnection {
 		const createdConversation = await this.conversationService.create(user, targetUser[0].username);
 
 		this.server.to(user.username).emit("conversation_created", createdConversation);
-		this.server.to(targetUser[0].username).emit("conversation_added", createdConversation);
+		this.server.to(targetUser[0].username).emit("conversation_added", {
+			...createdConversation,
+			sender: createdConversation.target,
+			target: createdConversation.sender,
+		});
 	}
 
 	@SubscribeMessage(ConversationEvent.DELETE)
@@ -60,6 +64,10 @@ export class ConversationGateway implements OnGatewayConnection {
 		const deletedConversation = await this.conversationService.delete(user, targetUsername);
 
 		this.server.to(user.username).emit("conversation_deleted", deletedConversation);
-		this.server.to(targetUsername).emit("conversation_removed", deletedConversation);
+		this.server.to(targetUsername).emit("conversation_removed", {
+			...deletedConversation,
+			sender: deletedConversation.target,
+			target: deletedConversation.sender,
+		});
 	}
 }

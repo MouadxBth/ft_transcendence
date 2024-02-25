@@ -54,8 +54,6 @@ services:
       - .env
     networks:
       - ft_transcendence
-    volumes:
-      - backend_volume:/usr/src/app
     depends_on:
       postgres:
         condition: service_healthy
@@ -75,8 +73,6 @@ services:
       - .env
     networks:
       - ft_transcendence
-    volumes:
-      - frontend_volume:/usr/src/app
     depends_on: ["backend"]
 
 networks:
@@ -92,19 +88,3 @@ volumes:
   postgres_volume:
     name: postgres_volume
     driver: local
-
-  backend_volume:
-    name: backend_volume
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ${BACKEND_DIR}
-
-  frontend_volume:
-    name: frontend_volume
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ${FRONTEND_DIR}

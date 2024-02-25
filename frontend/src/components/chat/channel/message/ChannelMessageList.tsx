@@ -48,7 +48,7 @@ const ChannelMessageList = ({ className, channel }: ChannelMessageListProps) => 
 		});
 
 		notifications?.on("user_blocked", (args: BlockStatusType) => {
-			if (authenticatedUser?.user.username === args.senderId) {
+			if (authenticatedUser?.user.username === args.senderId && args.blocking) {
 				channelMessagesDispatch({
 					type: "FILTER_MESSAGES",
 					payload: args.targetId,

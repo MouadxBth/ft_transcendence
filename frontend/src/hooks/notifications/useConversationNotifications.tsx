@@ -51,9 +51,9 @@ const useConversationNotifications = () => {
 				className: "rounded",
 				description: (
 					<ConversationData
-						name={args.sender.nickname}
+						name={args.target.nickname}
 						createdAt={args.createdAt}
-						message={`${args.sender.nickname} has created a conversation with you!`}
+						message={`${args.target.nickname} has created a conversation with you!`}
 					/>
 				),
 			});
@@ -79,9 +79,9 @@ const useConversationNotifications = () => {
 				className: "rounded",
 				description: (
 					<ConversationData
-						name={args.sender.nickname}
+						name={args.target.nickname}
 						createdAt={args.createdAt}
-						message={`${args.sender.nickname} has deleted his conversation with you!`}
+						message={`${args.target.nickname} has deleted his conversation with you!`}
 					/>
 				),
 			});

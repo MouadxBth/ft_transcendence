@@ -29,6 +29,14 @@ export class UserService {
 		return this.prisma.user.findMany();
 	}
 
+	async find(nickname: string) {
+		return this.prisma.user.findMany({
+			where: {
+				nickname,
+			},
+		});
+	}
+
 	async search(nickname: string) {
 		return this.prisma.user.findMany({
 			where: {
