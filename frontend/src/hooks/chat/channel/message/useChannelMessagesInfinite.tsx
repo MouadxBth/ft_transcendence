@@ -1,3 +1,4 @@
+import { useAuthentication } from "@/hooks/authentication/useAuthentication";
 import axiosClient from "@/lib/axios";
 import { channelMessageSchema } from "@/lib/types/channel/channel-message";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -22,9 +23,10 @@ const fetchData = async ({ channel, cursor }: { channel: string; cursor: number 
 };
 
 const useChannelMessagesInfinite = (channel: string) => {
+	const { authenticatedUser } = useAuthentication();
 	const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery({
 		retry: false,
-		queryKey: ["channel-messages-infinite", channel],
+		queryKey: ["channel-messages-infinite", channel, authenticatedUser?.user.username],
 		queryFn: ({ pageParam }) => fetchData(pageParam),
 
 		initialPageParam: {

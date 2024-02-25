@@ -27,7 +27,9 @@ export class UserController {
 	@ApiResponse({ type: Array<User>, status: HttpStatus.OK, description: "Successful retrieval" })
 	async findAll() {
 		const collection = await this.userService.findAll();
-		return collection.map(({ twoFactorAuthenticationSecret, password, ...result }) => result);
+		return collection
+			.filter((user) => user.nickname)
+			.map(({ twoFactorAuthenticationSecret, password, ...result }) => result);
 	}
 
 	@Get("search/:nickname")

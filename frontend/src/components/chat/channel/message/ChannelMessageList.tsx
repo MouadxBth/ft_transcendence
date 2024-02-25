@@ -49,6 +49,14 @@ const ChannelMessageList = ({ className, channel }: ChannelMessageListProps) => 
 
 		notifications?.on("user_blocked", (args: BlockStatusType) => {
 			if (authenticatedUser?.user.username === args.senderId && args.blocking) {
+				console.log(
+					"REMOVING MESSAGES SENT BY ",
+					args.targetId,
+					" FOR: ",
+					authenticatedUser.user.username,
+					args.senderId,
+					args
+				);
 				channelMessagesDispatch({
 					type: "FILTER_MESSAGES",
 					payload: args.targetId,
@@ -56,8 +64,12 @@ const ChannelMessageList = ({ className, channel }: ChannelMessageListProps) => 
 			}
 		});
 		notifications?.on("user_unblocked", (args: BlockStatusType) => {
+			console.log("FOR ", authenticatedUser?.user.username, args);
 			queryClient.invalidateQueries({
-				queryKey: ["channel-messages-infinite", channel],
+				queryKey: ["channel-messages-infinite", channel, args.senderId],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["channel-messages-infinite", channel, args.targetId],
 			});
 		});
 	}, [channel, channels, notifications, queryClient, authenticatedUser, channelMessagesDispatch]);
