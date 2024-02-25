@@ -28,7 +28,7 @@ import { ChannelEvent } from "../channel.event";
 export class ChannelAdminGateway {
 	@WebSocketServer()
 	private readonly server: Server;
-	
+
 	constructor(
 		private readonly channelAdminService: ChannelAdminService,
 		private readonly channelService: ChannelService,
@@ -160,20 +160,17 @@ export class ChannelAdminGateway {
 			});
 
 			const channelUpdate = await this.channelService.findOne(dto.channel);
-	
+
 			channelUpdate.members.forEach((member) => {
-				this.server.to(member.user.username).emit("unmuted_on_channel", channelUpdate, unmuteResult, {
-					channel: dto.channel,
-					sender: user.nickname,
-					duration: dto.duration,
-				});
+				this.server
+					.to(member.user.username)
+					.emit("unmuted_on_channel", channelUpdate, unmuteResult, {
+						channel: dto.channel,
+						sender: user.nickname,
+						duration: dto.duration,
+					});
 			});
-
-		} catch (error: unknown) {
-			
-		}
-
-		
+		} catch (error: unknown) {}
 	}
 
 	@SubscribeMessage(ChannelEvent.MUTE)
@@ -195,12 +192,12 @@ export class ChannelAdminGateway {
 			member: userResult[0]!.username,
 		});
 
-		this.channelService.mutedUsers.set(
-			userResult[0]!.username,
-			setTimeout(async () => {
+		this.channelService.mutedUsers.set(userResult[0]!.username, {
+			channel: dto.channel,
+			timeout: setTimeout(async () => {
 				await this.unmuteUser(client, dto);
-			}, dto.duration * 1e3)
-		);
+			}, dto.duration * 1e3),
+		});
 
 		const channelUpdate = await this.channelService.findOne(dto.channel);
 
@@ -226,8 +223,8 @@ export class ChannelAdminGateway {
 
 		const timeout = this.channelService.mutedUsers.get(userResult[0]!.username);
 
-		if (timeout) {
-			clearTimeout(timeout);
+		if (timeout && timeout.channel === dto.channel) {
+			clearTimeout(timeout.timeout);
 		}
 
 		const unmuteResult = await this.channelAdminService.unmute(user.username, {
@@ -244,7 +241,7 @@ export class ChannelAdminGateway {
 				channel: dto.channel,
 				sender: user.nickname,
 				duration: dto.duration,
-			});    
+			});
 		});
 	}
 }

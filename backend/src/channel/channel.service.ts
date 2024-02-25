@@ -7,6 +7,11 @@ import * as bcrypt from "bcrypt";
 import { ChannelStatus } from "@prisma/client";
 import { UpdateChannelDto } from "./dto/update-channel.dto";
 
+export type MutedPlayer = {
+	timeout: NodeJS.Timeout;
+	channel: string;
+};
+
 @Injectable()
 export class ChannelService {
 	constructor(
@@ -14,7 +19,7 @@ export class ChannelService {
 		private readonly channelUtilities: ChannelUtilities
 	) {}
 
-	mutedUsers: Map<string, NodeJS.Timeout> = new Map();
+	mutedUsers: Map<string, MutedPlayer> = new Map();
 
 	async create(createChannelDto: CreateChannelDto, user: User) {
 		await this.channelUtilities.checkChannelNameAvailability(createChannelDto.name);

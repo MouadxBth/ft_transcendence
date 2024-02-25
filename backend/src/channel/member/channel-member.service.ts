@@ -73,6 +73,8 @@ export class ChannelMemberService {
 				},
 			});
 
+		const muteResult = this.channelService.mutedUsers.get(username);
+
 		return await this.prisma.channelMember.create({
 			data: {
 				user: {
@@ -81,7 +83,7 @@ export class ChannelMemberService {
 				channel: {
 					connect: { name: dto.channel },
 				},
-				muted: this.channelService.mutedUsers.has(username)
+				muted: muteResult && muteResult.channel === dto.channel,
 			},
 		});
 	}
