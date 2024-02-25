@@ -62,7 +62,7 @@ export class ChannelMessageService {
 					messages: {
 						orderBy: { createdAt: "desc" },
 						cursor: cursor < 0 ? undefined : { id: cursor },
-						skip: cursor < 0 ? 0 : 1,
+						// skip: cursor < 0 ? 0 : 1,
 						take: quantity,
 						select: this.channelMessageUtilities.formatChannelMessage(),
 					},
@@ -76,8 +76,16 @@ export class ChannelMessageService {
 
 		const { blocked } = await this.blockedService.getBlockedAndBlockedBy(username);
 
+		console.log("MESSAGES: ", result, " BLOCKED STATUS FOR: ", username, blocked);
+
 		if (result && result.length) {
-			return result.reverse().filter((message) => !blocked.includes(message.sender.user.username));
+			result.reverse();
+			console.log("MESSAGES AFTER REVERESE: ", result);
+			console.log(
+				"MESSAGES AFTER FILTER: ",
+				result.filter((message) => !blocked.includes(message.sender.user.username))
+			);
+			return result.filter((message) => !blocked.includes(message.sender.user.username));
 		}
 		return result;
 	}
