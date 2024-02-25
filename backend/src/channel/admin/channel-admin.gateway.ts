@@ -248,6 +248,11 @@ export class ChannelAdminGateway {
 
 		if (muteResult && muteResult.channel === dto.channel) {
 			clearTimeout(muteResult.timeout);
+
+			this.channelService.mutedUsers.set(
+				userResult[0]!.username,
+				mutedPlayer.filter((res) => res.channel !== dto.channel)
+			);
 		}
 
 		const unmuteResult = await this.channelAdminService.unmute(user.username, {
