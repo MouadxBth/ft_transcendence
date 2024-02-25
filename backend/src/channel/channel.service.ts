@@ -14,6 +14,8 @@ export class ChannelService {
 		private readonly channelUtilities: ChannelUtilities
 	) {}
 
+	mutedUsers: Map<string, NodeJS.Timeout> = new Map();
+
 	async create(createChannelDto: CreateChannelDto, user: User) {
 		await this.channelUtilities.checkChannelNameAvailability(createChannelDto.name);
 		await this.channelUtilities.validateChannelPassword(

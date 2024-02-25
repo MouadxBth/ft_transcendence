@@ -70,15 +70,11 @@ export class ChannelAdminUtilities {
 			throw new HttpException("Permission denied!", HttpStatus.BAD_REQUEST);
 
 		const member = channelResult.members.find((member) => member.user.username == dto.member);
-		// const caller = arguments.callee.caller.name;
-		// if (!member && caller !== "unban")
 		if (!member && fetchMember === true)
 			throw new HttpException(
 				"Target user of the operation is not a member of the channel!",
 				HttpStatus.BAD_REQUEST
 			);
-
-		console.log(member, channelResult);
 
 		if (
 			member &&

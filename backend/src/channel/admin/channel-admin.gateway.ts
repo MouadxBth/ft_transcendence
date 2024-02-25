@@ -28,8 +28,7 @@ import { ChannelEvent } from "../channel.event";
 export class ChannelAdminGateway {
 	@WebSocketServer()
 	private readonly server: Server;
-	private mutedUsers: Map<string, NodeJS.Timeout> = new Map();
-
+	
 	constructor(
 		private readonly channelAdminService: ChannelAdminService,
 		private readonly channelService: ChannelService,
@@ -139,7 +138,7 @@ export class ChannelAdminGateway {
 		}
 	}
 
-	private async unmuteUser(client: Socket, dto: AdminOperationsDto, notify: boolean) {
+	private async unmuteUser(client: Socket, dto: AdminOperationsDto) {
 		const { user } = (client.request as Request).user as AuthenticatedUser;
 
 		const userResult = await this.userService.find(dto.member);
@@ -148,24 +147,33 @@ export class ChannelAdminGateway {
 			throw new WsException("User with that nickname was not found!");
 		}
 
-		const unmuteResult = await this.channelAdminService.unmute(user.username, {
-			...dto,
-			member: userResult[0]!.username,
-		});
+		try {
+			const timeout = this.channelService.mutedUsers.get(userResult[0]!.username);
 
-		if (notify) {
-			this.server.to(user.username).emit("unmute_successful", unmuteResult);
+			if (timeout) {
+				this.channelService.mutedUsers.delete(userResult[0]!.username);
+			}
+
+			const unmuteResult = await this.channelAdminService.unmute(user.username, {
+				...dto,
+				member: userResult[0]!.username,
+			});
+
+			const channelUpdate = await this.channelService.findOne(dto.channel);
+	
+			channelUpdate.members.forEach((member) => {
+				this.server.to(member.user.username).emit("unmuted_on_channel", channelUpdate, unmuteResult, {
+					channel: dto.channel,
+					sender: user.nickname,
+					duration: dto.duration,
+				});
+			});
+
+		} catch (error: unknown) {
+			
 		}
 
-		const channelUpdate = await this.channelService.findOne(dto.channel);
-
-		channelUpdate.members.forEach((member) => {
-			this.server.to(member.user.username).emit("unmuted_on_channel", channelUpdate, unmuteResult, {
-				channel: dto.channel,
-				sender: user.nickname,
-				duration: dto.duration,
-			});
-		});
+		
 	}
 
 	@SubscribeMessage(ChannelEvent.MUTE)
@@ -182,17 +190,17 @@ export class ChannelAdminGateway {
 			throw new WsException("User with that nickname was not found!");
 		}
 
-		this.mutedUsers.set(
-			userResult[0]!.username,
-			setTimeout(async () => {
-				await this.unmuteUser(client, dto, false);
-			}, dto.duration * 1e3)
-		);
-
 		const muteResult = await this.channelAdminService.mute(user.username, {
 			...dto,
 			member: userResult[0]!.username,
 		});
+
+		this.channelService.mutedUsers.set(
+			userResult[0]!.username,
+			setTimeout(async () => {
+				await this.unmuteUser(client, dto);
+			}, dto.duration * 1e3)
+		);
 
 		const channelUpdate = await this.channelService.findOne(dto.channel);
 
@@ -209,17 +217,34 @@ export class ChannelAdminGateway {
 
 	@SubscribeMessage(ChannelEvent.UNMUTE)
 	async unmute(@ConnectedSocket() client: Socket, @MessageBody() dto: AdminOperationsDto) {
+		const { user } = (client.request as Request).user as AuthenticatedUser;
 		const userResult = await this.userService.find(dto.member);
 
 		if (userResult.length !== 1) {
 			throw new WsException("User with that nickname was not found!");
 		}
 
-		const timeout = this.mutedUsers.get(userResult[0]!.username);
+		const timeout = this.channelService.mutedUsers.get(userResult[0]!.username);
 
 		if (timeout) {
 			clearTimeout(timeout);
-			await this.unmuteUser(client, dto, true);
 		}
+
+		const unmuteResult = await this.channelAdminService.unmute(user.username, {
+			...dto,
+			member: userResult[0]!.username,
+		});
+
+		this.server.to(user.username).emit("unmute_successful", unmuteResult);
+
+		const channelUpdate = await this.channelService.findOne(dto.channel);
+
+		channelUpdate.members.forEach((member) => {
+			this.server.to(member.user.username).emit("unmuted_on_channel", channelUpdate, unmuteResult, {
+				channel: dto.channel,
+				sender: user.nickname,
+				duration: dto.duration,
+			});    
+		});
 	}
 }

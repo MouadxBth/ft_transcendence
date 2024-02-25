@@ -3,10 +3,14 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { JoinChannelDto } from "../dto/join-channel.dto";
 import { ChannelStatus } from "../enums/channel-status.enum";
 import * as bcrypt from "bcrypt";
+import { ChannelService } from "../channel.service";
 
 @Injectable()
 export class ChannelMemberService {
-	constructor(private readonly prisma: PrismaService) {}
+	constructor(
+		private readonly prisma: PrismaService,
+		private readonly channelService: ChannelService
+	) {}
 
 	async join(username: string, dto: JoinChannelDto) {
 		const channelResult = await this.prisma.channel.findUnique({
@@ -77,6 +81,7 @@ export class ChannelMemberService {
 				channel: {
 					connect: { name: dto.channel },
 				},
+				muted: this.channelService.mutedUsers.has(username)
 			},
 		});
 	}
