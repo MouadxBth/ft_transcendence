@@ -49,9 +49,18 @@ const Pong = ({ className, match }: PongProps) => {
 						default: "arcade",
 					},
 					fps: {
+						min: 60,
 						target: 60,
+						deltaHistory: 10,
+						smoothStep: true,
 						forceSetTimeOut: true,
 					},
+					audio: {
+						noAudio: true,
+						disableWebAudio: true,
+					},
+					banner: false,
+					disableContextMenu: true,
 				};
 
 				gameRef.current = new Phaser.Game(config);
