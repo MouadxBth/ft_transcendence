@@ -3,7 +3,6 @@ import { MessageDto } from "../dto/message.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { User } from "src/user/entities/user.entity";
 import { ChannelMessageUtilities } from "./channel-message.utilities";
-import { BlockedService } from "src/blocked/blocked.service";
 
 export interface ChannelMessageResult {
 	createdAt: Date;
@@ -29,8 +28,7 @@ export interface ChannelMessageResult {
 export class ChannelMessageService {
 	constructor(
 		private readonly prisma: PrismaService,
-		private readonly channelMessageUtilities: ChannelMessageUtilities,
-		private readonly blockedService: BlockedService
+		private readonly channelMessageUtilities: ChannelMessageUtilities
 	) {}
 
 	async create(username: string, dto: MessageDto) {
@@ -52,7 +50,19 @@ export class ChannelMessageService {
 		return this.channelMessageUtilities.formatChannelMessageResult(result);
 	}
 
-	async findLastSent(username: string, channel: string, cursor: number, quantity: number) {
+	async findAll(channel: string) {
+		const result = await this.prisma.channel.findUnique({
+			where: { name: channel },
+			select: {
+				messages: {
+					select: this.channelMessageUtilities.formatChannelMessage(),
+				},
+			},
+		});
+		return result;
+	}
+
+	async findLastSent(channel: string, cursor: number, quantity: number) {
 		if (quantity <= 0) throw new HttpException("Invalid quantity!", HttpStatus.BAD_REQUEST);
 
 		const result = await this.prisma.channel
@@ -62,7 +72,7 @@ export class ChannelMessageService {
 					messages: {
 						orderBy: { createdAt: "desc" },
 						cursor: cursor < 0 ? undefined : { id: cursor },
-						// skip: cursor < 0 ? 0 : 1,
+						skip: cursor < 0 ? 0 : 1,
 						take: quantity,
 						select: this.channelMessageUtilities.formatChannelMessage(),
 					},
@@ -74,18 +84,8 @@ export class ChannelMessageService {
 				)
 			);
 
-		const { blocked } = await this.blockedService.getBlockedAndBlockedBy(username);
-
-		console.log("MESSAGES: ", result, " BLOCKED STATUS FOR: ", username, blocked);
-
 		if (result && result.length) {
 			result.reverse();
-			console.log("MESSAGES AFTER REVERESE: ", result);
-			console.log(
-				"MESSAGES AFTER FILTER: ",
-				result.filter((message) => !blocked.includes(message.sender.user.username))
-			);
-			return result.filter((message) => !blocked.includes(message.sender.user.username));
 		}
 		return result;
 	}

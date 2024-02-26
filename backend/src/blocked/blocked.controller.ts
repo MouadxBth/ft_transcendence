@@ -35,6 +35,12 @@ export class BlockedController {
 		return this.blockedService.unblock((request.user! as AuthenticatedUser).user.username, target);
 	}
 
+	@Get("/all")
+	@ApiOkResponse({ description: "Blocked and blocked by users retrieved successfully." })
+	async blocked(@Req() request: Request) {
+		return this.blockedService.getBlocked((request.user! as AuthenticatedUser).user.username);
+	}
+
 	@Get("/:target")
 	@ApiOkResponse({ description: "Block status retrieved successfully." })
 	async blockStatus(@Param("target") target: string, @Req() request: Request) {

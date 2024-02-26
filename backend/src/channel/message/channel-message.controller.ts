@@ -5,14 +5,11 @@ import {
 	HttpStatus,
 	Param,
 	Query,
-	Req,
 	UseGuards,
 } from "@nestjs/common";
 import { AuthenticatedGuard } from "src/auth/guards/authenticated.guard";
 import { ChannelMessageService } from "./channel-message.service";
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { type Request } from "express";
-import { AuthenticatedUser } from "src/auth/entities/authenticated-user.entity";
 
 @ApiTags("Channel | Messages")
 @Controller("channel")
@@ -28,7 +25,6 @@ export class ChannelMessageController {
 	@ApiResponse({ status: 200, description: "Successfully retrieved channel messages" })
 	@ApiResponse({ status: 400, description: "Bad Request - Invalid cursor or quantity" })
 	async findMany(
-		@Req() req: Request,
 		@Param("channel") channel: string,
 		@Query("cursor") cursor: string | undefined,
 		@Query("quantity") quantity: string | undefined
@@ -44,12 +40,7 @@ export class ChannelMessageController {
 			if (Number.isNaN(parsedQuantity))
 				throw new HttpException("Invalid quantity query value!", HttpStatus.BAD_REQUEST);
 
-			return await this.channelMessageService.findLastSent(
-				(req.user as AuthenticatedUser).user.username,
-				channel,
-				parsedCursor,
-				parsedQuantity
-			);
+			return await this.channelMessageService.findLastSent(channel, parsedCursor, parsedQuantity);
 		}
 		return await this.channelMessageService.findAll(channel);
 	}

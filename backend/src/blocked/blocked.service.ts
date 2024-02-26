@@ -42,7 +42,7 @@ export class BlockedService {
 		return result;
 	}
 
-	private async getBlocked(username: string) {
+	async getBlocked(username: string) {
 		const result = await this.getBlockedAndBlockedBy(username);
 		return result.blocked;
 	}

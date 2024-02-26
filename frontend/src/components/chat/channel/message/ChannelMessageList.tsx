@@ -18,9 +18,10 @@ import { useQueryClient } from "@tanstack/react-query";
 export interface ChannelMessageListProps {
 	className?: string;
 	channel: string;
+	blocked: string[];
 }
 
-const ChannelMessageList = ({ className, channel }: ChannelMessageListProps) => {
+const ChannelMessageList = ({ className, channel, blocked }: ChannelMessageListProps) => {
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const { messages, channelMessagesDispatch } = useChannelMessagesState();
 	const [loading, setLoading] = useState(true);
@@ -78,9 +79,11 @@ const ChannelMessageList = ({ className, channel }: ChannelMessageListProps) => 
 
 		channelMessagesDispatch({
 			type: "SET_MESSAGES",
-			payload: data.pages.flat(),
+			payload: data.pages
+				.flat()
+				.filter((message) => !blocked.includes(message.sender.user.username)),
 		});
-	}, [isFetching, data, channelMessagesDispatch]);
+	}, [isFetching, data, blocked, channelMessagesDispatch]);
 
 	if (loading) return <ChannelMessageListSkeleton className={className} />;
 
